@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -10,16 +11,6 @@ android {
         }
     }
 
-    defaultConfig {
-        applicationId = "com.leon.be_nobat"
-        minSdk = 24
-        targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
     signingConfigs{
         create("release") {
             keyAlias = "ali_angel"
@@ -28,6 +19,17 @@ android {
             storePassword = "kaka019930"
         }
     }
+    defaultConfig {
+        applicationId = "com.leon.be_nobat"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig = signingConfigs.getByName("release")
+    }
+
     flavorDimensions += "person"
     productFlavors {
         create("user") {
@@ -53,12 +55,12 @@ android {
                 resources.directories.add("src/user/res")
             }
         }
-        getByName("main") {
+       /*getByName("main") {
             res {
                 java.directories.add("src/main/java")
                 resources.directories.add("src/main/res")
             }
-        }
+        }*/
     }
     buildTypes {
         release {
@@ -75,6 +77,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -83,7 +89,17 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-//    implementation(libs.pocketbase.kotlin)
+
+    // PocketBase & Networking
+    implementation(libs.agrevster.pocketbase.kotlin)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.ktor.client.auth)
+//    implementation(libs.play.services.auth)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
