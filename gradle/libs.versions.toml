@@ -18,6 +18,8 @@ playServicesAuth = "21.5.1"
 kotlinxSerializationJson = "1.10.0"
 ktorClientAuth = "3.4.0"
 datastorePreferencesVersion = "1.2.0"
+coreSplashscreen = "1.2.0"
+koinAndroid = "4.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -37,6 +39,8 @@ androidx-security-crypto = { group = "androidx.security", name = "security-crypt
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktorClientAuth" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

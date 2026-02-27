@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore(name = "secure_token_prefs")
 
-class TokenManger(context: Context) : ITokenManager {
+class TokenManager(context: Context) : ITokenManager {
     private val dataStore = context.dataStore
     val tokenFlow: Flow<String?> = context.dataStore.data.map { prefs ->
         prefs[TOKEN_KEY]?.let {

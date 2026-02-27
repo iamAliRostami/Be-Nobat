@@ -1,9 +1,34 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.BeNobat" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/green_medium</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/green_light_v1</item>
+        <item name="colorOnSecondary">@color/green_dark_v1</item>
+
+        <item name="android:windowBackground">@color/green_light_v2</item>
+        <item name="colorSurface">@color/green_light_v1</item>
+        <item name="colorOnSurface">@color/green_dark_v1</item>
+
+        <item name="android:statusBarColor">@color/green_light_v2</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+        <item name="materialButtonStyle">@style/Widget.BeNobat.Button</item>
+        <item name="materialCardViewStyle">@style/Widget.BeNobat.Card</item>
+        <item name="textInputStyle">@style/Widget.BeNobat.TextInputLayout</item>
+
+        <item name="android:fontFamily">@font/app_font</item>
+        <item name="fontFamily">@font/app_font</item>
+
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.BeNobat.Headline</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.BeNobat.Body</item>
     </style>
 
     <style name="Theme.BeNobat" parent="Base.Theme.BeNobat" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/green_dark_v1</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="postSplashScreenTheme">@style/Theme.BeNobat</item>
+    </style>
 </resources>

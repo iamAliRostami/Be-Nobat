@@ -1,14 +1,16 @@
 package com.leon.be_nobat.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.leon.be_nobat.R
 import com.leon.be_nobat.data.consts.Services
+import com.leon.be_nobat.helpers.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -22,9 +24,15 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import org.koin.android.ext.android.inject
 
 class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    val tokenManager: TokenManager by inject()
+
+
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
@@ -33,15 +41,37 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val splashScreen = installSplashScreen()
+
         lifecycleScope.launch {
-            try {
-                val allQueues = getQueues()
-                Log.e("size", allQueues.items.size.toString())
-            } catch (e: Exception) {
-                // Handle connection errors (e.g., server is offline)
-                Log.e("KtorError", "Failed to connect: ${e.message}")
+            val token = tokenManager.getToken()
+            if (token != null) {
+                /*startActivity(Intent(this@MainActivity, HomeActivity::class.java))*/
+                setContentView(R.layout.activity_login)
+            } else {
+                // اگر نداشت، صفحه لاگین را نشان بده
+                setContentView(R.layout.activity_login)
+                setupLoginLogic()
+                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             }
+            finish()
         }
+
+
+        /* lifecycleScope.launch {
+             try {
+                 val allQueues = getQueues()
+                 Log.e("size", allQueues.items.size.toString())
+             } catch (e: Exception) {
+                 // Handle connection errors (e.g., server is offline)
+                 Log.e("KtorError", "Failed to connect: ${e.message}")
+             }
+         }*/
+    }
+
+    private fun setupLoginLogic() {
+        // اینجا کدهای مربوط به کلیک دکمه‌ها و ارسال موبایل به سرور کاتور را بنویس
     }
 
     suspend fun getQueues(): PocketBaseResponse<QueueRecord> {
@@ -72,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         val response: HttpResponse =
-            client.get(Services.baseUrl +"/api/collections/access/records")
+            client.get(Services.baseUrl + "/api/collections/access/records")
         return response.body<PocketBaseResponse<QueueRecord>>()
     }
 
