@@ -96,9 +96,9 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.kotlinx.serialization.json)
 
-    implementation(libs.androidx.security.crypto)
     implementation(libs.ktor.client.auth)
-//    implementation(libs.play.services.auth)
+    implementation(libs.androidx.security.crypto)
+    implementation(libs.androidx.datastore.preferences)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
