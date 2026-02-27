@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/android:windowBackground"
-    android:padding="24dp"
+    android:layout_margin="24dp"
     tools:context=".ui.activities.LoginActivity">
 
     <TextView
