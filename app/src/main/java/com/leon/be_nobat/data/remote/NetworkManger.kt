@@ -11,11 +11,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
 
 object NetworkManger : INetworkManager {
 

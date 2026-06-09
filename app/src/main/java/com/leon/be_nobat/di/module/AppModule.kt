@@ -12,15 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
-import org.koin.plugin.module.dsl.viewModel
-import kotlin.coroutines.EmptyCoroutineContext.get
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.leon.be_nobat.ui.view_models.auth.AuthViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import org.koin.core.context.GlobalContext.get
 import org.koin.core.module.dsl.viewModel
 
 val appModule = module {
