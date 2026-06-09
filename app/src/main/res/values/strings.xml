@@ -6,4 +6,5 @@
     <string name="quest_login">ورود به عنوان مهمان</string>
     <string name="ask_for_account">حساب کاربری ندارید؟</string>
     <string name="sign_up">ثبت‌نام کنید</string>
+    <string name="password">گذرواژه</string>
 </resources>

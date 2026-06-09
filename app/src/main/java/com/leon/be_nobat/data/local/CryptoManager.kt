@@ -1,15 +1,16 @@
-package com.leon.be_nobat.helpers
+package com.leon.be_nobat.data.local
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import android.util.Base64
+import com.leon.be_nobat.domain.interfaces.ICryptoManager
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-object CryptoManager {
+object CryptoManager: ICryptoManager {
     private const val KEY_ALIAS = "my_token_key"
 
     private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
@@ -42,7 +43,7 @@ object CryptoManager {
         return keyGenerator.generateKey()
     }
 
-    fun encrypt(threshold: String): String {
+    override fun encrypt(threshold: String): String {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
@@ -50,7 +51,7 @@ object CryptoManager {
         return Base64.encodeToString(iv + encrypted, Base64.DEFAULT)
     }
 
-    fun decrypt(encryptedData: String): String {
+    override fun decrypt(encryptedData: String): String {
         val data = Base64.decode(encryptedData, Base64.DEFAULT)
         val iv = data.sliceArray(0 until 12)
         val encrypted = data.sliceArray(12 until data.size)

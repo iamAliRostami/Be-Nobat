@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea
+/.idea/planningMode.xml
+/.idea/project.xml
+/planningMode.xml
+/project.xml

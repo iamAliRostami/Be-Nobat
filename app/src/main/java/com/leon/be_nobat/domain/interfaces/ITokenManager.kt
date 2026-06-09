@@ -1,4 +1,4 @@
-package com.leon.be_nobat.helpers.interfaces
+package com.leon.be_nobat.domain.interfaces
 
 interface ITokenManager {
     suspend fun saveToken(token: String)

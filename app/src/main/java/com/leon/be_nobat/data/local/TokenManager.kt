@@ -1,10 +1,10 @@
-package com.leon.be_nobat.helpers
+package com.leon.be_nobat.data.local
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.leon.be_nobat.helpers.interfaces.ITokenManager
+import com.leon.be_nobat.domain.interfaces.ITokenManager
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -38,6 +38,7 @@ class TokenManager(context: Context) : ITokenManager {
             try {
                 CryptoManager.decrypt(it)
             } catch (e: Exception) {
+                e.printStackTrace()
                 null
             }
         }

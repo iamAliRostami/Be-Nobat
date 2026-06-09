@@ -2,6 +2,8 @@ package com.leon.be_nobat.helpers
 
 import android.app.Application
 import com.leon.be_nobat.di.module.appModule
+import com.leon.be_nobat.di.module.repositoryModule
+import com.leon.be_nobat.di.module.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -12,7 +14,7 @@ class App : Application() {
         startKoin {
             androidLogger()
             androidContext(this@App)
-            modules(appModule)
+            modules(listOf(appModule, repositoryModule, viewModelModule))
         }
     }
 }

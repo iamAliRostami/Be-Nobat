@@ -9,8 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.leon.be_nobat.R
-import com.leon.be_nobat.data.consts.Services
-import com.leon.be_nobat.helpers.TokenManager
+import com.leon.be_nobat.data.QueueRecord
+import com.leon.be_nobat.domain.consts.Services
+import com.leon.be_nobat.domain.PocketBaseResponse
+import com.leon.be_nobat.data.local.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
@@ -22,7 +24,6 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.android.inject
 
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             val token = tokenManager.getToken()
             if (token != null) {
                 /*startActivity(Intent(this@MainActivity, HomeActivity::class.java))*/
-                setContentView(R.layout.activity_login)
+                setContentView(R.layout.activity_main)
             } else {
                 // اگر نداشت، صفحه لاگین را نشان بده
                 setContentView(R.layout.activity_login)
@@ -75,10 +76,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     suspend fun getQueues(): PocketBaseResponse<QueueRecord> {
-        val baseUrl: String
-        baseUrl = if (true)
-            "s"
-        else "a"
         val client = HttpClient(Android) {
             install(ContentNegotiation) {
                 json(Json {
@@ -105,23 +102,4 @@ class MainActivity : AppCompatActivity() {
             client.get(Services.baseUrl + "/api/collections/access/records")
         return response.body<PocketBaseResponse<QueueRecord>>()
     }
-
-    @Serializable
-    data class PocketBaseResponse<T>(
-        val page: Int,
-        val perPage: Int,
-        val totalItems: Int,
-        val totalPages: Int,
-        val items: List<T> // لیست اصلی نوبت‌های شما اینجا قرار دارد
-    )
-
-    @Serializable
-    data class QueueRecord(
-        val id: String,
-        /*val collectionId: String,
-        val customerName: String,
-        val status: String,*/
-        val title: String
-        // بقیه فیلدهایی که در PocketBase تعریف کرده‌اید
-    )
 }

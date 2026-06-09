@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/android:windowBackground"
     android:layout_margin="24dp"
+    android:background="?attr/android:windowBackground"
     tools:context=".ui.activities.LoginActivity">
 
     <TextView
@@ -40,12 +40,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:hint="@string/mobile_phone"
+        app:endIconDrawable="@drawable/ic_mobile"
+        app:endIconMode="custom"
+        app:endIconTint="?attr/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/tvWelcome">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="phone"
+            android:paddingStart="48dp"
+            android:paddingEnd="48dp"
             android:textDirection="rtl" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="رمز عبور"
+        android:hint="@string/password"
         android:textAlignment="viewStart"
         app:hintEnabled="true"
         app:layout_constraintTop_toBottomOf="@id/tilPhone"
@@ -97,22 +102,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGuest">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/app_font"
-            android:text="@string/ask_for_account"
-            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:id="@+id/tvRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/app_font"
             android:text="@string/sign_up"
             android:textColor="?attr/colorPrimary"
             android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/app_font"
+            android:text="@string/ask_for_account"
+            android:textColor="?attr/colorOnSurface" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
