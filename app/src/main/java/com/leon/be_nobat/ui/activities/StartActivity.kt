@@ -23,11 +23,12 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.koin.android.ext.android.inject
 
-class MainActivity : AppCompatActivity() {
+class StartActivity : AppCompatActivity() {
     val tokenManager: TokenManager by inject()
 
 
@@ -35,45 +36,19 @@ class MainActivity : AppCompatActivity() {
         savedInstanceState: Bundle?
     ) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
         val splashScreen = installSplashScreen()
 
         lifecycleScope.launch {
-            val token = tokenManager.getToken()
+            val token = tokenManager.userToken.first()
             if (token != null) {
-                /*startActivity(Intent(this@MainActivity, HomeActivity::class.java))*/
-                setContentView(R.layout.activity_main)
+                startActivity(Intent(this@StartActivity, HomeActivity::class.java))
             } else {
-                // اگر نداشت، صفحه لاگین را نشان بده
-                setContentView(R.layout.activity_login)
-                setupLoginLogic()
-                startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                startActivity(Intent(this@StartActivity, LoginActivity::class.java))
             }
             finish()
         }
-
-
-        /* lifecycleScope.launch {
-             try {
-                 val allQueues = getQueues()
-                 Log.e("size", allQueues.items.size.toString())
-             } catch (e: Exception) {
-                 // Handle connection errors (e.g., server is offline)
-                 Log.e("KtorError", "Failed to connect: ${e.message}")
-             }
-         }*/
     }
 
-    private fun setupLoginLogic() {
-        // اینجا کدهای مربوط به کلیک دکمه‌ها و ارسال موبایل به سرور کاتور را بنویس
-    }
 
     suspend fun getQueues(): PocketBaseResponse<QueueRecord> {
         val client = HttpClient(Android) {

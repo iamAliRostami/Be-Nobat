@@ -15,10 +15,13 @@
         android:theme="@style/Theme.BeNobat"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ui.activities.HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.MainActivity"
+            android:name=".ui.activities.StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

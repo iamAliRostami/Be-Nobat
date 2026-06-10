@@ -20,6 +20,7 @@ ktorClientAuth = "3.5.0"
 datastorePreferencesVersion = "1.2.1"
 coreSplashscreen = "1.2.0"
 koinAndroid = "4.2.1"
+activityKtx = "1.13.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -41,6 +42,7 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktorClientAuth" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koinAndroid" }
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
