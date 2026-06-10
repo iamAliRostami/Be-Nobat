@@ -9,6 +9,17 @@
     android:background="?attr/android:windowBackground"
     tools:context=".ui.activities.LoginActivity">
 
+    <ImageButton
+        android:id="@+id/btnThemeToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="12dp"
+        android:contentDescription="@string/switch_theme"
+        android:src="@drawable/ic_switch_theme"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvLogo"
         android:layout_width="wrap_content"

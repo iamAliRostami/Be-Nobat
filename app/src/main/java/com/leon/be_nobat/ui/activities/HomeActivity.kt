@@ -1,14 +1,12 @@
 package com.leon.be_nobat.ui.activities
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.leon.be_nobat.R
+import com.leon.be_nobat.helpers.BaseActivity
 
-class HomeActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class HomeActivity : BaseActivity() {
+    override val layoutResourceId: Int = R.layout.activity_home
+
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
@@ -17,5 +15,13 @@ class HomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }*/
+
+    override fun setupViews() {
+        setToolbarTitle("لیست سفارشات")
+    }
+
+    override fun observeViewModel() {
+
     }
 }

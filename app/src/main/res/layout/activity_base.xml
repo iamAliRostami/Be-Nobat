@@ -52,13 +52,14 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/refresh"
                 android:src="@drawable/ic_refresh" />
+
             <ImageButton
                 android:id="@+id/btnThemeToggle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_switch_theme"
-                android:contentDescription="@string/switch_theme" />
+                android:contentDescription="@string/switch_theme"
+                android:src="@drawable/ic_switch_theme" />
         </LinearLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 

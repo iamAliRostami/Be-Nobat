@@ -3,6 +3,8 @@ package com.leon.be_nobat.helpers
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.annotation.LayoutRes
@@ -17,7 +19,6 @@ import org.koin.android.ext.android.inject
 abstract class BaseActivity : AppCompatActivity() {
 
     private lateinit var toolbar: MaterialToolbar
-    private lateinit var btnThemeToggle: ImageButton
     private val themePreferences: ThemeManager by inject()
     private val viewModel = MainViewModel(themePreferences)
 
@@ -34,15 +35,13 @@ abstract class BaseActivity : AppCompatActivity() {
         val container = findViewById<FrameLayout>(R.id.baseContentContainer)
         LayoutInflater.from(this).inflate(layoutResourceId, container, true)
 
-        setupBaseToolbar()
-        setupThemeToggle() // راه‌اندازی دکمه تغییر تم
+        toolbar = findViewById(R.id.baseToolbar)
 
         setupViews()
         observeViewModel()
     }
 
     private fun setupBaseToolbar() {
-        toolbar = findViewById(R.id.baseToolbar)
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -51,15 +50,19 @@ abstract class BaseActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { onFilterClicked() }
         findViewById<ImageButton>(R.id.btnSort).setOnClickListener { onSortClicked() }
         findViewById<ImageButton>(R.id.btnRefresh).setOnClickListener { onRefreshClicked() }
+        setupThemeToggle(findViewById(R.id.btnThemeToggle))
     }
 
-    private fun setupThemeToggle() {
-        btnThemeToggle = findViewById(R.id.btnThemeToggle)
+    fun setupThemeToggle(btnThemeToggle: View) {
         btnThemeToggle.setOnClickListener {
             val isNight =
                 resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
             viewModel.toggleTheme(isNight)
         }
+    }
+
+    private fun hideToolbar() {
+        toolbar.visibility = GONE
     }
 
     protected abstract fun setupViews()
@@ -72,5 +75,12 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected fun setToolbarTitle(title: String) {
         toolbar.title = title
+    }
+
+    protected fun setToolbarTitle(title: String?, hide: Boolean) {
+        if (hide)
+            hideToolbar()
+        else
+            setupBaseToolbar()
     }
 }
