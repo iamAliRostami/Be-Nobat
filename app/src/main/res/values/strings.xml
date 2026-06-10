@@ -7,4 +7,9 @@
     <string name="ask_for_account">حساب کاربری ندارید؟</string>
     <string name="sign_up">ثبت‌نام کنید</string>
     <string name="password">گذرواژه</string>
+    <string name="search">جستجو</string>
+    <string name="filter">فیلتر</string>
+    <string name="sort">مرتب\u200cسازی</string>
+    <string name="refresh">به\u200cروزرسانی</string>
+    <string name="switch_theme">تغییر حالت شب و روز</string>
 </resources>

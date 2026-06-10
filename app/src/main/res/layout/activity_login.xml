@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="24dp"
-
     android:background="?attr/android:windowBackground"
     tools:context=".ui.activities.LoginActivity">
 
@@ -108,32 +107,30 @@
         app:layout_constraintTop_toBottomOf="@id/btnLogin"
         app:layout_constraintWidth_percent="@dimen/form_width_percent" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvRegister"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnGuest">
+        android:clickable="true"
+        android:focusable="true"
+        android:fontFamily="@font/app_font"
+        android:padding="12dp"
+        android:text="@string/sign_up"
+        android:textColor="?attr/colorPrimary"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnGuest"
+        app:layout_constraintWidth_percent="0.5" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/app_font"
-            android:text="@string/sign_up"
-            android:textColor="?attr/colorPrimary"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/app_font"
-            android:text="@string/ask_for_account"
-            android:textColor="?attr/colorOnSurface" />
-    </LinearLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/app_font"
+        android:text="@string/ask_for_account"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="@id/tvRegister"
+        app:layout_constraintLeft_toRightOf="@id/tvRegister"
+        app:layout_constraintTop_toTopOf="@id/tvRegister" />
 </androidx.constraintlayout.widget.ConstraintLayout>

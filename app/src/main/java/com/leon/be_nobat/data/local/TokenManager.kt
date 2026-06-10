@@ -9,7 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-private val Context.dataStore by preferencesDataStore(name = "secure_token_prefs")
+const val preferencesName = "secure_token_prefs"
+const val preferencesKeyName = "encrypted_token"
+private val Context.dataStore by preferencesDataStore(name = preferencesName)
 
 class TokenManager(context: Context) : ITokenManager {
     private val dataStore = context.dataStore
@@ -24,7 +26,7 @@ class TokenManager(context: Context) : ITokenManager {
     }
 
     companion object {
-        private val TOKEN_KEY = stringPreferencesKey("encrypted_token")
+        private val TOKEN_KEY = stringPreferencesKey(preferencesKeyName)
     }
 
     override suspend fun saveToken(token: String) {
