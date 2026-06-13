@@ -3,13 +3,14 @@ package com.leon.be_nobat.helpers
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.View.GONE
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.leon.be_nobat.R
 import com.leon.be_nobat.data.local.ThemeManager
@@ -27,8 +28,13 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_base)
-
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
         // مدیریت راست‌چین بودن همیشگی
 //        window.decorView.layoutDirection = android.view.View.LAYOUT_DIRECTION_RTL
 
@@ -50,15 +56,13 @@ abstract class BaseActivity : AppCompatActivity() {
         findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { onFilterClicked() }
         findViewById<ImageButton>(R.id.btnSort).setOnClickListener { onSortClicked() }
         findViewById<ImageButton>(R.id.btnRefresh).setOnClickListener { onRefreshClicked() }
-        setupThemeToggle(findViewById(R.id.btnThemeToggle))
+        findViewById<ImageButton>(R.id.btnSwitchTheme).setOnClickListener { setupThemeToggle() }
     }
 
-    fun setupThemeToggle(btnThemeToggle: View) {
-        btnThemeToggle.setOnClickListener {
-            val isNight =
-                resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
-            viewModel.toggleTheme(isNight)
-        }
+    fun setupThemeToggle() {
+        val isNight =
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        viewModel.toggleTheme(isNight)
     }
 
     private fun hideToolbar() {
@@ -67,7 +71,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract fun setupViews()
     protected abstract fun observeViewModel()
-
     protected open fun onSearchClicked() {}
     protected open fun onFilterClicked() {}
     protected open fun onSortClicked() {}
@@ -77,7 +80,7 @@ abstract class BaseActivity : AppCompatActivity() {
         toolbar.title = title
     }
 
-    protected fun setToolbarTitle(title: String?, hide: Boolean) {
+    protected fun setToolbarTitle(hide: Boolean) {
         if (hide)
             hideToolbar()
         else

@@ -36,9 +36,11 @@
         <item name="boxCornerRadiusTopEnd">@dimen/input_corner_radius</item>
         <item name="boxCornerRadiusBottomStart">@dimen/input_corner_radius</item>
         <item name="boxCornerRadiusBottomEnd">@dimen/input_corner_radius</item>
-        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="boxStrokeColor">@color/til_border_selector</item>
         <item name="hintTextColor">?attr/colorPrimary</item>
         <item name="android:fontFamily">@font/app_font</item>
+        <item name="endIconTint">?attr/colorPrimary</item>
+        <item name="passwordToggleTint">?attr/colorPrimary</item>
     </style>
 
     <style name="TextAppearance.BeNobat.Headline" parent="TextAppearance.Material3.HeadlineMedium">

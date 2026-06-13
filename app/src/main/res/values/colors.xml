@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="green_dark_v1">#051F20</color>
-    <color name="green_dark_v2">#0B2B26</color>
-    <color name="green_dark_v3">#163832</color>
-    <color name="green_medium">#235347</color>
-    <color name="green_light_v1">#8EB69B</color>
-    <color name="green_light_v2">#DAF1DE</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="colorPrimary">#235347</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorSecondary">#8EB69B</color>
+    <color name="colorOnSecondary">#051F20</color>
+    <color name="windowBackground">#DAF1DE</color>
+    <color name="colorSurface">#8EB69B</color>
+    <color name="colorOnSurface">#051F20</color>
     <color name="error_red">#B00020</color>
 </resources>

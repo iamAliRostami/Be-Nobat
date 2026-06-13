@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="24dp"
@@ -11,13 +10,14 @@
 
     <ImageButton
         android:id="@+id/btnThemeToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="12dp"
         android:contentDescription="@string/switch_theme"
+        android:scaleType="fitCenter"
         android:src="@drawable/ic_switch_theme"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvLogo"
+        app:layout_constraintStart_toStartOf="@id/tilPhone"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -47,17 +47,16 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPhone"
         style="@style/Widget.BeNobat.TextInputLayout"
-        android:layout_width="@dimen/form_width"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:hint="@string/mobile_phone"
         app:endIconDrawable="@drawable/ic_mobile"
         app:endIconMode="custom"
-        app:endIconTint="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvWelcome"
-        app:layout_constraintWidth_max="420dp"
+        app:layout_constraintWidth_max="@dimen/form_width"
         app:layout_constraintWidth_percent="@dimen/form_width_percent">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -73,7 +72,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
         style="@style/Widget.BeNobat.TextInputLayout"
-        android:layout_width="@dimen/form_width"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/form_input_margin"
         android:hint="@string/password"
@@ -82,9 +81,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilPhone"
+        app:layout_constraintWidth_max="@dimen/form_width"
         app:layout_constraintWidth_percent="@dimen/form_width_percent"
-        app:passwordToggleEnabled="true"
-        app:passwordToggleTint="?attr/colorPrimary">
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -97,25 +96,27 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogin"
         style="@style/Widget.BeNobat.Button"
-        android:layout_width="@dimen/form_width"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/form_input_margin"
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilPassword"
+        app:layout_constraintWidth_max="@dimen/form_width"
         app:layout_constraintWidth_percent="@dimen/form_width_percent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnGuest"
         style="@style/Widget.BeNobat.Button.Outlined"
-        android:layout_width="@dimen/form_width"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/form_input_margin"
         android:text="@string/quest_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        app:layout_constraintWidth_max="@dimen/form_width"
         app:layout_constraintWidth_percent="@dimen/form_width_percent" />
 
 
@@ -131,9 +132,9 @@
         android:text="@string/sign_up"
         android:textColor="?attr/colorPrimary"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGuest"
-        app:layout_constraintWidth_percent="0.5" />
+        app:layout_constraintWidth_percent="@dimen/form_width_half_percent" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"
