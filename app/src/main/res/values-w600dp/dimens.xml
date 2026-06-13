@@ -2,5 +2,4 @@
 <resources>
     <dimen name="form_width">420dp</dimen>
     <dimen name="form_width_percent">1.0</dimen>
-    <!--    <dimen name="form_width_half_percent">0.5</dimen>-->
 </resources>

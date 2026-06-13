@@ -134,7 +134,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGuest"
-        app:layout_constraintWidth_percent="@dimen/form_width_half_percent" />
+        app:layout_constraintWidth_percent="0.5" />
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="wrap_content"

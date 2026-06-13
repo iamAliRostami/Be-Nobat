@@ -11,5 +11,4 @@
 
     <dimen name="form_width">0dp</dimen>
     <dimen name="form_width_percent">0.9</dimen>
-    <dimen name="form_width_half_percent">0.5</dimen>
 </resources>
