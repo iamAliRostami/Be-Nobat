@@ -8,6 +8,7 @@ class HomeActivity : BaseActivity() {
 
     override fun setupViews() {
         setToolbarTitle("لیست سفارشات")
+        setMenuVisibility(false)
     }
 
     override fun observeViewModel() {

@@ -3,9 +3,11 @@ package com.leon.be_nobat.helpers
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View.GONE
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.FrameLayout
-import android.widget.ImageButton
+import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +24,8 @@ abstract class BaseActivity : AppCompatActivity() {
     private lateinit var toolbar: MaterialToolbar
     private val themePreferences: ThemeManager by inject()
     private val viewModel = MainViewModel(themePreferences)
+    private var isMenuVisible = false
+    private var isHorizontalButtonsVisible = true
 
     @get:LayoutRes
     protected abstract val layoutResourceId: Int
@@ -30,6 +34,10 @@ abstract class BaseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_base)
+
+        // Force RTL layout direction
+        window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -42,6 +50,7 @@ abstract class BaseActivity : AppCompatActivity() {
         LayoutInflater.from(this).inflate(layoutResourceId, container, true)
 
         toolbar = findViewById(R.id.baseToolbar)
+        setSupportActionBar(toolbar)
 
         setupViews()
         observeViewModel()
@@ -51,12 +60,34 @@ abstract class BaseActivity : AppCompatActivity() {
         toolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+    }
 
-        findViewById<ImageButton>(R.id.btnSearch).setOnClickListener { onSearchClicked() }
-        findViewById<ImageButton>(R.id.btnFilter).setOnClickListener { onFilterClicked() }
-        findViewById<ImageButton>(R.id.btnSort).setOnClickListener { onSortClicked() }
-        findViewById<ImageButton>(R.id.btnRefresh).setOnClickListener { onRefreshClicked() }
-        findViewById<ImageButton>(R.id.btnSwitchTheme).setOnClickListener { setupThemeToggle() }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (isMenuVisible) {
+            menuInflater.inflate(R.menu.main_menu, menu)
+
+            // Handle horizontal buttons visibility if they are part of the menu
+            menu.findItem(R.id.search)?.isVisible = isHorizontalButtonsVisible
+            menu.findItem(R.id.filter)?.isVisible = isHorizontalButtonsVisible
+            menu.findItem(R.id.sort)?.isVisible = isHorizontalButtonsVisible
+            menu.findItem(R.id.refresh)?.isVisible = isHorizontalButtonsVisible
+            menu.findItem(R.id.switchTheme)?.isVisible = isHorizontalButtonsVisible
+
+            return true
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.search -> onSearchClicked()
+            R.id.filter -> onFilterClicked()
+            R.id.sort -> onSortClicked()
+            R.id.refresh -> onRefreshClicked()
+            R.id.switchTheme -> setupThemeToggle()
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     fun setupThemeToggle() {
@@ -66,7 +97,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun hideToolbar() {
-        toolbar.visibility = GONE
+        toolbar.visibility = View.GONE
     }
 
     protected abstract fun setupViews()
@@ -76,8 +107,29 @@ abstract class BaseActivity : AppCompatActivity() {
     protected open fun onSortClicked() {}
     protected open fun onRefreshClicked() {}
 
+    protected fun setHorizontalButtonsVisibility(visible: Boolean) {
+        isHorizontalButtonsVisible = visible
+        invalidateOptionsMenu()
+    }
+
+    protected fun setMenuVisibility(visible: Boolean) {
+        isMenuVisible = visible
+        invalidateOptionsMenu()
+    }
+
+    protected fun showPopupMenu(view: View, menuRes: Int, onMenuItemClick: (Int) -> Unit) {
+        val popup = PopupMenu(this, view)
+        popup.menuInflater.inflate(menuRes, popup.menu)
+        popup.setOnMenuItemClickListener { item ->
+            onMenuItemClick(item.itemId)
+            true
+        }
+        popup.show()
+    }
+
     protected fun setToolbarTitle(title: String) {
         toolbar.title = title
+        setupBaseToolbar()
     }
 
     protected fun setToolbarTitle(hide: Boolean) {

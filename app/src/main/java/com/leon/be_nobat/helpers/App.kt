@@ -7,9 +7,8 @@ import com.leon.be_nobat.di.module.appModule
 import com.leon.be_nobat.di.module.localStorageModule
 import com.leon.be_nobat.di.module.repositoryModule
 import com.leon.be_nobat.di.module.viewModelModule
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.get
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -33,7 +32,7 @@ class App : Application() {
             )
         }
         val preferences: ThemeManager = get()
-        MainScope().launch {
+        runBlocking {
             val savedTheme = preferences.themeMode.first()
             AppCompatDelegate.setDefaultNightMode(savedTheme)
         }
