@@ -1,0 +1,12 @@
+package com.leon.be_nobat.domain.ttt
+
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserProfilesDomain(
+    @SerialName("user_id") val userId: String,
+    @SerialName("nation_code") val nationCode: String?,
+    @SerialName("birth_date") val birthDate: String?,
+    val gender: String
+) : BaseDomain()
