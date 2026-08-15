@@ -1,4 +1,4 @@
-package com.leon.be_nobat.domain.ttt
+package com.leon.be_nobat.domain.model
 
 import kotlinx.serialization.Serializable
 
