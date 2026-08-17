@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResourceAvailabilityDomain(
+data class ResourceAvailability(
     @SerialName("resource_assignment_id") val resourceAssignmentId: String?,
     @SerialName("day_of_week") val dayOfWeek: Double?,
     @SerialName("open_time") val openTime: String?,

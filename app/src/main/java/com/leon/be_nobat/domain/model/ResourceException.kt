@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResourceExceptionsDomain(
+data class ResourceException(
     @SerialName("branch_id") val branchId: String?,
     @SerialName("resource_assignment_id") val resourceAssignmentId: String?,
     @SerialName("start_datetime") val startDatetime: String?,

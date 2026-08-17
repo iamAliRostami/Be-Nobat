@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ServiceAssignmentsDomain(
+data class ServiceAssignment(
     @SerialName("branch_service_id") val branchServiceId: String,
     @SerialName("resource_assignment_id") val resourceAssignmentId: String?,
     @SerialName("price_overide") val priceOveride: String?,

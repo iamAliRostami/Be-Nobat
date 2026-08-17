@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReputationEventsDomain(
+data class ReputationEvent(
     @SerialName("subject_user_id") val subjectUserId: String?,
     @SerialName("appointment_id") val appointmentId: String?,
     @SerialName("source_user_id") val sourceUserId: String?,

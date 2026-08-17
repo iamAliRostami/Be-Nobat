@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DiscountsDomain(
+data class Discount(
     @SerialName("business_id") val businessId: String?,
     val code: String?,
     val type: String?,

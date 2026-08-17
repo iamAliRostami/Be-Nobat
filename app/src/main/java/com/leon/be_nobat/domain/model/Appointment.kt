@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AppointmentDomain(
+data class Appointment(
     @SerialName("branch_id") val branchId: String?,
     @SerialName("client_user_id") val clientUserId: String?,
     val start: String,

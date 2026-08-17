@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserSystemRolesDomain(
+data class UserSystemRole(
     @SerialName("user_id") val userId: String?,
     @SerialName("role_id") val roleId: String?,
     val status: String?,

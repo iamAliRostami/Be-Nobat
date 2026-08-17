@@ -4,8 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FavoritesDomain(
+data class UserProfile(
     @SerialName("user_id") val userId: String,
-    @SerialName("business_id") val businessId: String?,
-    @SerialName("resource_id") val resourceId: String?
+    @SerialName("nation_code") val nationCode: String?,
+    @SerialName("birth_date") val birthDate: String?,
+    val gender: String
 ) : BaseDomain()

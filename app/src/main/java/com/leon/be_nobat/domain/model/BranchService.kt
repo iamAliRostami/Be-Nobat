@@ -4,13 +4,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResourceAssignmentsDomain(
-    @SerialName("resource_id") val resourceId: String?,
+data class BranchService(
     @SerialName("branch_id") val branchId: String?,
-    val title: String?,
+    @SerialName("service_id") val serviceId: String?,
+    val price: Double?,
+    val duration: Double?,
     val status: String?,
-    @SerialName("start_date") val startDate: String?,
-    @SerialName("end_date") val endDate: String?,
+    @SerialName("requires_approval") val requiresApproval: Boolean,
     @SerialName("deleted_at") val deletedAt: String?,
     @SerialName("deleted_by") val deletedBy: String?
 ) : BaseDomain()

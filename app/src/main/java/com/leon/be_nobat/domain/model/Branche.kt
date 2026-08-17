@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BranchesDomain(
+data class Branche(
     @SerialName("business_id") val businessId: String?,
     val name: String?,
     val code: String,

@@ -4,12 +4,12 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PermissionsDomain(
-    val code: String?,
-    val title: String?,
+data class Role(
+    val title: String,
+    @SerialName("title_fa") val titleFa: String,
     val scope: String?,
-    val description: String?,
-    val status: String,
+    val code: String?,
+    val status: String?,
     @SerialName("deleted_at") val deletedAt: String?,
     @SerialName("deleted_by") val deletedBy: String?
 ) : BaseDomain()

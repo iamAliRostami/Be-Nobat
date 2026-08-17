@@ -4,11 +4,14 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ServiceCategoryDomain(
+data class Service(
     @SerialName("business_id") val businessId: String?,
+    @SerialName("category_id") val categoryId: String?,
     val name: String?,
-    @SerialName("sort_order") val sortOrder: Double?,
-    @SerialName("parent_id") val parentId: String?,
+    val description: String?,
+    val duration: Double,
+    val status: Boolean,
+    @SerialName("base_price") val basePrice: String,
     @SerialName("deleted_at") val deletedAt: String?,
     @SerialName("deleted_by") val deletedBy: String?
 ) : BaseDomain()

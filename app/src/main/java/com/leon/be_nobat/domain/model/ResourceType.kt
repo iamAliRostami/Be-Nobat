@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResourceTypesDomain(
+data class ResourceType(
     val name: String,
     @SerialName("name_fa") val nameFa: String,
     @SerialName("deleted_at") val deletedAt: String?,

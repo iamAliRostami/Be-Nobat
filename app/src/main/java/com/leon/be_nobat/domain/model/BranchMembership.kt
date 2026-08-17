@@ -4,9 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ReviewsDomain(
-    @SerialName("appointment_service_id") val appointmentServiceId: String?,
+data class BranchMembership(
+    @SerialName("branch_id") val branchId: String?,
     @SerialName("user_id") val userId: String?,
-    val rating: Double,
-    val comment: String?
+    val roles: String?,
+    val status: String
 ) : BaseDomain()
