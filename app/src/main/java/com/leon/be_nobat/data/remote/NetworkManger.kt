@@ -26,10 +26,16 @@ object NetworkManger : INetworkManager {
         install(Auth) {
             bearer {
                 loadTokens {
+
+
                     // اینجا توکن را از TokenManager می‌خوانیم
                     val token =
                         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJwYmNfMzE0MjYzNTgyMyIsImV4cCI6MTc3MjA0NDY1OSwiaWQiOiJ6YXFzN2p6OTIyanNob3kiLCJyZWZyZXNoYWJsZSI6dHJ1ZSwidHlwZSI6ImF1dGgifQ.yiTwkZTMpFaffcUKoJMjxebPkkhVCkVT8zbLjcWt3jo"
-                    if (token != null) {
+                    token =   tokenManager.userToken.first()
+                    /*?.let {
+                        BearerTokens(accessToken = it, refreshToken = "")
+                    }*/
+                        if (token != null) {
                         BearerTokens(
                             token,
                             ""
