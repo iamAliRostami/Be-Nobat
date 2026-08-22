@@ -7,14 +7,6 @@ android {
     namespace = "com.leon.be_nobat"
     compileSdk = 37
 
-    signingConfigs{
-        create("release") {
-            keyAlias = "ali_angel"
-            keyPassword = "kaka019930"
-            storeFile = file("D:/keys/MyFourthKey.jks")
-            storePassword = "kaka019930"
-        }
-    }
     defaultConfig {
         applicationId = "com.leon.be_nobat"
         minSdk = 24
@@ -23,7 +15,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig = signingConfigs.getByName("release")
     }
 
     flavorDimensions += "person"
@@ -65,8 +56,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
-            isDebuggable = true
+            isDebuggable = false
         }
     }
     compileOptions {

@@ -1,9 +1,6 @@
 package com.leon.be_nobat.data.remote
 
-import com.leon.be_nobat.data.remote.PocketBaseConfig.Companion.BASE_URL
-import com.leon.be_nobat.domain.model.User
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -19,6 +16,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
@@ -36,17 +34,29 @@ data class PbListResponse<T>(
 )
 
 @Serializable
-data class PbAuthResponse(
+data class AuthResponseDto(
     val token: String = "",
-    val record: User,
+    val record: UserDto,
+)
+
+@Serializable
+data class UserDto(
+    val password: String = "",
+    val tokenKey: String = "",
+    val email: String? = null,
+    @SerialName("email_visibility") val emailVisibility: Boolean? = null,
+    val verified: Boolean? = null,
+    val name: String = "",
+    val avatar: String? = null,
+    val mobile: String = "",
+    val status: String = "",
 )
 
 class PocketBaseClient(
+    @PublishedApi internal val client: HttpClient,
+    @PublishedApi internal val baseUrl: String,
     private val tokenProvider: suspend () -> String? = { null },
 ) {
-    @PublishedApi
-    internal val client = HttpClient(Android) { expectSuccess = false }
-
     @PublishedApi
     internal val json = Json {
         ignoreUnknownKeys = true
@@ -78,7 +88,7 @@ class PocketBaseClient(
         expand: String? = null,
     ): Result<PbListResponse<T>> = runCatching {
         val token = currentToken()
-        client.get("$BASE_URL/api/collections/$collection/records") {
+        client.get("$baseUrl/api/collections/$collection/records") {
             parameter("page", page)
             parameter("perPage", perPage)
             filter?.let { parameter("filter", it) }
@@ -93,7 +103,7 @@ class PocketBaseClient(
         collection: String, id: String, expand: String? = null,
     ): Result<T> = runCatching {
         val token = currentToken()
-        client.get("$BASE_URL/api/collections/$collection/records/$id") {
+        client.get("$baseUrl/api/collections/$collection/records/$id") {
             expand?.let { parameter("expand", it) }
             auth(token)
         }.ensureSuccess().let { json.decodeFromString<T>(it.bodyAsText()) }
@@ -104,7 +114,7 @@ class PocketBaseClient(
         collection: String, body: JsonObject,
     ): Result<T> = runCatching {
         val token = currentToken()
-        client.post("$BASE_URL/api/collections/$collection/records") {
+        client.post("$baseUrl/api/collections/$collection/records") {
             contentType(ContentType.Application.Json)
             setBody(body.toString())
             auth(token)
@@ -116,7 +126,7 @@ class PocketBaseClient(
         collection: String, id: String, body: JsonObject,
     ): Result<T> = runCatching {
         val token = currentToken()
-        client.patch("$BASE_URL/api/collections/$collection/records/$id") {
+        client.patch("$baseUrl/api/collections/$collection/records/$id") {
             contentType(ContentType.Application.Json)
             setBody(body.toString())
             auth(token)
@@ -126,20 +136,20 @@ class PocketBaseClient(
     // ---------- حذف ----------
     suspend fun delete(collection: String, id: String): Result<Unit> = runCatching {
         val token = currentToken()
-        client.delete("$BASE_URL/api/collections/$collection/records/$id") { auth(token) }
+        client.delete("$baseUrl/api/collections/$collection/records/$id") { auth(token) }
             .ensureSuccess()
         Unit
     }
 
     // ---------- ورود ----------
-    suspend fun authWithPassword(identity: String, password: String): Result<PbAuthResponse> =
+    suspend fun authWithPassword(identity: String, password: String): Result<AuthResponseDto> =
         runCatching {
-            client.post("$BASE_URL/api/collections/users/auth-with-password") {
+            client.post("$baseUrl/api/collections/users/auth-with-password") {
                 contentType(ContentType.Application.Json)
                 setBody(buildJsonObject {
                     put("identity", identity)
                     put("password", password)
                 }.toString())
-            }.ensureSuccess().let { json.decodeFromString<PbAuthResponse>(it.bodyAsText()) }
+            }.ensureSuccess().let { json.decodeFromString<AuthResponseDto>(it.bodyAsText()) }
         }
 }

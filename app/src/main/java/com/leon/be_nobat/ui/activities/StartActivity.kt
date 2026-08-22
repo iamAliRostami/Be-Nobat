@@ -5,13 +5,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.leon.be_nobat.data.local.TokenManager
+import com.leon.be_nobat.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class StartActivity : AppCompatActivity() {
-    private val tokenManager: TokenManager by inject()
+    private val sessionRepository: SessionRepository by inject()
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -20,7 +20,7 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            val token = tokenManager.userToken.first()
+            val token = sessionRepository.token.first()
             if (token != null) {
                 startActivity(Intent(this@StartActivity, HomeActivity::class.java))
             } else {

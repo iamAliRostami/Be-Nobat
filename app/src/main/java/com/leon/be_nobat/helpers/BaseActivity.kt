@@ -15,15 +15,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.leon.be_nobat.R
-import com.leon.be_nobat.data.local.ThemeManager
 import com.leon.be_nobat.ui.view_models.base.MainViewModel
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 abstract class BaseActivity : AppCompatActivity() {
 
     private lateinit var toolbar: MaterialToolbar
-    private val themePreferences: ThemeManager by inject()
-    private val viewModel = MainViewModel(themePreferences)
+    private val viewModel: MainViewModel by viewModel()
     private var isMenuVisible = false
     private var isHorizontalButtonsVisible = true
 
