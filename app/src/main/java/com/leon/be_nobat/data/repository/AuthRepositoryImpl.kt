@@ -1,23 +1,19 @@
 package com.leon.be_nobat.data.repository
 
-import com.leon.be_nobat.data.local.TokenManager
+import com.leon.be_nobat.data.remote.PocketBaseClient
 import com.leon.be_nobat.domain.model.User
 import com.leon.be_nobat.domain.repository.AuthRepository
-import io.ktor.client.HttpClient
+import com.leon.be_nobat.domain.repository.SessionRepository
 
 class AuthRepositoryImpl(
-    private val client: HttpClient,
-    private val prefs: TokenManager
+    private val remoteDataSource: PocketBaseClient,
+    private val sessionRepository: SessionRepository,
 ) : AuthRepository {
 
-    override suspend fun loginWithEmail(email: String, pass: String): Result<User> {
-        return try {
-            // در اینجا می‌توانید از PocketBase یا Ktor Client استفاده کنید.
-            // به عنوان نمونه یک کاربر فرضی بازگردانده می‌شود:
-            val user = User(id = "1", name = "توسعه‌دهنده", email = email)
-            Result.success(user)
-        } catch (e: Exception) {
-            Result.failure(e)
+    override suspend fun loginWithEmail(email: String, password: String): Result<User> =
+        remoteDataSource.authWithPassword(email, password).mapCatching { response ->
+            require(response.token.isNotBlank()) { "پاسخ ورود فاقد توکن است" }
+            sessionRepository.saveToken(response.token)
+            response.record.toDomain()
         }
-    }
 }

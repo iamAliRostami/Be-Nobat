@@ -1,21 +1,20 @@
 package com.leon.be_nobat.data
 
-import com.leon.be_nobat.domain.model.User
+import com.leon.be_nobat.data.remote.PocketBaseClient
+import com.leon.be_nobat.data.remote.UserDto
 import com.leon.be_nobat.domain.interfaces.IAppApi
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import com.leon.be_nobat.domain.model.User
 
+/** PocketBase-backed implementation of the domain API boundary. */
 class AppApiImpl(
-    private val client: HttpClient,
-    private val dispatcher: CoroutineDispatcher   // from DI
+    private val client: PocketBaseClient,
 ) : IAppApi {
+    override suspend fun fetchUsers(): Result<List<User>> =
+        client.list<UserDto>(collection = USERS_COLLECTION).map { response ->
+            response.items.map(UserDto::toDomain)
+        }
 
-    override suspend fun fetchUsers(): List<User> = withContext(dispatcher) {
-        client.get("https://api.example.com/users").body()   // Ktor auto‑serializes to `List<User>`
+    private companion object {
+        const val USERS_COLLECTION = "users"
     }
-
-    // Add more methods as needed …
 }

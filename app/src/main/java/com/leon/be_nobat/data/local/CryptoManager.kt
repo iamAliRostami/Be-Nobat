@@ -10,12 +10,12 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-object CryptoManager: ICryptoManager {
+class CryptoManager : ICryptoManager {
     private const val KEY_ALIAS = "my_token_key"
 
     private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
-    private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
-    private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
+    private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_GCM
+    private const val PADDING = KeyProperties.ENCRYPTION_PADDING_NONE
     private const val TRANSFORMATION = "$ALGORITHM/$BLOCK_MODE/$PADDING"
     private const val ANDROID_KEY_STORE = "AndroidKeyStore"
 
@@ -53,10 +53,15 @@ object CryptoManager: ICryptoManager {
 
     override fun decrypt(encryptedData: String): String {
         val data = Base64.decode(encryptedData, Base64.DEFAULT)
-        val iv = data.sliceArray(0 until 12)
-        val encrypted = data.sliceArray(12 until data.size)
+        require(data.size > IV_SIZE) { "Encrypted value is invalid" }
+        val iv = data.sliceArray(0 until IV_SIZE)
+        val encrypted = data.sliceArray(IV_SIZE until data.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), GCMParameterSpec(128, iv))
         return String(cipher.doFinal(encrypted))
+    }
+
+    private companion object {
+        const val IV_SIZE = 12
     }
 }

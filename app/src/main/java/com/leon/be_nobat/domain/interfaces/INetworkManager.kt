@@ -1,8 +1,6 @@
 package com.leon.be_nobat.domain.interfaces
 
-import io.ktor.client.HttpClient
-
+/** Provides the domain-facing API without leaking an HTTP client into the domain layer. */
 interface INetworkManager {
-    fun provideHttpClient(): HttpClient
-    fun provideApiService(client: HttpClient): IAppApi
+    val apiService: IAppApi
 }

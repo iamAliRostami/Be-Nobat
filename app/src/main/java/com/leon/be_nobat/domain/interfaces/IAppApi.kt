@@ -1,7 +1,9 @@
 package com.leon.be_nobat.domain.interfaces
 
-import com.leon.be_nobat.domain.model.User
-
-interface IAppApi {
-    suspend fun fetchUsers(): List<User>
-}
+/**
+ * Application API boundary.
+ *
+ * Keeping this contract in the domain layer allows callers to depend on API capabilities
+ * without knowing that the current implementation uses PocketBase and Ktor.
+ */
+interface IAppApi : IApiService
