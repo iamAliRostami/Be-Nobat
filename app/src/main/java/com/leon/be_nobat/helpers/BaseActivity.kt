@@ -59,8 +59,6 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (isMenuVisible) {
             menuInflater.inflate(R.menu.main_menu, menu)
-
-            // Handle horizontal buttons visibility if they are part of the menu
             menu.findItem(R.id.search)?.isVisible = isHorizontalButtonsVisible
             menu.findItem(R.id.filter)?.isVisible = isHorizontalButtonsVisible
             menu.findItem(R.id.sort)?.isVisible = isHorizontalButtonsVisible
