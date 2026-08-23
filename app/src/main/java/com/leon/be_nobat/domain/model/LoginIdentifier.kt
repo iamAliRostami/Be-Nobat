@@ -34,13 +34,13 @@ sealed interface LoginIdentifier {
     }
 }
 
-sealed class AuthException(message: String) : Exception(message) {
-    data object InvalidIdentifier : AuthException("ایمیل یا شماره موبایل معتبر نیست")
-    data object EmptyPassword : AuthException("گذرواژه الزامی است")
-    data object InvalidCredentials : AuthException("ایمیل، شماره موبایل یا گذرواژه صحیح نیست")
-    data object TooManyRequests : AuthException("تعداد تلاش‌ها زیاد است؛ کمی بعد دوباره امتحان کنید")
-    data object ServiceUnavailable : AuthException("سرویس ورود موقتاً در دسترس نیست")
-    data object NetworkUnavailable : AuthException("اتصال اینترنت را بررسی کنید")
-    data object RequestTimedOut : AuthException("زمان درخواست به پایان رسید؛ دوباره تلاش کنید")
-    data object Unexpected : AuthException("خطای غیرمنتظره‌ای رخ داد")
+sealed class AuthException : Exception() {
+    data object InvalidIdentifier : AuthException()
+    data object EmptyPassword : AuthException()
+    data object InvalidCredentials : AuthException()
+    data object TooManyRequests : AuthException()
+    data object ServiceUnavailable : AuthException()
+    data object NetworkUnavailable : AuthException()
+    data object RequestTimedOut : AuthException()
+    data object Unexpected : AuthException()
 }

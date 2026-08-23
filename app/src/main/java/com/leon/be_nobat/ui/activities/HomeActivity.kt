@@ -7,7 +7,7 @@ class HomeActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_home
 
     override fun setupViews() {
-        setToolbarTitle("لیست سفارشات")
+        setToolbarTitle(getString(R.string.orders_title))
         setMenuVisibility(false)
     }
 

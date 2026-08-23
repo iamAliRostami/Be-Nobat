@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">بي نوبات</string>
+    <string name="welcome_message">مرحباً! سجّل الدخول لحجز موعد</string>
+    <string name="mobile_phone">رقم الهاتف</string>
+    <string name="email_or_mobile">البريد الإلكتروني أو رقم الهاتف</string>
+    <string name="login">تسجيل الدخول</string>
+    <string name="logging_in">جارٍ تسجيل الدخول…</string>
+    <string name="unexpected_error">حدث خطأ غير متوقع</string>
+    <string name="quest_login">المتابعة كضيف</string>
+    <string name="ask_for_account">ليس لديك حساب؟</string>
+    <string name="sign_up">إنشاء حساب</string>
+    <string name="password">كلمة المرور</string>
+    <string name="search">بحث</string>
+    <string name="filter">تصفية</string>
+    <string name="sort">ترتيب</string>
+    <string name="refresh">تحديث</string>
+    <string name="switch_theme">تبديل المظهر الفاتح أو الداكن</string>
+    <string name="more_options">خيارات إضافية</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="current_language">عر</string>
+    <string name="language_persian">فارسی</string>
+    <string name="language_english">English</string>
+    <string name="language_arabic">العربية</string>
+    <string name="orders_title">الطلبات</string>
+    <string name="home_message">مرحباً بك في بي نوبات</string>
+    <string name="example_title">مثال</string>
+    <string name="example_message">هذه شاشة تجريبية</string>
+    <string name="error_invalid_identifier">أدخل بريداً إلكترونياً أو رقم هاتف صالحاً</string>
+    <string name="error_empty_password">كلمة المرور مطلوبة</string>
+    <string name="error_invalid_credentials">البريد الإلكتروني أو رقم الهاتف أو كلمة المرور غير صحيحة</string>
+    <string name="error_too_many_requests">محاولات كثيرة. يرجى المحاولة لاحقاً</string>
+    <string name="error_service_unavailable">خدمة تسجيل الدخول غير متاحة مؤقتاً</string>
+    <string name="error_network_unavailable">تحقق من اتصالك بالإنترنت</string>
+    <string name="error_request_timed_out">انتهت مهلة الطلب. حاول مرة أخرى</string>
+</resources>
