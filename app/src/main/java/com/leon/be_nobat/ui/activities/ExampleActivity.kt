@@ -7,7 +7,7 @@ class ExampleActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_example
 
     override fun setupViews() {
-        setToolbarTitle("فعالیت نمونه")
+        setToolbarTitle(getString(R.string.example_title))
         setMenuVisibility(true)
         setHorizontalButtonsVisibility(false)
     }

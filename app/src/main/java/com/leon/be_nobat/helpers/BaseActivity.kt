@@ -35,17 +35,11 @@ abstract class BaseActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_base)
 
-        // Force RTL layout direction
-        window.decorView.layoutDirection = View.LAYOUT_DIRECTION_RTL
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        // مدیریت راست‌چین بودن همیشگی
-//        window.decorView.layoutDirection = android.view.View.LAYOUT_DIRECTION_RTL
-
         val container = findViewById<FrameLayout>(R.id.baseContentContainer)
         LayoutInflater.from(this).inflate(layoutResourceId, container, true)
 

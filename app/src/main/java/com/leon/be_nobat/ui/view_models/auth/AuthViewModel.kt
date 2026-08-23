@@ -7,19 +7,28 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+sealed interface LoginUiState {
+    data object Idle : LoginUiState
+    data object Loading : LoginUiState
+    data class Success(val userName: String) : LoginUiState
+    data class Error(val error: Throwable) : LoginUiState
+}
+
 class AuthViewModel(private val loginUseCase: LoginUseCase) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<String>("در انتظار ورود...")
-    val loginState: StateFlow<String> = _loginState
+    private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Idle)
+    val loginState: StateFlow<LoginUiState> = _loginState
 
-    fun login(email: String, pass: String) {
+    fun login(identity: String, password: String) {
+        if (_loginState.value == LoginUiState.Loading) return
         viewModelScope.launch {
-            loginUseCase(email, pass)
+            _loginState.value = LoginUiState.Loading
+            loginUseCase(identity, password)
                 .onSuccess { user ->
-                    _loginState.value = "خوش آمدید ${user.name}"
+                    _loginState.value = LoginUiState.Success(user.name)
                 }
                 .onFailure { error ->
-                    _loginState.value = "خطا: ${error.message}"
+                    _loginState.value = LoginUiState.Error(error)
                 }
         }
     }

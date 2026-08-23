@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="24dp"
-    android:layoutDirection="rtl"
     android:background="?attr/android:windowBackground"
     tools:context=".ui.activities.LoginActivity">
 
@@ -18,7 +17,18 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_switch_theme"
         app:layout_constraintBottom_toTopOf="@id/tvLogo"
-        app:layout_constraintStart_toStartOf="@id/tilPhone"
+        app:layout_constraintStart_toStartOf="@id/tilIdentity"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLanguage"
+        style="@style/Widget.BeNobat.Button.Outlined"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:contentDescription="@string/change_language"
+        android:minWidth="64dp"
+        android:text="@string/current_language"
+        app:layout_constraintEnd_toEndOf="@id/tilIdentity"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -46,12 +56,12 @@
         app:layout_constraintTop_toBottomOf="@id/tvLogo" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPhone"
+        android:id="@+id/tilIdentity"
         style="@style/Widget.BeNobat.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:hint="@string/mobile_phone"
+        android:hint="@string/email_or_mobile"
         app:endIconDrawable="@drawable/ic_mobile"
         app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,11 +73,9 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="phone"
-            android:maxLength="11"
+            android:inputType="textEmailAddress"
             android:paddingStart="48dp"
-            android:paddingEnd="48dp"
-            android:textDirection="rtl" />
+            android:paddingEnd="48dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -81,7 +89,7 @@
         app:hintEnabled="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tilPhone"
+        app:layout_constraintTop_toBottomOf="@id/tilIdentity"
         app:layout_constraintWidth_max="@dimen/form_width"
         app:layout_constraintWidth_percent="@dimen/form_width_percent"
         app:passwordToggleEnabled="true">

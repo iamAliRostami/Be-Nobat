@@ -1,9 +1,8 @@
 package com.leon.be_nobat.data.remote
 
-import com.leon.be_nobat.data.remote.PocketBaseConfig.Companion.BASE_URL
 import com.leon.be_nobat.domain.model.User
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
+import io.ktor.client.call.body
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
@@ -13,18 +12,16 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 
-class PocketBaseException(val status: Int, message: String) : Exception(message)
+class PocketBaseException(val statusCode: Int, message: String) : Exception(message)
 
 @Serializable
 data class PbListResponse<T>(
@@ -42,18 +39,11 @@ data class PbAuthResponse(
 )
 
 class PocketBaseClient(
+    @PublishedApi internal val client: HttpClient,
+    @PublishedApi internal val baseUrl: String,
     private val tokenProvider: suspend () -> String? = { null },
+    private val loginUrl: String = "$baseUrl/api/collections/users/auth-with-password",
 ) {
-    @PublishedApi
-    internal val client = HttpClient(Android) { expectSuccess = false }
-
-    @PublishedApi
-    internal val json = Json {
-        ignoreUnknownKeys = true
-        encodeDefaults = true
-        isLenient = true
-    }
-
     @PublishedApi
     internal suspend fun currentToken(): String? = tokenProvider()
 
@@ -64,7 +54,10 @@ class PocketBaseClient(
 
     @PublishedApi
     internal suspend fun HttpResponse.ensureSuccess(): HttpResponse {
-        if (!status.isSuccess()) throw PocketBaseException(status.value, bodyAsText())
+        if (!status.isSuccess()) {
+            val responseBody = runCatching { body<String>() }.getOrDefault("Request failed")
+            throw PocketBaseException(status.value, responseBody)
+        }
         return this
     }
 
@@ -78,14 +71,14 @@ class PocketBaseClient(
         expand: String? = null,
     ): Result<PbListResponse<T>> = runCatching {
         val token = currentToken()
-        client.get("$BASE_URL/api/collections/$collection/records") {
+        client.get("$baseUrl/api/collections/$collection/records") {
             parameter("page", page)
             parameter("perPage", perPage)
             filter?.let { parameter("filter", it) }
             sort?.let { parameter("sort", it) }
             expand?.let { parameter("expand", it) }
             auth(token)
-        }.ensureSuccess().let { json.decodeFromString<PbListResponse<T>>(it.bodyAsText()) }
+        }.ensureSuccess().body()
     }
 
     // ---------- یک رکورد ----------
@@ -93,10 +86,10 @@ class PocketBaseClient(
         collection: String, id: String, expand: String? = null,
     ): Result<T> = runCatching {
         val token = currentToken()
-        client.get("$BASE_URL/api/collections/$collection/records/$id") {
+        client.get("$baseUrl/api/collections/$collection/records/$id") {
             expand?.let { parameter("expand", it) }
             auth(token)
-        }.ensureSuccess().let { json.decodeFromString<T>(it.bodyAsText()) }
+        }.ensureSuccess().body()
     }
 
     // ---------- ساخت ----------
@@ -104,11 +97,11 @@ class PocketBaseClient(
         collection: String, body: JsonObject,
     ): Result<T> = runCatching {
         val token = currentToken()
-        client.post("$BASE_URL/api/collections/$collection/records") {
+        client.post("$baseUrl/api/collections/$collection/records") {
             contentType(ContentType.Application.Json)
-            setBody(body.toString())
+            setBody(body)
             auth(token)
-        }.ensureSuccess().let { json.decodeFromString<T>(it.bodyAsText()) }
+        }.ensureSuccess().body()
     }
 
     // ---------- آپدیت ----------
@@ -116,17 +109,17 @@ class PocketBaseClient(
         collection: String, id: String, body: JsonObject,
     ): Result<T> = runCatching {
         val token = currentToken()
-        client.patch("$BASE_URL/api/collections/$collection/records/$id") {
+        client.patch("$baseUrl/api/collections/$collection/records/$id") {
             contentType(ContentType.Application.Json)
-            setBody(body.toString())
+            setBody(body)
             auth(token)
-        }.ensureSuccess().let { json.decodeFromString<T>(it.bodyAsText()) }
+        }.ensureSuccess().body()
     }
 
     // ---------- حذف ----------
     suspend fun delete(collection: String, id: String): Result<Unit> = runCatching {
         val token = currentToken()
-        client.delete("$BASE_URL/api/collections/$collection/records/$id") { auth(token) }
+        client.delete("$baseUrl/api/collections/$collection/records/$id") { auth(token) }
             .ensureSuccess()
         Unit
     }
@@ -134,12 +127,12 @@ class PocketBaseClient(
     // ---------- ورود ----------
     suspend fun authWithPassword(identity: String, password: String): Result<PbAuthResponse> =
         runCatching {
-            client.post("$BASE_URL/api/collections/users/auth-with-password") {
+            client.post(loginUrl) {
                 contentType(ContentType.Application.Json)
                 setBody(buildJsonObject {
                     put("identity", identity)
                     put("password", password)
-                }.toString())
-            }.ensureSuccess().let { json.decodeFromString<PbAuthResponse>(it.bodyAsText()) }
+                })
+            }.ensureSuccess().body()
         }
 }
