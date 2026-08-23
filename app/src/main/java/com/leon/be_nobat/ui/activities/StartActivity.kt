@@ -13,7 +13,7 @@ import org.koin.android.ext.android.inject
 class StartActivity : AppCompatActivity() {
     private val tokenManager: TokenManager by inject()
 
-    //    val DEFAULT_LANGUAGE_TAG = "fa"
+    val DEFAULT_LANGUAGE_TAG = "fa"
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
