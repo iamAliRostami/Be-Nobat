@@ -3,12 +3,27 @@ package com.leon.be_nobat.ui.activities
 import android.content.Intent
 import android.view.View
 import android.widget.ImageButton
+import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputLayout
 import com.leon.be_nobat.R
+import com.leon.be_nobat.domain.model.AuthException
 import com.leon.be_nobat.helpers.BaseActivity
+import com.leon.be_nobat.ui.view_models.auth.AuthViewModel
+import com.leon.be_nobat.ui.view_models.auth.LoginUiState
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
     override val layoutResourceId: Int = R.layout.activity_login
+    private val authViewModel: AuthViewModel by viewModel()
+
+    private val identityInput by lazy { findViewById<TextInputLayout>(R.id.tilIdentity) }
+    private val passwordInput by lazy { findViewById<TextInputLayout>(R.id.tilPassword) }
+    private val loginButton by lazy { findViewById<MaterialButton>(R.id.btnLogin) }
 
     override fun setupViews() {
         setToolbarTitle(true)
@@ -18,6 +33,11 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                authViewModel.loginState.collect { renderLoginState(it) }
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -27,7 +47,40 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         } else if (id == R.id.btnGuest) {
             startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
         } else if (id == R.id.btnLogin) {
-            startActivity(Intent(this@LoginActivity, ExampleActivity::class.java))
+            clearInputErrors()
+            authViewModel.login(
+                identityInput.editText?.text?.toString().orEmpty(),
+                passwordInput.editText?.text?.toString().orEmpty(),
+            )
         }
+    }
+
+    private fun renderLoginState(state: LoginUiState) {
+        loginButton.isEnabled = state !is LoginUiState.Loading
+        loginButton.text = if (state is LoginUiState.Loading) {
+            getString(R.string.logging_in)
+        } else {
+            getString(R.string.login)
+        }
+        when (state) {
+            is LoginUiState.Error -> {
+                val message = state.error.message ?: getString(R.string.unexpected_error)
+                when (state.error) {
+                    AuthException.InvalidIdentifier -> identityInput.error = message
+                    AuthException.EmptyPassword -> passwordInput.error = message
+                    else -> Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                }
+            }
+            is LoginUiState.Success -> {
+                startActivity(Intent(this, HomeActivity::class.java))
+                finish()
+            }
+            LoginUiState.Idle, LoginUiState.Loading -> Unit
+        }
+    }
+
+    private fun clearInputErrors() {
+        identityInput.error = null
+        passwordInput.error = null
     }
 }

@@ -1,23 +1,39 @@
 package com.leon.be_nobat.data.repository
 
 import com.leon.be_nobat.data.local.TokenManager
+import com.leon.be_nobat.data.remote.PocketBaseClient
+import com.leon.be_nobat.data.remote.PocketBaseException
+import com.leon.be_nobat.domain.model.AuthException
 import com.leon.be_nobat.domain.model.User
 import com.leon.be_nobat.domain.repository.AuthRepository
-import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpRequestTimeoutException
+import java.io.IOException
 
 class AuthRepositoryImpl(
-    private val client: HttpClient,
-    private val prefs: TokenManager
+    private val remoteDataSource: PocketBaseClient,
+    private val tokenManager: TokenManager,
 ) : AuthRepository {
 
-    override suspend fun loginWithEmail(email: String, pass: String): Result<User> {
-        return try {
-            // در اینجا می‌توانید از PocketBase یا Ktor Client استفاده کنید.
-            // به عنوان نمونه یک کاربر فرضی بازگردانده می‌شود:
-            val user = User(id = "1", name = "توسعه‌دهنده", email = email)
-            Result.success(user)
-        } catch (e: Exception) {
-            Result.failure(e)
+    override suspend fun login(identity: String, password: String): Result<User> {
+        return remoteDataSource.authWithPassword(identity, password)
+            .mapCatching { session ->
+                tokenManager.save(session.token)
+                session.record
+            }
+            .recoverCatching { throw it.toAuthException() }
+    }
+
+    private fun Throwable.toAuthException(): AuthException = when (this) {
+        is AuthException -> this
+        is HttpRequestTimeoutException -> AuthException.RequestTimedOut
+        is IOException -> AuthException.NetworkUnavailable
+        is PocketBaseException -> when (statusCode) {
+            400, 401, 403, 404 -> AuthException.InvalidCredentials
+            408 -> AuthException.RequestTimedOut
+            429 -> AuthException.TooManyRequests
+            in 500..599 -> AuthException.ServiceUnavailable
+            else -> AuthException.Unexpected
         }
+        else -> AuthException.Unexpected
     }
 }

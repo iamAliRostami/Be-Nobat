@@ -3,7 +3,6 @@ package com.leon.be_nobat.helpers
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.leon.be_nobat.data.local.ThemeManager
-import com.leon.be_nobat.di.module.appModule
 import com.leon.be_nobat.di.module.localStorageModule
 import com.leon.be_nobat.di.module.networkModule
 import com.leon.be_nobat.di.module.repositoryModule
@@ -25,7 +24,6 @@ class App : Application() {
             androidContext(this@App)
             modules(
                 listOf(
-                    appModule,
                     localStorageModule,
                     repositoryModule,
                     viewModelModule,

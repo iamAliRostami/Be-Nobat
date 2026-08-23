@@ -24,6 +24,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         signingConfig = signingConfigs.getByName("release")
+        buildConfigField("String", "POCKET_BASE_URL", "\"http://10.0.2.2:8090\"")
+        buildConfigField("String", "AUTH_LOGIN_PATH", "\"/api/collections/users/auth-with-password\"")
     }
 
     flavorDimensions += "person"
@@ -60,6 +62,7 @@ android {
     }
     buildTypes {
         release {
+            buildConfigField("String", "POCKET_BASE_URL", "\"https://api.example.com\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
