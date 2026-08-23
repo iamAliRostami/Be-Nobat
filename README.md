@@ -35,7 +35,8 @@ an Android SDK compatible with the configured compile SDK.
 
 Open the login screen and tap the language button at the top. Select English, فارسی, or العربية.
 The selected application locale is managed by AppCompat and remains active when activities are
-recreated.
+recreated. Persian is selected automatically on first launch; an existing user selection is never
+overwritten.
 
 ## Code documentation
 
