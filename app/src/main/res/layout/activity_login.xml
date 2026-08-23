@@ -16,10 +16,9 @@
         android:contentDescription="@string/switch_theme"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_switch_theme"
-        app:layout_constraintBottom_toTopOf="@id/tvLogo"
         app:layout_constraintStart_toStartOf="@id/tilIdentity"
         app:layout_constraintTop_toTopOf="parent" />
-
+    <!--    app:layout_constraintBottom_toTopOf="@id/tvLogo"-->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLanguage"
         style="@style/Widget.BeNobat.Button.Outlined"
@@ -152,6 +151,6 @@
         android:text="@string/ask_for_account"
         android:textColor="?attr/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="@id/tvRegister"
-        app:layout_constraintLeft_toRightOf="@id/tvRegister"
+        app:layout_constraintEnd_toStartOf="@id/tvRegister"
         app:layout_constraintTop_toTopOf="@id/tvRegister" />
 </androidx.constraintlayout.widget.ConstraintLayout>

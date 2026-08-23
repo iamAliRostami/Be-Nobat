@@ -62,7 +62,7 @@ android {
     }
     buildTypes {
         release {
-            buildConfigField("String", "POCKET_BASE_URL", "\"https://api.example.com\"")
+//            buildConfigField("String", "POCKET_BASE_URL", "\"https://api.example.com\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

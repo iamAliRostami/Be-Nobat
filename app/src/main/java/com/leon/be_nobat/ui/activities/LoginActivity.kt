@@ -48,7 +48,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         if (id == R.id.btnThemeToggle) {
             setupThemeToggle()
         } else if (id == R.id.btnLanguage) {
-            v?.let(::showLanguageMenu)
+            v.let(::showLanguageMenu)
         } else if (id == R.id.btnGuest) {
             startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
         } else if (id == R.id.btnLogin) {
