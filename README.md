@@ -37,4 +37,8 @@ Open the login screen and tap the language button at the top. Select English, ف
 The selected application locale is managed by AppCompat and remains active when activities are
 recreated.
 
-For detailed network and logging notes, see [docs/README.md](docs/README.md).
+## Code documentation
+
+The bilingual [code documentation](docs/CODE_DOCUMENTATION.md) explains every production class and
+explicit function in English and Persian. It must be updated in the same commit as future code
+changes. For focused network and logging notes, see [docs/README.md](docs/README.md).
