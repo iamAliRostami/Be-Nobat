@@ -17,6 +17,11 @@ import org.koin.core.context.startKoin
 const val PREFERENCES_NAME = "setting_prefs"
 
 class App : Application() {
+    companion object {
+        const val TAG = "BeNobat"
+        const val API_TAG = "BeNobat.Api"
+    }
+
     override fun onCreate() {
         super.onCreate()
         startKoin {

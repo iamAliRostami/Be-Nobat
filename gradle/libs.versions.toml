@@ -13,6 +13,7 @@ constraintlayout = "2.2.1"
 pocketbaseKotlinVersion = "2.7.4"
 ktorClientAndroid = "3.5.1"
 ktorClientContentNegotiation = "3.5.1"
+ktorClientLogging = "3.5.1"
 securityCrypto = "1.1.0"
 #playServicesAuth = "21.6.0"
 kotlinxSerializationJson = "1.11.0"
@@ -36,6 +37,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 agrevster-pocketbase-kotlin = { group = "io.github.agrevster", name = "pocketbase-kotlin", version.ref = "pocketbaseKotlinVersion" }
 ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktorClientAndroid" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktorClientContentNegotiation" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorClientLogging" }
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }
 #play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "playServicesAuth" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }

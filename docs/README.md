@@ -22,3 +22,10 @@ base URL `https://api.example.com`, which must be replaced before shipping.
 Login accepts an email address or an Iranian mobile number. Supported mobile formats are normalized
 to `+98` before being sent as PocketBase's `identity`. Authentication, rate-limit, timeout, server,
 and network failures are translated to safe user-facing errors instead of exposing API responses.
+
+## Logging
+
+Use `App.TAG` for general application logs and `App.API_TAG` for network logs. Debug builds log the
+method and URL of PocketBase requests plus response status information through Ktor's logging
+plugin. API logging is disabled in release builds, request bodies are not logged, and authorization
+headers are sanitized to avoid leaking credentials or personal data.
