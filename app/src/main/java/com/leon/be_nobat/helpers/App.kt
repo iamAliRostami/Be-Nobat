@@ -2,6 +2,7 @@ package com.leon.be_nobat.helpers
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import com.leon.be_nobat.data.local.ThemeManager
 import com.leon.be_nobat.di.module.localStorageModule
 import com.leon.be_nobat.di.module.networkModule
@@ -20,10 +21,16 @@ class App : Application() {
     companion object {
         const val TAG = "BeNobat"
         const val API_TAG = "BeNobat.Api"
+        const val DEFAULT_LANGUAGE_TAG = "fa"
     }
 
     override fun onCreate() {
         super.onCreate()
+        if (AppCompatDelegate.getApplicationLocales().isEmpty) {
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(DEFAULT_LANGUAGE_TAG)
+            )
+        }
         startKoin {
             androidLogger()
             androidContext(this@App)

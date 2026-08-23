@@ -37,12 +37,13 @@ LoginActivity
 
 #### `App`
 
-Android `Application` entry point. It exposes `TAG` and `API_TAG`, starts Koin with all modules,
-loads the saved theme from `ThemeManager`, and applies it before normal UI usage.
+Android `Application` entry point. It exposes logging tags and `DEFAULT_LANGUAGE_TAG`, applies
+Persian only when no application locale has been selected, starts Koin with all modules, loads the
+saved theme from `ThemeManager`, and applies it before normal UI usage.
 
 | Function | Responsibility |
 |---|---|
-| `onCreate()` | Starts Koin, registers Android context/modules, reads the persisted theme, and applies the night mode. |
+| `onCreate()` | Selects Persian on first launch without overwriting a saved locale, starts Koin, reads the persisted theme, and applies night mode. |
 
 #### `BaseActivity`
 
@@ -256,12 +257,12 @@ LoginActivity
 
 #### `App`
 
-نقطه شروع Application اندروید است؛ Tagهای عمومی و API را ارائه می‌کند، Koin را راه‌اندازی می‌کند و
-تم ذخیره‌شده را پیش از استفاده عادی رابط کاربری اعمال می‌کند.
+نقطه شروع Application اندروید است؛ Tagهای لاگ و `DEFAULT_LANGUAGE_TAG` را ارائه می‌کند، فقط در نبود
+زبان انتخاب‌شده فارسی را اعمال می‌کند، Koin را راه‌اندازی می‌کند و تم ذخیره‌شده را بارگذاری می‌کند.
 
 | تابع | عملکرد |
 |---|---|
-| `onCreate()` | Koin و ماژول‌ها را راه‌اندازی، تم ذخیره‌شده را خوانده و حالت شب را اعمال می‌کند. |
+| `onCreate()` | بدون بازنویسی زبان ذخیره‌شده، در اولین اجرا فارسی را انتخاب و سپس Koin و تم را راه‌اندازی می‌کند. |
 
 #### `BaseActivity`
 
@@ -412,3 +413,4 @@ LoginActivity
 | Commit/change | English | فارسی |
 |---|---|---|
 | Initial documentation | Added bilingual architecture, class, function, model, API, UI, localization, security, and maintenance documentation. | مستند دوزبانه معماری، کلاس‌ها، توابع، مدل‌ها، API، رابط، چندزبانه‌سازی، امنیت و قانون نگهداری اضافه شد. |
+| Persian default locale | Documented first-launch Persian selection and preservation of the user's saved locale. | انتخاب فارسی در اولین اجرا و حفظ زبان ذخیره‌شده کاربر مستند شد. |
