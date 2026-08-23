@@ -30,9 +30,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     override fun setupViews() {
         setToolbarTitle(true)
         findViewById<ImageButton>(R.id.btnThemeToggle).setOnClickListener(this)
-        findViewById<MaterialButton>(R.id.btnGuest).setOnClickListener(this)
-        findViewById<MaterialButton>(R.id.btnLogin).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnLanguage).setOnClickListener(this)
+        findViewById<MaterialButton>(R.id.btnGuest).setOnClickListener(this)
+        loginButton.setOnClickListener(this)
     }
 
     override fun observeViewModel() {
@@ -44,19 +44,26 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        val id = v?.id
-        if (id == R.id.btnThemeToggle) {
-            setupThemeToggle()
-        } else if (id == R.id.btnLanguage) {
-            v.let(::showLanguageMenu)
-        } else if (id == R.id.btnGuest) {
-            startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-        } else if (id == R.id.btnLogin) {
-            clearInputErrors()
-            authViewModel.login(
-                identityInput.editText?.text?.toString().orEmpty(),
-                passwordInput.editText?.text?.toString().orEmpty(),
-            )
+        when (v?.id) {
+            R.id.btnThemeToggle -> {
+                setupThemeToggle()
+            }
+
+            R.id.btnLanguage -> {
+                v.let(::showLanguageMenu)
+            }
+
+            R.id.btnGuest -> {
+                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
+            }
+
+            R.id.btnLogin -> {
+                clearInputErrors()
+                authViewModel.login(
+                    identityInput.editText?.text?.toString().orEmpty(),
+                    passwordInput.editText?.text?.toString().orEmpty(),
+                )
+            }
         }
     }
 
@@ -76,10 +83,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     else -> Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
             }
+
             is LoginUiState.Success -> {
                 startActivity(Intent(this, HomeActivity::class.java))
                 finish()
             }
+
             LoginUiState.Idle, LoginUiState.Loading -> Unit
         }
     }
