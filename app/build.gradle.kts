@@ -21,7 +21,6 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         signingConfig = signingConfigs.getByName("release")
         buildConfigField("String", "POCKET_BASE_URL", "\"http://10.0.2.2:8090\"")
