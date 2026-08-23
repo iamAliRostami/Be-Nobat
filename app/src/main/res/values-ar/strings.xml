@@ -7,7 +7,7 @@
     <string name="login">تسجيل الدخول</string>
     <string name="logging_in">جارٍ تسجيل الدخول…</string>
     <string name="unexpected_error">حدث خطأ غير متوقع</string>
-    <string name="quest_login">المتابعة كضيف</string>
+    <string name="guest_login">المتابعة كضيف</string>
     <string name="ask_for_account">ليس لديك حساب؟</string>
     <string name="sign_up">إنشاء حساب</string>
     <string name="password">كلمة المرور</string>

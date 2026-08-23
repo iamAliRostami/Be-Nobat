@@ -7,7 +7,7 @@
     <string name="login">Sign in</string>
     <string name="logging_in">Signing in…</string>
     <string name="unexpected_error">An unexpected error occurred</string>
-    <string name="quest_login">Continue as guest</string>
+    <string name="guest_login">Continue as guest</string>
     <string name="ask_for_account">Don’t have an account?</string>
     <string name="sign_up">Create one</string>
     <string name="password">Password</string>
