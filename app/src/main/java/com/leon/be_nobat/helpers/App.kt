@@ -2,7 +2,6 @@ package com.leon.be_nobat.helpers
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import com.leon.be_nobat.data.local.ThemeManager
 import com.leon.be_nobat.di.module.localStorageModule
 import com.leon.be_nobat.di.module.networkModule
@@ -41,12 +40,6 @@ class App : Application() {
         runBlocking {
             val savedTheme = preferences.themeMode.first()
             AppCompatDelegate.setDefaultNightMode(savedTheme)
-
-            if (AppCompatDelegate.getApplicationLocales().isEmpty) {
-                AppCompatDelegate.setApplicationLocales(
-                    LocaleListCompat.forLanguageTags("fa")
-                )
-            }
         }
     }
 }
