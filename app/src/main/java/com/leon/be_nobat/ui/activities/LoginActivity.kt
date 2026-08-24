@@ -4,8 +4,6 @@ import android.content.Intent
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -96,20 +94,6 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private fun clearInputErrors() {
         identityInput.error = null
         passwordInput.error = null
-    }
-
-    private fun showLanguageMenu(anchor: View) {
-        showPopupMenu(anchor, R.menu.language_menu) { menuItemId ->
-            val languageTag = when (menuItemId) {
-                R.id.language_persian -> "fa"
-                R.id.language_arabic -> "ar"
-                R.id.language_english -> "en"
-                else -> return@showPopupMenu
-            }
-            AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.forLanguageTags(languageTag)
-            )
-        }
     }
 
     private fun Throwable.messageResource(): Int = when (this) {

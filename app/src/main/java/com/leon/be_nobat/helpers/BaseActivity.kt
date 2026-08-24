@@ -11,6 +11,8 @@ import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
@@ -87,7 +89,19 @@ abstract class BaseActivity : AppCompatActivity() {
             resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         viewModel.toggleTheme(isNight)
     }
-
+    fun showLanguageMenu(anchor: View) {
+        showPopupMenu(anchor, R.menu.language_menu) { menuItemId ->
+            val languageTag = when (menuItemId) {
+                R.id.language_persian -> "fa"
+                R.id.language_arabic -> "ar"
+                R.id.language_english -> "en"
+                else -> return@showPopupMenu
+            }
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(languageTag)
+            )
+        }
+    }
     private fun hideToolbar() {
         toolbar.visibility = View.GONE
     }
