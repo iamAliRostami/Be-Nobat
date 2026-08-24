@@ -52,11 +52,6 @@ abstract class BaseActivity : AppCompatActivity() {
         observeViewModel()
     }
 
-    private fun setupBaseToolbar() {
-        toolbar.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
-        }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (isMenuVisible) {
@@ -104,9 +99,6 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun hideToolbar() {
-        toolbar.visibility = View.GONE
-    }
 
     protected abstract fun setupViews()
     protected abstract fun observeViewModel()
@@ -145,5 +137,15 @@ abstract class BaseActivity : AppCompatActivity() {
             hideToolbar()
         else
             setupBaseToolbar()
+    }
+
+    private fun setupBaseToolbar() {
+        toolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun hideToolbar() {
+        toolbar.visibility = View.GONE
     }
 }
