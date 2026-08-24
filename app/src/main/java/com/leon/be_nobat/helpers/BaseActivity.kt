@@ -84,12 +84,13 @@ abstract class BaseActivity : AppCompatActivity() {
         return true
     }
 
-    fun setupThemeToggle() {
+    protected fun setupThemeToggle() {
         val isNight =
             resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         viewModel.toggleTheme(isNight)
     }
-    fun showLanguageMenu(anchor: View) {
+
+    protected fun showLanguageMenu(anchor: View) {
         showPopupMenu(anchor, R.menu.language_menu) { menuItemId ->
             val languageTag = when (menuItemId) {
                 R.id.language_persian -> "fa"
@@ -102,6 +103,7 @@ abstract class BaseActivity : AppCompatActivity() {
             )
         }
     }
+
     private fun hideToolbar() {
         toolbar.visibility = View.GONE
     }
