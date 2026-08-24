@@ -1,6 +1,7 @@
 package com.leon.be_nobat.ui.view_models.base
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.leon.be_nobat.data.local.ThemeManager
@@ -17,6 +18,14 @@ class MainViewModel(private val themeManager: ThemeManager) : ViewModel() {
             }
             themeManager.save(nextMode)
             AppCompatDelegate.setDefaultNightMode(nextMode)
+        }
+    }
+
+    fun switchLanguage(languageTag: String) {
+        viewModelScope.launch {
+            AppCompatDelegate.setApplicationLocales(
+                LocaleListCompat.forLanguageTags(languageTag)
+            )
         }
     }
 }

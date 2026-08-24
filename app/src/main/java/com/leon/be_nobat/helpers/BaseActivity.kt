@@ -11,8 +11,6 @@ import android.widget.PopupMenu
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.LocaleListCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.appbar.MaterialToolbar
@@ -93,9 +91,10 @@ abstract class BaseActivity : AppCompatActivity() {
                 R.id.language_english -> "en"
                 else -> return@showPopupMenu
             }
-            AppCompatDelegate.setApplicationLocales(
+            viewModel.switchLanguage(languageTag)
+            /*AppCompatDelegate.setApplicationLocales(
                 LocaleListCompat.forLanguageTags(languageTag)
-            )
+            )*/
         }
     }
 
