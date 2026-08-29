@@ -17,7 +17,7 @@ class AuthRepositoryImpl(
     override suspend fun login(identity: String, password: String): Result<User> {
         return remoteDataSource.authWithPassword(identity, password)
             .mapCatching { session ->
-                tokenManager.save(session.token)
+                tokenManager.save(session.token, session.record)
                 session.record
             }
             .recoverCatching { throw it.toAuthException() }

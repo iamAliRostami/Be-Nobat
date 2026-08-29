@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
 import com.leon.be_nobat.BuildConfig
+import com.leon.be_nobat.data.local.CryptoManager
 import com.leon.be_nobat.data.local.ThemeManager
 import com.leon.be_nobat.data.local.TokenManager
 import com.leon.be_nobat.data.remote.PocketBaseClient
 import com.leon.be_nobat.data.remote.PocketBaseConfig
 import com.leon.be_nobat.data.repository.AuthRepositoryImpl
+import com.leon.be_nobat.domain.interfaces.ICryptoManager
 import com.leon.be_nobat.domain.repository.AuthRepository
 import com.leon.be_nobat.domain.usecase.LoginUseCase
 import com.leon.be_nobat.helpers.App
@@ -35,7 +37,8 @@ val localStorageModule = module {
             produceFile = { androidContext().preferencesDataStoreFile(PREFERENCES_NAME) }
         )
     }
-    single { TokenManager(get()) }
+    single<ICryptoManager> { CryptoManager }
+    single { TokenManager(get(), get(), get()) }
     single { ThemeManager(get()) }
 }
 val repositoryModule = module {

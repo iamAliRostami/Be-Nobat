@@ -14,10 +14,11 @@ object CryptoManager: ICryptoManager {
     private const val KEY_ALIAS = "my_token_key"
 
     private const val ALGORITHM = KeyProperties.KEY_ALGORITHM_AES
-    private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_CBC
-    private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
+    private const val BLOCK_MODE = KeyProperties.BLOCK_MODE_GCM
+    private const val PADDING = KeyProperties.ENCRYPTION_PADDING_NONE
     private const val TRANSFORMATION = "$ALGORITHM/$BLOCK_MODE/$PADDING"
     private const val ANDROID_KEY_STORE = "AndroidKeyStore"
+    private const val GCM_IV_SIZE_BYTES = 12
 
     private fun getKey(): SecretKey {
         val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE).apply { load(null) }
@@ -53,9 +54,10 @@ object CryptoManager: ICryptoManager {
 
     override fun decrypt(encryptedData: String): String {
         val data = Base64.decode(encryptedData, Base64.DEFAULT)
-        val iv = data.sliceArray(0 until 12)
-        val encrypted = data.sliceArray(12 until data.size)
         val cipher = Cipher.getInstance(TRANSFORMATION)
+        require(data.size > GCM_IV_SIZE_BYTES) { "Invalid encrypted value" }
+        val iv = data.sliceArray(0 until GCM_IV_SIZE_BYTES)
+        val encrypted = data.sliceArray(GCM_IV_SIZE_BYTES until data.size)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), GCMParameterSpec(128, iv))
         return String(cipher.doFinal(encrypted))
     }
