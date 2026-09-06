@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#146B5D</color>
     <color name="colorOnPrimary">#FFFFFF</color>
-    <color name="colorSecondary">#F2B84B</color>
+    <color name="colorSecondary">#8EB69B</color>
     <color name="colorOnSecondary">#302400</color>
     <color name="windowBackground">#F5F8F7</color>
     <color name="colorSurface">#FFFFFF</color>
