@@ -9,8 +9,14 @@
 This document describes the responsibility of every current production class and its explicit
 functions under `app/src/main/java`. Compiler-generated data-class functions are not listed.
 
+The login presentation is a responsive, scroll-safe Material card with localized RTL/LTR copy,
+keyboard submission, accessible theme/language controls, and the custom Be Nobat BN monogram.
+
 این سند مسئولیت تمام کلاس‌های فعلی کد اصلی و توابع صریح آن‌ها در مسیر `app/src/main/java` را شرح
 می‌دهد. توابعی که Kotlin به‌صورت خودکار برای data classها تولید می‌کند فهرست نشده‌اند.
+
+نمای ورود یک کارت متریال واکنش‌گرا و قابل اسکرول با متن بومی‌سازی‌شده راست‌به‌چپ/چپ‌به‌راست،
+ارسال از صفحه‌کلید، کنترل‌های دسترس‌پذیر پوسته و زبان، و مونوگرام اختصاصی BN «به نوبت» است.
 
 ---
 

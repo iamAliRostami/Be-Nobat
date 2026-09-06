@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Be Nobat</string>
     <string name="welcome_message">Welcome! Sign in to book an appointment</string>
+    <string name="login_title">Sign in to your account</string>
+    <string name="logo_content_description">Be Nobat logo</string>
     <string name="mobile_phone">Mobile number</string>
     <string name="email_or_mobile">Email or mobile number</string>
     <string name="login">Sign in</string>
