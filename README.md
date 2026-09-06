@@ -13,6 +13,7 @@ PocketBase authentication flow that accepts an email address or Iranian mobile n
 - Secure local token storage
 - English, Persian, and Arabic resources with automatic LTR/RTL layout direction
 - In-app language selector on the login screen
+- Refined, keyboard-friendly Material login experience with a custom BN monogram and launcher icon
 - Safe, debug-only API request logging
 
 ## Development API

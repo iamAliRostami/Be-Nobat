@@ -2,12 +2,14 @@ package com.leon.be_nobat.ui.activities
 
 import android.content.Intent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.leon.be_nobat.R
 import com.leon.be_nobat.domain.model.AuthException
@@ -31,6 +33,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         findViewById<MaterialButton>(R.id.btnLanguage).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnGuest).setOnClickListener(this)
         loginButton.setOnClickListener(this)
+        findViewById<TextInputEditText>(R.id.etPassword).setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                submitLogin()
+                true
+            } else false
+        }
     }
 
     override fun observeViewModel() {
@@ -56,13 +64,17 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             }
 
             R.id.btnLogin -> {
-                clearInputErrors()
-                authViewModel.login(
-                    identityInput.editText?.text?.toString().orEmpty(),
-                    passwordInput.editText?.text?.toString().orEmpty(),
-                )
+                submitLogin()
             }
         }
+    }
+
+    private fun submitLogin() {
+        clearInputErrors()
+        authViewModel.login(
+            identityInput.editText?.text?.toString().orEmpty(),
+            passwordInput.editText?.text?.toString().orEmpty(),
+        )
     }
 
     private fun renderLoginState(state: LoginUiState) {
