@@ -3,6 +3,7 @@ package com.leon.be_nobat.ui.activities
 import android.content.Intent
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,7 +29,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
     override fun setupViews() {
         setToolbarTitle(true)
-        findViewById<MaterialButton>(R.id.btnThemeToggle).setOnClickListener(this)
+        findViewById<ImageButton>(R.id.btnThemeToggle).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnLanguage).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnGuest).setOnClickListener(this)
         loginButton.setOnClickListener(this)
