@@ -1,108 +1,61 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.serialization)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
 }
-
+val productionApiUrl = providers.environmentVariable("BENOBAT_API_BASE_URL").orNull?.trimEnd('/')
+require(productionApiUrl == null || productionApiUrl.startsWith("https://")) {
+    "BENOBAT_API_BASE_URL must use HTTPS."
+}
 android {
     namespace = "com.leon.be_nobat"
-    compileSdk = 37
-
-    signingConfigs{
-        create("release") {
-            keyAlias = "ali_angel"
-            keyPassword = "kaka019930"
-            storeFile = file("D:/keys/MyFourthKey.jks")
-            storePassword = "kaka019930"
-        }
-    }
+    compileSdk = 35
     defaultConfig {
         applicationId = "com.leon.be_nobat"
-        minSdk = 24
-        targetSdk = 37
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 26
+        targetSdk = 35
+        versionCode = 2
+        versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig = signingConfigs.getByName("release")
-        buildConfigField("String", "POCKET_BASE_URL", "\"http://10.0.2.2:8090\"")
-        buildConfigField("String", "AUTH_LOGIN_PATH", "\"/api/collections/users/auth-with-password\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080/\"")
     }
-
-    flavorDimensions += "person"
-    productFlavors {
-        create("user") {
-            dimension = "person"
+    val signingPath = providers.environmentVariable("BENOBAT_KEYSTORE_PATH").orNull
+    if (signingPath != null) {
+        signingConfigs.create("release") {
+            storeFile = file(signingPath)
+            storePassword = providers.environmentVariable("BENOBAT_KEYSTORE_PASSWORD").get()
+            keyAlias = providers.environmentVariable("BENOBAT_KEY_ALIAS").get()
+            keyPassword = providers.environmentVariable("BENOBAT_KEY_PASSWORD").get()
         }
-        create("admin") {
-            dimension = "person"
-            applicationIdSuffix = ".admin"
-        }
-    }
-    sourceSets {
-        getByName("admin") {
-            res {
-                manifest.srcFile("src/admin/AndroidManifest.xml")
-                java.directories.add("src/admin/java")
-                resources.directories.add("src/admin/res")
-            }
-        }
-        getByName("user") {
-            res {
-                manifest.srcFile("src/user/AndroidManifest.xml")
-                java.directories.add("src/user/java")
-                resources.directories.add("src/user/res")
-            }
-        }
-       /*getByName("main") {
-            res {
-                java.directories.add("src/main/java")
-                resources.directories.add("src/main/res")
-            }
-        }*/
     }
     buildTypes {
+        debug { isDebuggable = true }
         release {
-//            buildConfigField("String", "POCKET_BASE_URL", "\"https://api.example.com\"")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-            signingConfig = signingConfigs.getByName("release")
-            isDebuggable = true
+            buildConfigField("String", "API_BASE_URL", "\"${productionApiUrl ?: ""}\"")
+            isDebuggable = false
+            isMinifyEnabled = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            if (signingPath != null) signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    buildFeatures {
-        viewBinding = true
-        buildConfig = true
-    }
+    kotlinOptions { jvmTarget = "17" }
+    buildFeatures { viewBinding = true; buildConfig = true }
 }
-
 dependencies {
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-
-    // PocketBase & Networking
-    implementation(libs.agrevster.pocketbase.kotlin)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.logging)
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.ktor.client.auth)
-    implementation(libs.androidx.security.crypto)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.koin.android)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 }
