@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="team">اعضای تیم</string>
+    <string name="customers">مشتریان</string>
+    <string name="appointment_history">سوابق نوبت‌های مشتری</string>
+    <string name="all_reviews">مشاهده همهٔ نظرات</string>
+    <string name="review_appointments">ثبت نظر برای نوبت‌های من</string>
+    <string name="no_reviews">هنوز نظری منتشر نشده است</string>
+    <string name="unrated">بدون امتیاز</string>
+    <string name="pending_evaluations">مشتریان در انتظار ارزیابی</string>
+</resources>

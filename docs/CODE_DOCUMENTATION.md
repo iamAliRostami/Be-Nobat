@@ -420,3 +420,47 @@ LoginActivity
 |---|---|---|
 | Initial documentation | Added bilingual architecture, class, function, model, API, UI, localization, security, and maintenance documentation. | مستند دوزبانه معماری، کلاس‌ها، توابع، مدل‌ها، API، رابط، چندزبانه‌سازی، امنیت و قانون نگهداری اضافه شد. |
 | Persian default locale | Documented first-launch Persian selection and preservation of the user's saved locale. | انتخاب فارسی در اولین اجرا و حفظ زبان ذخیره‌شده کاربر مستند شد. |
+
+## ASP.NET client migration / مهاجرت کلاینت دات‌نت — 2026-10-12
+
+The active presentation was adapted from the native client in the server repository while retaining this project's Ktor transport and Koin dependency injection. Original models and login code remain as migration references; the launcher opens the full native customer and management application.
+
+- MainActivity: renders discovery, booking, appointments, account and settings; observes NativeState and sends operations through the ViewModel/use-case layer. open/load coordinate navigation and data loading; the render methods build localized Material views.
+- ManagementScreens: renders scoped administration lists, forms, assignments and calendar/status operations. Server authorization is authoritative; local capability flags only control presentation.
+- NativeViewModel: retains screen state, drafts and navigation stack; load cancels stale reads, action coordinates mutations, fail handles error codes and clears unauthorized sessions. saveSession/updateUser/clearSession update encrypted storage.
+- BookingUseCases: request forwards operations through the repository contract; all collects paginated options; avatar delegates bounded image retrieval.
+- BookingRepository / BookingRepositoryImpl: isolate domain callers from Ktor and delegate requests and image retrieval to the remote data source.
+- BeNobatApi: builds /api/v1 requests with encoded queries, current bearer tokens and JSON bodies; login/register omit old tokens. Non-success responses preserve status and stable server error codes. avatar rejects another origin and limits downloads to 2 MiB. Coroutine cancellation is preserved.
+- BookingModule: provides transport, repository, use cases, encrypted session and ViewModel through Koin. It uses the current configured server, prohibits redirects and sets bounded network timeouts.
+- SecureSession: read decrypts stored state (clearing unreadable state), save encrypts with Android Keystore AES-GCM, clear removes persisted credentials.
+- BookingRules: validates email, Iranian phone numbers, password policy, booking dates and server URLs; calculates exact decimal totals and exposes permitted status actions.
+- ApiJson: objects/strings/text read optional JSON fields without displaying JSON null as user text; ApiFailure carries a stable code and HTTP status.
+- StartActivity: preserves default Persian locale and splash screen, then opens MainActivity.
+
+رابط مشتری و مدیریت از موارد کاربرد، قرارداد مخزن و شبکهٔ Ktor عبور می‌کند. وابستگی‌ها با Koin تزریق می‌شوند و سرور مرجع اعتبارسنجی رزرو و مجوزهای مدیریت است. توکن‌های API جدید جدا از توکن قدیمی نگهداری می‌شوند. منابع تازه در native_strings.xml سه زبان اضافه شده‌اند تا متن و طراحی قبلی حفظ شود.
+
+Validation: .NET server baseline passed 306/306 tests against an isolated PostgreSQL database. HTTP suites passed 70 customer/management checks and 28 account checks. Android results must be read from the latest Gradle test/lint reports; server tests alone do not validate the Android UI.
+
+### Local validation — 2026-10-12
+
+- Server: 306 tests passed, none failed or skipped, using an isolated PostgreSQL 17 container on localhost:55432; health endpoint returned Healthy.
+- Live HTTP: 70 customer/management checks and 28 account checks passed. The account suite was run separately after the shared login rate-limit window expired.
+- Android Studio project: 23 JVM tests passed. Both userDebug and adminDebug APKs built. lintUserDebug completed with 0 errors and 38 warnings.
+- Windows-only test adaptation: TokenManagerTest uses explicit OkioStorage/PreferencesSerializer for atomic file replacement, and closes its coroutine scope. Application storage is unchanged.
+- Android instrumented tests and device results are recorded separately in the Android project's build/codex-device-tests.log.
+- No existing production database was used, migrated or reset.
+
+
+## Web parity update — 2026-10-12
+Added independent scoped Team and Customers screens with search, branch filtering, pagination and links to membership/platform user management. Customer history reads /admin/appointments?customerId=... across all dates. People endpoints remain read-only; no unsupported create/delete calls are offered.
+Added the full paginated public review screen with published dates, manager replies and a link to review eligible appointments. Management option lists now use BookingUseCases.all so records after the first 100 remain selectable. Missing ratings display a localized unrated label and sort below rated businesses.
+Booking date defaults and the 90-day date picker horizon now use the branch time zone, matching server validation.
+صفحهٔ اعضای تیم و مشتریان، سوابق کامل نوبت مشتری، همهٔ نظرات عمومی و گزینه‌های مدیریتی بیش از ۱۰۰ مورد اضافه شد. محدودهٔ تاریخ رزرو بر مبنای منطقهٔ زمانی شعبه اصلاح شد.
+
+Management now also exposes completed customer appointments awaiting evaluation, through /admin/customer-reviews/pending with paging and the existing private evaluation form.
+
+
+### Parity validation — 2026-10-12
+The updated client passed 24 JVM tests and 3 instrumented tests on the connected physical phone against the disposable .NET API. Instrumented coverage includes guest route protection, real sign-in, public reviews, scoped management lists, customer appointment history and pending customer evaluations. Both userDebug and adminDebug APKs built; lintUserDebug reported 0 errors and 35 warnings. Existing server results remain 306 tests plus 70 booking/management and 28 account HTTP checks; no server code was changed in this parity update.
+Build verification uses the isolated .gradle-user-codex cache with direct repository access; the local proxy timed out for Java. Dependency versions in the project were preserved.
+اعتبارسنجی این تغییرات: ۲۴ تست واحد و ۳ تست رابط روی گوشی واقعی موفق شدند. هر دو APK مشتری و مدیریت ساخته شدند؛ lint بدون خطا و با ۳۵ هشدار پایان یافت. این نتایج پوشش سناریوهای فوق را تأیید می‌کند و به معنی آزمون دستی همهٔ امکانات وب نیست.

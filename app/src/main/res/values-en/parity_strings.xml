@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="team">Team members</string>
+    <string name="customers">Customers</string>
+    <string name="appointment_history">Customer appointment history</string>
+    <string name="all_reviews">View all reviews</string>
+    <string name="review_appointments">Review my appointments</string>
+    <string name="no_reviews">No published reviews yet</string>
+    <string name="unrated">Not rated</string>
+    <string name="pending_evaluations">Customers awaiting evaluation</string>
+</resources>
