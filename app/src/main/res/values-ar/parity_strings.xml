@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="team">أعضاء الفريق</string>
+    <string name="customers">العملاء</string>
+    <string name="appointment_history">سجل مواعيد العميل</string>
+    <string name="all_reviews">عرض جميع التقييمات</string>
+    <string name="review_appointments">تقييم مواعيدي</string>
+    <string name="no_reviews">لا توجد تقييمات منشورة بعد</string>
+    <string name="unrated">بدون تقييم</string>
+    <string name="pending_evaluations">عملاء بانتظار التقييم</string>
+</resources>

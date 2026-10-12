@@ -7,8 +7,10 @@
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
+        <item name="colorOnSurfaceVariant">@color/colorOnSurfaceVariant</item>
+        <item name="colorOutline">@color/colorOutline</item>
 
-        <item name="android:statusBarColor">@color/colorOnSecondary</item>
+        <item name="android:statusBarColor">@color/windowBackground</item>
         <item name="android:windowLightStatusBar">true</item>
 
         <item name="materialButtonStyle">@style/Widget.BeNobat.Button</item>
@@ -26,7 +28,7 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/windowBackground</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_be_nobat</item>
         <item name="postSplashScreenTheme">@style/Theme.BeNobat</item>
     </style>
 </resources>

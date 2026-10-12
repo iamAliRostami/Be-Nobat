@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">بي نوبات</string>
     <string name="welcome_message">مرحباً! سجّل الدخول لحجز موعد</string>
+    <string name="login_title">تسجيل الدخول إلى حسابك</string>
+    <string name="logo_content_description">شعار بي نوبات</string>
     <string name="mobile_phone">رقم الهاتف</string>
     <string name="email_or_mobile">البريد الإلكتروني أو رقم الهاتف</string>
     <string name="login">تسجيل الدخول</string>

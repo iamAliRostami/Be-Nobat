@@ -2,6 +2,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fa">
     <string name="app_name">به نوبت</string>
     <string name="welcome_message">خوش آمدید! برای رزرو نوبت وارد شوید</string>
+    <string name="login_title">ورود به حساب</string>
+    <string name="logo_content_description">نشان به نوبت</string>
     <string name="mobile_phone">شماره موبایل</string>
     <string name="email_or_mobile">ایمیل یا شماره موبایل</string>
     <string name="login">ورود</string>

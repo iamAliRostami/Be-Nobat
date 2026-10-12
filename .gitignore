@@ -1,20 +1,25 @@
+# Android Studio and local machine settings
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+.idea/
 .DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
 local.properties
-/.idea
-/.idea/planningMode.xml
-/.idea/project.xml
 /planningMode.xml
 /project.xml
+
+# Gradle caches (including isolated verification caches) and generated outputs
+.gradle/
+.gradle-*/
+.kotlin/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Packages, diagnostics and private signing files
+*.apk
+*.aab
+*.apks
+*.hprof
+*.log
+*.jks
+*.keystore

@@ -12,6 +12,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
+import okio.Path.Companion.toPath
+import okio.FileSystem
+import androidx.datastore.core.okio.OkioStorage
+import androidx.datastore.preferences.core.PreferencesSerializer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 
 class TokenManagerTest {
     @get:Rule
@@ -19,9 +27,15 @@ class TokenManagerTest {
 
     @Test
     fun `save persists token and complete user and delete clears both`() = runBlocking {
+        val storageScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
         val dataStore = PreferenceDataStoreFactory.create(
-            produceFile = { File(temporaryFolder.root, "session.preferences_pb") },
+            scope = storageScope,
+            // Okio uses atomic replacement on Windows; Android FileStorage uses File.renameTo.
+            storage = OkioStorage(FileSystem.SYSTEM, PreferencesSerializer) {
+                File(temporaryFolder.root, "session.preferences_pb").absolutePath.toPath()
+            },
         )
+        try {
         val manager = TokenManager(dataStore, Json, FakeCryptoManager)
         val user = User(
             email = "user@example.com",
@@ -42,6 +56,7 @@ class TokenManagerTest {
 
         assertNull(manager.userToken.first())
         assertNull(manager.user.first())
+        } finally { storageScope.cancel() }
     }
 
     private object FakeCryptoManager : ICryptoManager {
