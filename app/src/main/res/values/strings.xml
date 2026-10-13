@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="fa">
+    <!-- ============ App basics ============ -->
     <string name="app_name">به نوبت</string>
+    <string name="logo_content_description">نشان به نوبت</string>
+
+    <!-- ============ Login / Auth ============ -->
     <string name="welcome_message">خوش آمدید! برای رزرو نوبت وارد شوید</string>
     <string name="login_title">ورود به حساب</string>
-    <string name="logo_content_description">نشان به نوبت</string>
     <string name="mobile_phone">شماره موبایل</string>
-    <string name="email_or_mobile">ایمیل یا شماره موبایل</string>
+    <string name="email_or_mobile">ایمیل (ورود با موبایل هنوز پشتیبانی نمی‌شود)</string>
+    <string name="email">ایمیل</string>
+    <string name="password">گذرواژه</string>
     <string name="login">ورود</string>
     <string name="logging_in">در حال ورود…</string>
-    <string name="unexpected_error">خطای غیرمنتظره‌ای رخ داد</string>
     <string name="guest_login">ورود به‌عنوان مهمان</string>
     <string name="ask_for_account">حساب کاربری ندارید؟</string>
     <string name="sign_up">ثبت‌نام کنید</string>
-    <string name="password">گذرواژه</string>
+    <string name="logout">خروج از حساب</string>
+
+    <!-- ============ Register ============ -->
+    <string name="register_title">ساخت حساب جدید</string>
+    <string name="display_name">نام نمایشی</string>
+    <string name="phone_number">شماره موبایل (۰۹xxxxxxxxx)</string>
+    <string name="register">ثبت‌نام</string>
+    <string name="registering">در حال ساخت حساب…</string>
+    <string name="already_have_account">حساب دارید؟</string>
+    <string name="back_to_login">بازگشت به ورود</string>
+
+    <!-- ============ Toolbar / Menu ============ -->
     <string name="search">جستجو</string>
     <string name="filter">فیلتر</string>
     <string name="sort">مرتب‌سازی</string>
@@ -24,15 +39,162 @@
     <string name="language_persian">فارسی</string>
     <string name="language_english">English</string>
     <string name="language_arabic">العربية</string>
-    <string name="orders_title">لیست سفارش‌ها</string>
-    <string name="home_message">به برنامه به نوبت خوش آمدید</string>
-    <string name="example_title">فعالیت نمونه</string>
-    <string name="example_message">این یک صفحه نمونه است</string>
-    <string name="error_invalid_identifier">ایمیل یا شماره موبایل معتبر وارد کنید</string>
+
+    <!-- ============ Bottom navigation ============ -->
+    <string name="nav_home">خانه</string>
+    <string name="nav_appointments">نوبت‌ها</string>
+    <string name="nav_favorites">علاقه‌مندی</string>
+    <string name="nav_profile">پروفایل</string>
+    <string name="nav_admin">پنل مدیریت</string>
+
+    <!-- ============ Admin drawer items ============ -->
+    <string name="admin_dashboard">داشبورد</string>
+    <string name="admin_calendar">تقویم نوبت‌ها</string>
+    <string name="admin_branches">شعب و منابع</string>
+    <string name="admin_services">خدمات</string>
+    <string name="admin_availability">ساعات کاری</string>
+    <string name="admin_reviews">نظرات</string>
+    <string name="admin_customers">مشتریان</string>
+    <string name="admin_team">اعضای تیم</string>
+    <string name="platform_businesses">کسب‌وکارها (پلتفرم)</string>
+    <string name="platform_catalog">کاتالوگ خدمات</string>
+    <string name="platform_categories">دسته‌بندی‌ها</string>
+    <string name="platform_access">کاربران و دسترسی</string>
+    <string name="admin_back_to_user_view">بازگشت به نمای مشتری</string>
+
+    <!-- ============ Home / business list ============ -->
+    <string name="home_message">کسب‌وکار مورد نظر را جستجو کنید</string>
+    <string name="home_search_hint">جستجوی کسب‌وکار، شهر، دسته‌بندی…</string>
+    <string name="no_businesses_yet">هنوز کسب‌وکاری یافت نشد. بعداً تلاش کنید.</string>
+    <string name="book_now">رزرو نوبت</string>
+    <string name="branch_count">شعب: %1$d</string>
+    <string name="service_count">خدمات: %1$d</string>
+    <string name="rating_value">امتیاز: %1$.1f</string>
+    <string name="review_count">نظر: %1$d</string>
+    <string name="requires_approval">نیازمند تأیید</string>
+
+    <!-- ============ Business detail ============ -->
+    <string name="branches_section">شعب</string>
+    <string name="services_section">خدمات</string>
+    <string name="reviews_section">نظرات</string>
+    <string name="add_to_favorites">افزودن به علاقه‌مندی</string>
+    <string name="remove_from_favorites">حذف از علاقه‌مندی</string>
+    <string name="duration_minutes">مدت: %1$d دقیقه</string>
+    <string name="price_label">قیمت: %1$s</string>
+
+    <!-- ============ Booking wizard ============ -->
+    <string name="booking_select_branch">۱. انتخاب شعبه</string>
+    <string name="booking_select_services">۲. انتخاب خدمات</string>
+    <string name="booking_select_provider">۳. انتخاب ارائه‌دهنده</string>
+    <string name="booking_select_date">۴. انتخاب تاریخ</string>
+    <string name="booking_select_slot">۵. انتخاب ساعت</string>
+    <string name="booking_confirm_info">۶. تأیید اطلاعات</string>
+    <string name="any_provider">هر ارائه‌دهنده‌ای</string>
+    <string name="phone_for_booking">شماره تماس برای این نوبت</string>
+    <string name="note_for_booking">یادداشت (اختیاری)</string>
+    <string name="accept_terms">با قوانین رزرو موافقم</string>
+    <string name="confirm_booking">تأیید و ثبت نوبت</string>
+    <string name="booking_in_progress">در حال ثبت نوبت…</string>
+    <string name="booking_success">نوبت شما با موفقیت ثبت شد</string>
+    <string name="booking_tracking_code">کد پیگیری: %1$s</string>
+    <string name="no_slots_available">برای این روز ساعتی آزاد نیست</string>
+
+    <!-- ============ Appointments ============ -->
+    <string name="orders_title">نوبت‌های من</string>
+    <string name="tab_upcoming">آینده</string>
+    <string name="tab_pending">در انتظار</string>
+    <string name="tab_confirmed">تأیید شده</string>
+    <string name="tab_completed">انجام شده</string>
+    <string name="tab_cancelled">لغو شده</string>
+    <string name="cancel_appointment">لغو نوبت</string>
+    <string name="add_review">ثبت نظر</string>
+    <string name="no_appointments">نوبتی برای نمایش نیست</string>
+    <string name="appointment_status_pending">در انتظار تأیید</string>
+    <string name="appointment_status_confirmed">تأیید شده</string>
+    <string name="appointment_status_completed">انجام شده</string>
+    <string name="appointment_status_cancelled">لغو شده</string>
+    <string name="appointment_status_no_show">عدم حضور</string>
+    <string name="submit_review">ارسال نظر</string>
+    <string name="review_rating_hint">امتیاز شما</string>
+    <string name="review_comment_hint">نظر شما درباره این نوبت…</string>
+
+    <!-- ============ Favorites ============ -->
+    <string name="favorites_title">علاقه‌مندی‌ها</string>
+    <string name="no_favorites">هیچ کسب‌وکاری در علاقه‌مندی‌ها نیست</string>
+    <string name="remove_favorite">حذف از علاقه‌مندی</string>
+
+    <!-- ============ Profile ============ -->
+    <string name="profile_title">پروفایل</string>
+    <string name="edit_profile">ویرایش پروفایل</string>
+    <string name="change_password">تغییر گذرواژه</string>
+    <string name="change_email">تغییر ایمیل</string>
+    <string name="current_password">گذرواژه فعلی</string>
+    <string name="new_password">گذرواژه جدید</string>
+    <string name="new_email">ایمیل جدید</string>
+    <string name="upload_avatar">بارگذاری عکس پروفایل</string>
+    <string name="remove_avatar">حذف عکس پروفایل</string>
+    <string name="save">ذخیره</string>
+    <string name="saving">در حال ذخیره…</string>
+    <string name="saved">ذخیره شد</string>
+    <string name="password_changed">گذرواژه تغییر کرد</string>
+    <string name="email_changed">ایمیل تغییر کرد</string>
+    <string name="avatar_updated">عکس پروفایل به‌روزرسانی شد</string>
+    <string name="avatar_removed">عکس پروفایل حذف شد</string>
+
+    <!-- ============ Admin ============ -->
+    <string name="admin_dashboard_businesses">کسب‌وکارها</string>
+    <string name="admin_dashboard_branches">شعب</string>
+    <string name="admin_dashboard_appointments">نوبت‌ها</string>
+    <string name="admin_dashboard_pending">در انتظار</string>
+    <string name="admin_dashboard_upcoming">آینده</string>
+    <string name="admin_dashboard_completed">انجام شده</string>
+    <string name="admin_dashboard_revenue">درآمد</string>
+    <string name="admin_dashboard_pending_reviews">نظرات در انتظار</string>
+
+    <string name="customer_name_label">مشتری: %1$s</string>
+    <string name="tracking_code_label">کد پیگیری: %1$s</string>
+    <string name="confirm_appointment">تأیید نوبت</string>
+    <string name="complete_appointment">اتمام نوبت</string>
+    <string name="mark_no_show">ثبت عدم حضور</string>
+    <string name="cancel_appointment_admin">لغو نوبت</string>
+    <string name="publish_review">انتشار نظر</string>
+    <string name="reject_review">رد نظر</string>
+    <string name="reset_password">بازنشانی گذرواژه</string>
+    <string name="set_active">فعال‌سازی</string>
+    <string name="set_inactive">غیرفعال‌سازی</string>
+    <string name="temporary_password">گذرواژه موقت: %1$s</string>
+    <string name="role_customer">مشتری</string>
+    <string name="role_platform_admin">مدیر پلتفرم</string>
+
+    <!-- ============ Common UI ============ -->
+    <string name="loading">در حال بارگذاری…</string>
+    <string name="error_generic">خطایی رخ داد</string>
+    <string name="retry">تلاش دوباره</string>
+    <string name="empty_list">موردی یافت نشد</string>
+    <string name="action_close">بستن</string>
+    <string name="action_back">بازگشت</string>
+    <string name="action_continue">ادامه</string>
+    <string name="action_skip">رد شدن</string>
+
+    <!-- ============ Error messages ============ -->
+    <string name="unexpected_error">خطای غیرمنتظره‌ای رخ داد</string>
+    <string name="error_invalid_identifier">ایمیل معتبر وارد کنید (ورود با موبایل هنوز فعال نیست)</string>
     <string name="error_empty_password">گذرواژه الزامی است</string>
-    <string name="error_invalid_credentials">ایمیل، شماره موبایل یا گذرواژه صحیح نیست</string>
+    <string name="error_invalid_credentials">ایمیل یا گذرواژه صحیح نیست</string>
+    <string name="error_account_locked">حساب شما موقتاً قفل شده است</string>
+    <string name="error_duplicate_email">این ایمیل قبلاً ثبت شده است</string>
+    <string name="error_password_mismatch">گذرواژه فعلی نادرست است</string>
+    <string name="error_weak_password">گذرواژه باید حداقل ۶ کاراکتر و شامل حرف و عدد باشد</string>
     <string name="error_too_many_requests">تعداد تلاش‌ها زیاد است؛ کمی بعد دوباره امتحان کنید</string>
-    <string name="error_service_unavailable">سرویس ورود موقتاً در دسترس نیست</string>
+    <string name="error_service_unavailable">سرویس موقتاً در دسترس نیست</string>
     <string name="error_network_unavailable">اتصال اینترنت را بررسی کنید</string>
     <string name="error_request_timed_out">زمان درخواست به پایان رسید؛ دوباره تلاش کنید</string>
+    <string name="error_unauthorized">برای دسترسی وارد شوید</string>
+    <string name="error_forbidden">شما به این بخش دسترسی ندارید</string>
+    <string name="error_not_found">موردی یافت نشد</string>
+    <string name="error_conflict">تعارض اطلاعات — صفحه را به‌روز کنید</string>
+
+    <!-- legacy / example screen -->
+    <string name="example_title">فعالیت نمونه</string>
+    <string name="example_message">این یک صفحه نمونه است</string>
 </resources>

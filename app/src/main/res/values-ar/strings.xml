@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">بي نوبات</string>
+    <string name="logo_content_description">شعار بي نوبات</string>
+
     <string name="welcome_message">مرحباً! سجّل الدخول لحجز موعد</string>
     <string name="login_title">تسجيل الدخول إلى حسابك</string>
-    <string name="logo_content_description">شعار بي نوبات</string>
     <string name="mobile_phone">رقم الهاتف</string>
-    <string name="email_or_mobile">البريد الإلكتروني أو رقم الهاتف</string>
+    <string name="email_or_mobile">البريد الإلكتروني (الدخول بالهاتف غير مدعوم بعد)</string>
+    <string name="email">البريد الإلكتروني</string>
+    <string name="password">كلمة المرور</string>
     <string name="login">تسجيل الدخول</string>
     <string name="logging_in">جارٍ تسجيل الدخول…</string>
-    <string name="unexpected_error">حدث خطأ غير متوقع</string>
     <string name="guest_login">المتابعة كضيف</string>
     <string name="ask_for_account">ليس لديك حساب؟</string>
     <string name="sign_up">إنشاء حساب</string>
-    <string name="password">كلمة المرور</string>
+    <string name="logout">تسجيل الخروج</string>
+
+    <string name="register_title">إنشاء حساب جديد</string>
+    <string name="display_name">الاسم المعروض</string>
+    <string name="phone_number">رقم الهاتف (09xxxxxxxxx)</string>
+    <string name="register">تسجيل</string>
+    <string name="registering">جارٍ إنشاء الحساب…</string>
+    <string name="already_have_account">لديك حساب؟</string>
+    <string name="back_to_login">العودة لتسجيل الدخول</string>
+
     <string name="search">بحث</string>
     <string name="filter">تصفية</string>
     <string name="sort">ترتيب</string>
@@ -24,15 +35,150 @@
     <string name="language_persian">فارسی</string>
     <string name="language_english">English</string>
     <string name="language_arabic">العربية</string>
-    <string name="orders_title">الطلبات</string>
-    <string name="home_message">مرحباً بك في بي نوبات</string>
-    <string name="example_title">مثال</string>
-    <string name="example_message">هذه شاشة تجريبية</string>
-    <string name="error_invalid_identifier">أدخل بريداً إلكترونياً أو رقم هاتف صالحاً</string>
+
+    <string name="nav_home">الرئيسية</string>
+    <string name="nav_appointments">المواعيد</string>
+    <string name="nav_favorites">المفضلة</string>
+    <string name="nav_profile">الملف</string>
+    <string name="nav_admin">لوحة الإدارة</string>
+
+    <string name="admin_dashboard">لوحة التحكم</string>
+    <string name="admin_calendar">تقويم المواعيد</string>
+    <string name="admin_branches">الفروع والموارد</string>
+    <string name="admin_services">الخدمات</string>
+    <string name="admin_availability">ساعات العمل</string>
+    <string name="admin_reviews">المراجعات</string>
+    <string name="admin_customers">العملاء</string>
+    <string name="admin_team">أعضاء الفريق</string>
+    <string name="platform_businesses">الشركات (المنصة)</string>
+    <string name="platform_catalog">كتالوج الخدمات</string>
+    <string name="platform_categories">التصنيفات</string>
+    <string name="platform_access">المستخدمون والصلاحيات</string>
+    <string name="admin_back_to_user_view">العودة لعرض العميل</string>
+
+    <string name="home_message">ابحث عن شركة لحجز موعد</string>
+    <string name="home_search_hint">بحث بالشركة أو المدينة أو التصنيف…</string>
+    <string name="no_businesses_yet">لا توجد شركات بعد. حاول لاحقاً.</string>
+    <string name="book_now">احجز الآن</string>
+    <string name="branch_count">الفروع: %1$d</string>
+    <string name="service_count">الخدمات: %1$d</string>
+    <string name="rating_value">التقييم: %1$.1f</string>
+    <string name="review_count">المراجعات: %1$d</string>
+    <string name="requires_approval">يتطلب موافقة</string>
+
+    <string name="branches_section">الفروع</string>
+    <string name="services_section">الخدمات</string>
+    <string name="reviews_section">المراجعات</string>
+    <string name="add_to_favorites">إضافة للمفضلة</string>
+    <string name="remove_from_favorites">إزالة من المفضلة</string>
+    <string name="duration_minutes">المدة: %1$d دقيقة</string>
+    <string name="price_label">السعر: %1$s</string>
+
+    <string name="booking_select_branch">١. اختر فرعاً</string>
+    <string name="booking_select_services">٢. اختر الخدمات</string>
+    <string name="booking_select_provider">٣. اختر مقدم الخدمة</string>
+    <string name="booking_select_date">٤. اختر التاريخ</string>
+    <string name="booking_select_slot">٥. اختر الوقت</string>
+    <string name="booking_confirm_info">٦. تأكيد المعلومات</string>
+    <string name="any_provider">أي مقدم خدمة</string>
+    <string name="phone_for_booking">هاتف التواصل لهذا الموعد</string>
+    <string name="note_for_booking">ملاحظة (اختياري)</string>
+    <string name="accept_terms">أوافق على شروط الحجز</string>
+    <string name="confirm_booking">تأكيد الحجز</string>
+    <string name="booking_in_progress">جارٍ الحجز…</string>
+    <string name="booking_success">تم الحجز بنجاح</string>
+    <string name="booking_tracking_code">رمز التتبع: %1$s</string>
+    <string name="no_slots_available">لا توجد مواعيد متاحة في هذا اليوم</string>
+
+    <string name="orders_title">مواعيدي</string>
+    <string name="tab_upcoming">القادمة</string>
+    <string name="tab_pending">قيد الانتظار</string>
+    <string name="tab_confirmed">مؤكدة</string>
+    <string name="tab_completed">منجزة</string>
+    <string name="tab_cancelled">ملغاة</string>
+    <string name="cancel_appointment">إلغاء الموعد</string>
+    <string name="add_review">اكتب مراجعة</string>
+    <string name="no_appointments">لا توجد مواعيد</string>
+    <string name="appointment_status_pending">قيد الانتظار</string>
+    <string name="appointment_status_confirmed">مؤكد</string>
+    <string name="appointment_status_completed">منجز</string>
+    <string name="appointment_status_cancelled">ملغى</string>
+    <string name="appointment_status_no_show">لم يحضر</string>
+    <string name="submit_review">إرسال المراجعة</string>
+    <string name="review_rating_hint">تقييمك</string>
+    <string name="review_comment_hint">رأيك في هذا الموعد…</string>
+
+    <string name="favorites_title">المفضلة</string>
+    <string name="no_favorites">لا توجد شركات مفضلة بعد</string>
+    <string name="remove_favorite">إزالة من المفضلة</string>
+
+    <string name="profile_title">الملف الشخصي</string>
+    <string name="edit_profile">تعديل الملف</string>
+    <string name="change_password">تغيير كلمة المرور</string>
+    <string name="change_email">تغيير البريد الإلكتروني</string>
+    <string name="current_password">كلمة المرور الحالية</string>
+    <string name="new_password">كلمة المرور الجديدة</string>
+    <string name="new_email">البريد الإلكتروني الجديد</string>
+    <string name="upload_avatar">رفع صورة الملف</string>
+    <string name="remove_avatar">إزالة صورة الملف</string>
+    <string name="save">حفظ</string>
+    <string name="saving">جارٍ الحفظ…</string>
+    <string name="saved">تم الحفظ</string>
+    <string name="password_changed">تم تغيير كلمة المرور</string>
+    <string name="email_changed">تم تغيير البريد</string>
+    <string name="avatar_updated">تم تحديث الصورة</string>
+    <string name="avatar_removed">تم حذف الصورة</string>
+
+    <string name="admin_dashboard_businesses">الشركات</string>
+    <string name="admin_dashboard_branches">الفروع</string>
+    <string name="admin_dashboard_appointments">المواعيد</string>
+    <string name="admin_dashboard_pending">قيد الانتظار</string>
+    <string name="admin_dashboard_upcoming">القادمة</string>
+    <string name="admin_dashboard_completed">منجزة</string>
+    <string name="admin_dashboard_revenue">الإيراد</string>
+    <string name="admin_dashboard_pending_reviews">مراجعات قيد الانتظار</string>
+
+    <string name="customer_name_label">العميل: %1$s</string>
+    <string name="tracking_code_label">التتبع: %1$s</string>
+    <string name="confirm_appointment">تأكيد</string>
+    <string name="complete_appointment">إنهاء</string>
+    <string name="mark_no_show">لم يحضر</string>
+    <string name="cancel_appointment_admin">إلغاء</string>
+    <string name="publish_review">نشر</string>
+    <string name="reject_review">رفض</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
+    <string name="set_active">تفعيل</string>
+    <string name="set_inactive">إلغاء التفعيل</string>
+    <string name="temporary_password">كلمة مرور مؤقتة: %1$s</string>
+    <string name="role_customer">عميل</string>
+    <string name="role_platform_admin">مدير المنصة</string>
+
+    <string name="loading">جارٍ التحميل…</string>
+    <string name="error_generic">حدث خطأ</string>
+    <string name="retry">إعادة المحاولة</string>
+    <string name="empty_list">لا توجد عناصر</string>
+    <string name="action_close">إغلاق</string>
+    <string name="action_back">رجوع</string>
+    <string name="action_continue">متابعة</string>
+    <string name="action_skip">تخطي</string>
+
+    <string name="unexpected_error">حدث خطأ غير متوقع</string>
+    <string name="error_invalid_identifier">أدخل بريداً إلكترونياً صالحاً (الدخول بالهاتف غير مدعوم بعد)</string>
     <string name="error_empty_password">كلمة المرور مطلوبة</string>
-    <string name="error_invalid_credentials">البريد الإلكتروني أو رقم الهاتف أو كلمة المرور غير صحيحة</string>
+    <string name="error_invalid_credentials">البريد الإلكتروني أو كلمة المرور غير صحيحة</string>
+    <string name="error_account_locked">حسابك مقفل مؤقتاً</string>
+    <string name="error_duplicate_email">هذا البريد مسجل مسبقاً</string>
+    <string name="error_password_mismatch">كلمة المرور الحالية غير صحيحة</string>
+    <string name="error_weak_password">كلمة المرور يجب أن تكون 6 أحرف على الأقل وتحتوي على أحرف وأرقام</string>
     <string name="error_too_many_requests">محاولات كثيرة. يرجى المحاولة لاحقاً</string>
-    <string name="error_service_unavailable">خدمة تسجيل الدخول غير متاحة مؤقتاً</string>
+    <string name="error_service_unavailable">الخدمة غير متاحة مؤقتاً</string>
     <string name="error_network_unavailable">تحقق من اتصالك بالإنترنت</string>
     <string name="error_request_timed_out">انتهت مهلة الطلب. حاول مرة أخرى</string>
+    <string name="error_unauthorized">سجّل الدخول للمتابعة</string>
+    <string name="error_forbidden">لا تملك صلاحية الوصول لهذا القسم</string>
+    <string name="error_not_found">غير موجود</string>
+    <string name="error_conflict">تعارض — حدث وأعد المحاولة</string>
+
+    <string name="example_title">مثال</string>
+    <string name="example_message">هذه شاشة تجريبية</string>
 </resources>

@@ -6,6 +6,7 @@ import com.leon.be_nobat.data.local.ThemeManager
 import com.leon.be_nobat.di.module.localStorageModule
 import com.leon.be_nobat.di.module.networkModule
 import com.leon.be_nobat.di.module.repositoryModule
+import com.leon.be_nobat.di.module.useCaseModule
 import com.leon.be_nobat.di.module.viewModelModule
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -30,9 +31,10 @@ class App : Application() {
             modules(
                 listOf(
                     localStorageModule,
+                    networkModule,
                     repositoryModule,
+                    useCaseModule,
                     viewModelModule,
-                    networkModule
                 )
             )
         }

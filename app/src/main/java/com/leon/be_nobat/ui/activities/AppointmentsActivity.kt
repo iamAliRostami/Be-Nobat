@@ -1,0 +1,176 @@
+package com.leon.be_nobat.ui.activities
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import com.leon.be_nobat.R
+import com.leon.be_nobat.databinding.ItemAppointmentBinding
+import com.leon.be_nobat.domain.model.Appointment
+import com.leon.be_nobat.helpers.BaseActivity
+import com.leon.be_nobat.ui.view_models.AppointmentTab
+import com.leon.be_nobat.ui.view_models.AppointmentsUiState
+import com.leon.be_nobat.ui.view_models.AppointmentsViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+class AppointmentsActivity : BaseActivity() {
+    override val layoutResourceId: Int = R.layout.activity_appointments
+
+    private val viewModel: AppointmentsViewModel by viewModel()
+    private lateinit var adapter: AppointmentsAdapter
+    private lateinit var swipeRefresh: SwipeRefreshLayout
+
+    override fun setupViews() {
+        setToolbarTitle(getString(R.string.orders_title))
+        setMenuVisibility(false)
+
+        swipeRefresh = findViewById(R.id.swipeRefresh)
+        swipeRefresh.setOnRefreshListener { viewModel.load() }
+
+        adapter = AppointmentsAdapter(
+            onCancel = { appt -> viewModel.cancel(appt.id) },
+            onReview = { appt -> viewModel.openReview(appt.id) },
+        )
+        findViewById<RecyclerView>(R.id.appointmentsList).apply {
+            layoutManager = LinearLayoutManager(this@AppointmentsActivity)
+            this.adapter = this@AppointmentsActivity.adapter
+        }
+
+        val tabs = findViewById<TabLayout>(R.id.tabs)
+        AppointmentTab.entries.forEach { tab ->
+            tabs.addTab(tabs.newTab().setText(tab.label))
+        }
+        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                viewModel.selectTab(AppointmentTab.entries[tab.position])
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.setOnItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> { startActivity(Intent(this, HomeActivity::class.java)); finish(); true }
+                R.id.nav_appointments -> { true }
+                R.id.nav_favorites -> { startActivity(Intent(this, FavoritesActivity::class.java)); finish(); true }
+                R.id.nav_profile -> { startActivity(Intent(this, ProfileActivity::class.java)); finish(); true }
+                else -> false
+            }
+        })
+        bottomNav.selectedItemId = R.id.nav_appointments
+    }
+
+    override fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { render(it) }
+            }
+        }
+    }
+
+    private fun render(state: AppointmentsUiState) {
+        swipeRefresh.isRefreshing = state.loading && state.items.isNotEmpty()
+        findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.items.isEmpty()
+        findViewById<android.widget.TextView>(R.id.emptyStateText).isVisible = !state.loading && state.items.isEmpty()
+        adapter.submitList(state.items)
+
+        state.reviewForAppointmentId?.let { apptId ->
+            showReviewDialog(state.reviewRating, state.reviewComment, state.reviewSubmitting) { rating, comment ->
+                viewModel.setRating(rating); viewModel.setComment(comment); viewModel.submitReview()
+            }
+        }
+
+        state.error?.let {
+            Snackbar.make(swipeRefresh, it, Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showReviewDialog(rating: Int, comment: String, submitting: Boolean, onSubmit: (Int, String) -> Unit) {
+        val context = this
+        val container = android.widget.LinearLayout(context).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(48, 24, 48, 24)
+        }
+        val ratingSlider = com.google.android.material.slider.Slider(context).apply {
+            valueFrom = 1f; valueTo = 5f; stepSize = 1f; value = rating.toFloat()
+        }
+        val commentInput = com.google.android.material.textfield.TextInputEditText(context).apply {
+            hint = getString(R.string.review_comment_hint)
+            setText(comment)
+            minLines = 2
+        }
+        container.addView(ratingSlider)
+        container.addView(commentInput)
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.add_review)
+            .setView(container)
+            .setPositiveButton(R.string.submit_review) { _, _ ->
+                onSubmit(ratingSlider.value.toInt(), commentInput.text.toString())
+            }
+            .setNegativeButton(R.string.action_close) { _, _ -> viewModel.closeReview() }
+            .setOnDismissListener { viewModel.closeReview() }
+            .show()
+    }
+
+    private class AppointmentsAdapter(
+        private val onCancel: (Appointment) -> Unit,
+        private val onReview: (Appointment) -> Unit,
+    ) : ListAdapter<Appointment, AppointmentsAdapter.VH>(
+        object : DiffUtil.ItemCallback<Appointment>() {
+            override fun areItemsTheSame(a: Appointment, b: Appointment) = a.id == b.id
+            override fun areContentsTheSame(a: Appointment, b: Appointment) = a == b
+        }
+    ) {
+
+        inner class VH(val binding: ItemAppointmentBinding) : RecyclerView.ViewHolder(binding.root) {
+            fun bind(item: Appointment) {
+                binding.apply {
+                    tvBusiness.text = item.businessName
+                    tvBranch.text = item.branchName
+                    tvServices.text = item.serviceNames.joinToString("، ")
+                    tvProvider.text = item.resourceName ?: ""
+                    tvTime.text = "${item.startsAt.substringBefore('T')} - ${item.startsAt.substringAfter('T').substringBefore('+')}"
+                    tvPrice.text = "${item.finalPrice.toInt()} ${item.currency}"
+                    tvTrackingCode.text = root.context.getString(R.string.tracking_code_label, item.trackingCode)
+                    tvStatus.text = when (item.status) {
+                        "Pending" -> root.context.getString(R.string.appointment_status_pending)
+                        "Confirmed" -> root.context.getString(R.string.appointment_status_confirmed)
+                        "Completed" -> root.context.getString(R.string.appointment_status_completed)
+                        "Cancelled" -> root.context.getString(R.string.appointment_status_cancelled)
+                        "NoShow" -> root.context.getString(R.string.appointment_status_no_show)
+                        else -> item.status
+                    }
+                    btnCancel.isVisible = item.canCancel
+                    btnReview.isVisible = item.canReview
+                    btnCancel.setOnClickListener { onCancel(item) }
+                    btnReview.setOnClickListener { onReview(item) }
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
+            val inflater = LayoutInflater.from(parent.context)
+            return VH(ItemAppointmentBinding.inflate(inflater, parent, false))
+        }
+
+        override fun onBindViewHolder(holder: VH, position: Int) {
+            holder.bind(getItem(position))
+        }
+    }
+}

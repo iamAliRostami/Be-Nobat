@@ -24,26 +24,69 @@
                 android:value="true" />
         </service>
 
-        <activity
-            android:name=".ui.activities.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.ExampleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.activities.LoginActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+        <!-- Launcher -->
         <activity
             android:name=".ui.activities.StartActivity"
             android:theme="@style/Theme.App.Starting"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Auth -->
+        <activity
+            android:name=".ui.activities.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activities.RegisterActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Customer surface -->
+        <activity
+            android:name=".ui.activities.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.BusinessDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.BookingActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.activities.AppointmentsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.FavoritesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activities.ProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Admin surface -->
+        <activity android:name=".ui.activities.AdminHomeActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminCalendarActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminBranchesActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminReviewsActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminServicesActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminAvailabilityActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminCustomersActivity" android:exported="false" />
+        <activity android:name=".ui.activities.AdminTeamActivity" android:exported="false" />
+
+        <!-- Platform surface -->
+        <activity android:name=".ui.activities.PlatformBusinessesActivity" android:exported="false" />
+        <activity android:name=".ui.activities.PlatformCatalogActivity" android:exported="false" />
+        <activity android:name=".ui.activities.PlatformCategoriesActivity" android:exported="false" />
+        <activity android:name=".ui.activities.PlatformAccessActivity" android:exported="false" />
+
+        <!-- Legacy example activity (kept for back-compat) -->
+        <activity
+            android:name=".ui.activities.ExampleActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

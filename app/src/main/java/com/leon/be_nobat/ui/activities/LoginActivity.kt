@@ -28,11 +28,14 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private val loginButton by lazy { findViewById<MaterialButton>(R.id.btnLogin) }
 
     override fun setupViews() {
-        setToolbarTitle(true)
+        setToolbarTitle(true) // hide toolbar (login has its own header)
         findViewById<ImageButton>(R.id.btnThemeToggle).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnLanguage).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnGuest).setOnClickListener(this)
         loginButton.setOnClickListener(this)
+        findViewById<MaterialButton?>(R.id.tvRegister)?.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
         findViewById<TextInputEditText>(R.id.etPassword).setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 submitLogin()
@@ -51,21 +54,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.btnThemeToggle -> {
-                setupThemeToggle()
-            }
-
-            R.id.btnLanguage -> {
-                v.let(::showLanguageMenu)
-            }
-
+            R.id.btnThemeToggle -> setupThemeToggle()
+            R.id.btnLanguage -> v?.let(::showLanguageMenu)
             R.id.btnGuest -> {
                 startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
             }
-
-            R.id.btnLogin -> {
-                submitLogin()
-            }
+            R.id.btnLogin -> submitLogin()
         }
     }
 
@@ -92,15 +86,25 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                     AuthException.EmptyPassword -> passwordInput.error = message
                     else -> Toast.makeText(this, message, Toast.LENGTH_LONG).show()
                 }
+                authViewModel.resetState()
             }
 
-            is LoginUiState.Success -> {
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
-            }
+            is LoginUiState.Success -> routeAfterLogin(state.session.user)
 
             LoginUiState.Idle, LoginUiState.Loading -> Unit
         }
+    }
+
+    private fun routeAfterLogin(user: com.leon.be_nobat.domain.model.User) {
+        // Role-based routing: admin/managers/staff go to admin home; customers to customer home.
+        val target = if (user.isStaff) {
+            Intent(this, AdminHomeActivity::class.java)
+        } else {
+            Intent(this, HomeActivity::class.java)
+        }
+        target.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(target)
+        finishAffinity()
     }
 
     private fun clearInputErrors() {
@@ -112,10 +116,18 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         AuthException.InvalidIdentifier -> R.string.error_invalid_identifier
         AuthException.EmptyPassword -> R.string.error_empty_password
         AuthException.InvalidCredentials -> R.string.error_invalid_credentials
+        AuthException.AccountLocked -> R.string.error_account_locked
+        AuthException.DuplicateEmail -> R.string.error_duplicate_email
+        AuthException.PasswordMismatch -> R.string.error_password_mismatch
+        AuthException.WeakPassword -> R.string.error_weak_password
         AuthException.TooManyRequests -> R.string.error_too_many_requests
         AuthException.ServiceUnavailable -> R.string.error_service_unavailable
         AuthException.NetworkUnavailable -> R.string.error_network_unavailable
         AuthException.RequestTimedOut -> R.string.error_request_timed_out
+        AuthException.Unauthorized -> R.string.error_unauthorized
+        AuthException.Forbidden -> R.string.error_forbidden
+        AuthException.NotFound -> R.string.error_not_found
+        AuthException.Conflict -> R.string.error_conflict
         else -> R.string.unexpected_error
     }
 }

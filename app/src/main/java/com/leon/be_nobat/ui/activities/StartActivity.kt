@@ -19,19 +19,23 @@ class StartActivity : AppCompatActivity() {
 
     private val tokenManager: TokenManager by inject()
 
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         setDefaultLocaleIfNeeded()
         lifecycleScope.launch {
-            val token = tokenManager.userToken.first()
-            if (token != null) {
-                startActivity(Intent(this@StartActivity, HomeActivity::class.java))
+            val session = tokenManager.currentSession()
+            val target = if (session != null) {
+                // Role-based routing: admin → AdminHomeActivity, customer → HomeActivity.
+                if (session.user.isStaff) {
+                    Intent(this@StartActivity, AdminHomeActivity::class.java)
+                } else {
+                    Intent(this@StartActivity, HomeActivity::class.java)
+                }
             } else {
-                startActivity(Intent(this@StartActivity, LoginActivity::class.java))
+                Intent(this@StartActivity, LoginActivity::class.java)
             }
+            startActivity(target)
             finish()
         }
     }
