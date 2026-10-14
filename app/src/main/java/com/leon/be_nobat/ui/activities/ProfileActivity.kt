@@ -100,6 +100,13 @@ class ProfileActivity : BaseActivity() {
             findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etDisplayName).setText(state.displayName)
             findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etPhone).setText(state.phoneNumber)
         }
+        if (com.leon.be_nobat.BuildConfig.DEMO_MODE) {
+            val avatar = findViewById<android.widget.ImageView>(R.id.ivAvatar)
+            val bitmap = state.avatarUrl?.takeIf { it.startsWith("data:image/") }?.substringAfter("base64,")?.let { encoded ->
+                runCatching { val bytes = Base64.decode(encoded, Base64.DEFAULT); BitmapFactory.decodeByteArray(bytes, 0, bytes.size) }.getOrNull()
+            }
+            if (bitmap != null) avatar.setImageBitmap(bitmap) else avatar.setImageResource(com.leon.be_nobat.R.drawable.ic_person)
+        }
         // Save button state
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveProfile).let {
             it.text = if (state.savingProfile) getString(R.string.saving) else getString(R.string.save)

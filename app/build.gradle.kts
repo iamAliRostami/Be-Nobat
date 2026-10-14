@@ -21,6 +21,20 @@ android {
         buildConfigField("String", "API_VERSION", "\"v1\"")
     }
 
+    flavorDimensions += "version"
+    productFlavors {
+        create("prod") {
+            dimension = "version"
+            buildConfigField("Boolean", "DEMO_MODE", "false")
+        }
+        create("demo") {
+            dimension = "version"
+            applicationIdSuffix = ".demo"
+            versionNameSuffix = "-demo"
+            buildConfigField("Boolean", "DEMO_MODE", "true")
+        }
+    }
+
     buildTypes {
         debug {
             // Emulator talks to the dev server running on the host machine via 10.0.2.2.
@@ -34,6 +48,7 @@ android {
             buildConfigField("String", "MEDIA_BASE_URL", "\"https://api.benobat.example.com\"")
             isMinifyEnabled = false
             isDebuggable = false
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

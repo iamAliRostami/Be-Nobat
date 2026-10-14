@@ -1,5 +1,6 @@
 package com.leon.be_nobat.di.module
 
+import com.leon.be_nobat.data.demo.*
 import android.util.Log
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile
@@ -139,12 +140,22 @@ val localStorageModule = module {
 }
 
 val repositoryModule = module {
-    single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
-    single<BusinessRepository> { BusinessRepositoryImpl(get()) }
-    single<BookingRepository> { BookingRepositoryImpl(get()) }
-    single<FavoriteRepository> { FavoriteRepositoryImpl(get()) }
-    single<ManagementRepository> { ManagementRepositoryImpl(get(), get()) }
-    single<PlatformRepository> { PlatformRepositoryImpl(get(), get()) }
+    if (BuildConfig.DEMO_MODE) {
+        single { DemoDataStore(androidContext(), get()) }
+        single<AuthRepository> { DemoAuthRepository(get(), get()) }
+        single<BusinessRepository> { DemoBusinessRepository(get()) }
+        single<BookingRepository> { DemoBookingRepository(get(), get()) }
+        single<FavoriteRepository> { DemoFavoriteRepository(get(), get()) }
+        single<ManagementRepository> { DemoManagementRepository(get(), get()) }
+        single<PlatformRepository> { DemoPlatformRepository(get(), get()) }
+    } else {
+        single<AuthRepository> { AuthRepositoryImpl(get(), get()) }
+        single<BusinessRepository> { BusinessRepositoryImpl(get()) }
+        single<BookingRepository> { BookingRepositoryImpl(get()) }
+        single<FavoriteRepository> { FavoriteRepositoryImpl(get()) }
+        single<ManagementRepository> { ManagementRepositoryImpl(get(), get()) }
+        single<PlatformRepository> { PlatformRepositoryImpl(get(), get()) }
+    }
 }
 
 val useCaseModule = module {
