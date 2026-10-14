@@ -22,7 +22,7 @@ data class PlatformCategoriesUiState(
 
 class PlatformCategoriesViewModel(
     private val list: PlatformListCategoriesUseCase,
-    private val create: PlatformCreateCategoryUseCase,
+    private val createUseCase: PlatformCreateCategoryUseCase,
     private val deleteUseCase: PlatformDeleteCategoryUseCase,
 ) : ViewModel() {
 
@@ -44,5 +44,13 @@ class PlatformCategoriesViewModel(
         deleteUseCase(id).onSuccess {
             _state.value = _state.value.copy(items = _state.value.items.filterNot { it.id == id }, message = "deleted")
         }.onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
+
+    fun create(input: com.leon.be_nobat.domain.model.ManagementCategoryInput) = viewModelScope.launch {
+        createUseCase(input)
+            .onSuccess { created ->
+                _state.value = _state.value.copy(items = listOf(created) + _state.value.items, message = "created")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
     }
 }

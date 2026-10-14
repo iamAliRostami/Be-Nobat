@@ -15,6 +15,8 @@ import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
 import com.leon.be_nobat.databinding.ItemAdminAppointmentBinding
 import com.leon.be_nobat.domain.model.ManagementUser
+import com.leon.be_nobat.domain.model.ManagementUserInput
+import com.leon.be_nobat.helpers.AdminFormDialog
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
 import com.leon.be_nobat.ui.adapters.simpleDiff
@@ -52,6 +54,37 @@ class PlatformAccessActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@PlatformAccessActivity)
             this.adapter = this@PlatformAccessActivity.adapter
         }
+
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd).apply {
+            visibility = View.VISIBLE
+            setOnClickListener { showCreateUserDialog() }
+        }
+    }
+
+    private fun showCreateUserDialog() {
+        AdminFormDialog.Builder(this)
+            .setTitle(getString(R.string.form_create_user_title))
+            .field(getString(R.string.form_label_name))
+            .field(getString(R.string.form_label_email))
+            .field(getString(R.string.form_label_phone))
+            .field(getString(R.string.form_label_role), "Customer")
+            .onSubmit { values ->
+                val name = values.getOrNull(0).orEmpty()
+                val email = values.getOrNull(1).orEmpty()
+                val phone = values.getOrNull(2).orEmpty()
+                val role = values.getOrNull(3).orEmpty().ifBlank { "Customer" }
+                if (name.isBlank() || email.isBlank() || phone.isBlank()) {
+                    Snackbar.make(findViewById(R.id.swipeRefresh), R.string.msg_invalid_input, Snackbar.LENGTH_SHORT).show()
+                    return@onSubmit
+                }
+                viewModel.createUser(ManagementUserInput(
+                    displayName = name,
+                    email = email,
+                    phoneNumber = phone,
+                    role = role,
+                ))
+            }
+            .show()
     }
 
     private fun showRoleDialog(user: ManagementUser) {

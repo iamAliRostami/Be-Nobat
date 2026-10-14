@@ -14,6 +14,8 @@ import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
 import com.leon.be_nobat.databinding.ItemAdminAppointmentBinding
 import com.leon.be_nobat.domain.model.ManagementCatalog
+import com.leon.be_nobat.domain.model.ManagementCatalogInput
+import com.leon.be_nobat.helpers.AdminFormDialog
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
 import com.leon.be_nobat.ui.adapters.simpleDiff
@@ -49,6 +51,40 @@ class PlatformCatalogActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@PlatformCatalogActivity)
             this.adapter = this@PlatformCatalogActivity.adapter
         }
+
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd).apply {
+            visibility = View.VISIBLE
+            setOnClickListener { showCreateCatalogDialog() }
+        }
+    }
+
+    private fun showCreateCatalogDialog() {
+        AdminFormDialog.Builder(this)
+            .setTitle(getString(R.string.form_create_catalog_title))
+            .field(getString(R.string.form_label_name))
+            .field(getString(R.string.form_label_slug))
+            .field(getString(R.string.form_label_category), "عمومی")
+            .field(getString(R.string.form_label_description))
+            .numberField(getString(R.string.form_label_duration_minutes), "30")
+            .onSubmit { values ->
+                val name = values.getOrNull(0).orEmpty()
+                val slug = values.getOrNull(1).orEmpty()
+                val category = values.getOrNull(2).orEmpty().ifBlank { "عمومی" }
+                val description = values.getOrNull(3).orEmpty()
+                val duration = values.getOrNull(4)?.toIntOrNull() ?: 30
+                if (name.isBlank() || slug.isBlank()) {
+                    Snackbar.make(findViewById(R.id.swipeRefresh), R.string.msg_invalid_input, Snackbar.LENGTH_SHORT).show()
+                    return@onSubmit
+                }
+                viewModel.create(ManagementCatalogInput(
+                    name = name,
+                    slug = slug,
+                    category = category,
+                    description = description,
+                    suggestedDurationMinutes = duration,
+                ))
+            }
+            .show()
     }
 
     override fun observeViewModel() {

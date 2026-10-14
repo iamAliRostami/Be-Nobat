@@ -141,11 +141,45 @@ class ProfileActivity : BaseActivity() {
                 Snackbar.make(findViewById(R.id.scrollView), getString(R.string.error_generic), Snackbar.LENGTH_SHORT).show()
                 return
             }
-            // Try PNG first, fallback to JPEG
-            val pngStream = ByteArrayOutputStream()
-            bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, pngStream)
-            val base64 = Base64.encodeToString(pngStream.toByteArray(), Base64.NO_WRAP)
-            viewModel.uploadAvatar("image/png", base64)
+
+            // Downscale large bitmaps so we stay well under the 2 MiB raw
+            // server-side limit even before base64 encoding (which inflates
+            // by ~33%). 2048x2048 is a generous max for a profile avatar.
+            val maxDim = 2048
+            val scaled = if (bitmap.width > maxDim || bitmap.height > maxDim) {
+                val scale = maxDim.toFloat() / maxOf(bitmap.width, bitmap.height)
+                android.graphics.Bitmap.createScaledBitmap(
+                    bitmap,
+                    (bitmap.width * scale).toInt().coerceAtLeast(1),
+                    (bitmap.height * scale).toInt().coerceAtLeast(1),
+                    true,
+                ).also { if (it !== bitmap) bitmap.recycle() }
+            } else bitmap
+
+            // Encode as JPEG (much smaller than PNG for photo content),
+            // then fall back to PNG if JPEG size is unexpectedly large.
+            val jpegStream = ByteArrayOutputStream()
+            scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, jpegStream)
+            var bytes = jpegStream.toByteArray()
+            var contentType = "image/jpeg"
+
+            // Hard cap at ~1.4 MiB raw so base64 output stays under 2 MiB.
+            val maxRaw = 1_400_000
+            if (bytes.size > maxRaw) {
+                val lowered = ByteArrayOutputStream()
+                scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 60, lowered)
+                bytes = lowered.toByteArray()
+            }
+            // Final fallback: if JPEG is still too big, drop quality to 40.
+            if (bytes.size > maxRaw) {
+                val last = ByteArrayOutputStream()
+                scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 40, last)
+                bytes = last.toByteArray()
+            }
+
+            scaled.recycle()
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            viewModel.uploadAvatar(contentType, base64)
         } catch (e: Exception) {
             Snackbar.make(findViewById(R.id.scrollView), e.message ?: getString(R.string.error_generic), Snackbar.LENGTH_SHORT).show()
         }

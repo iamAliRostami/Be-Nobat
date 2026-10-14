@@ -25,8 +25,8 @@ data class PlatformBusinessesUiState(
 
 class PlatformBusinessesViewModel(
     private val list: PlatformListBusinessesUseCase,
-    private val create: PlatformCreateBusinessUseCase,
-    private val update: PlatformUpdateBusinessUseCase,
+    private val createUseCase: PlatformCreateBusinessUseCase,
+    private val updateUseCase: PlatformUpdateBusinessUseCase,
     private val toggle: PlatformToggleBusinessActiveUseCase,
     private val deleteUseCase: PlatformDeleteBusinessUseCase,
 ) : ViewModel() {
@@ -53,6 +53,23 @@ class PlatformBusinessesViewModel(
             val items = _state.value.items.map { if (it.id == id) updated else it }
             _state.value = _state.value.copy(items = items, message = "updated")
         }.onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
+
+    fun create(input: com.leon.be_nobat.domain.model.ManagementBusinessInput) = viewModelScope.launch {
+        createUseCase(input)
+            .onSuccess { created ->
+                _state.value = _state.value.copy(items = listOf(created) + _state.value.items, message = "created")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
+
+    fun update(id: String, input: com.leon.be_nobat.domain.model.ManagementBusinessInput) = viewModelScope.launch {
+        updateUseCase(id, input)
+            .onSuccess { updated ->
+                val items = _state.value.items.map { if (it.id == id) updated else it }
+                _state.value = _state.value.copy(items = items, message = "updated")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
     }
 
     fun delete(id: String) = viewModelScope.launch {

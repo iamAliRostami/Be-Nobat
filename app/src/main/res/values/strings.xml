@@ -175,6 +175,37 @@
     <string name="action_back">بازگشت</string>
     <string name="action_continue">ادامه</string>
     <string name="action_skip">رد شدن</string>
+    <string name="action_add">افزودن</string>
+    <string name="action_create">ایجاد</string>
+
+    <string name="form_create_branch_title">ایجاد شعبه جدید</string>
+    <string name="form_create_service_title">ایجاد خدمت جدید</string>
+    <string name="form_create_business_title">ایجاد کسب‌وکار</string>
+    <string name="form_create_catalog_title">ایجاد آیتم کاتالوگ</string>
+    <string name="form_create_category_title">ایجاد دسته‌بندی</string>
+    <string name="form_create_user_title">ایجاد کاربر جدید</string>
+
+    <string name="form_label_name">نام</string>
+    <string name="form_label_slug">اسلاگ (انگلیسی)</string>
+    <string name="form_label_category">دسته‌بندی</string>
+    <string name="form_label_city">شهر</string>
+    <string name="form_label_description">توضیحات</string>
+    <string name="form_label_address">آدرس</string>
+    <string name="form_label_open_hour">ساعت شروع (۰-۲۳)</string>
+    <string name="form_label_close_hour">ساعت پایان (۱-۲۴)</string>
+    <string name="form_label_duration_minutes">مدت (دقیقه)</string>
+    <string name="form_label_price">قیمت (ریال)</string>
+    <string name="form_label_currency">ارز</string>
+    <string name="form_label_email">ایمیل</string>
+    <string name="form_label_phone">موبایل</string>
+    <string name="form_label_role">نقش</string>
+    <string name="form_label_kind">نوع</string>
+    <string name="form_label_sort_order">ترتیب</string>
+
+    <string name="msg_created">با موفقیت ایجاد شد</string>
+    <string name="msg_updated">به‌روزرسانی شد</string>
+    <string name="msg_deleted">حذف شد</string>
+    <string name="msg_invalid_input">همه فیلدها را پر کنید</string>
 
     <!-- ============ Error messages ============ -->
     <string name="unexpected_error">خطای غیرمنتظره‌ای رخ داد</string>

@@ -14,6 +14,8 @@ import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
 import com.leon.be_nobat.databinding.ItemAdminAppointmentBinding
 import com.leon.be_nobat.domain.model.ManagementBranch
+import com.leon.be_nobat.domain.model.ManagementBranchInput
+import com.leon.be_nobat.helpers.AdminFormDialog
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
 import com.leon.be_nobat.ui.adapters.simpleDiff
@@ -50,6 +52,40 @@ class AdminBranchesActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@AdminBranchesActivity)
             this.adapter = this@AdminBranchesActivity.adapter
         }
+
+        // Show FAB for branches (Owner/Manager/PlatformAdmin only)
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd).apply {
+            visibility = View.VISIBLE
+            setOnClickListener { showCreateBranchDialog() }
+        }
+    }
+
+    private fun showCreateBranchDialog() {
+        AdminFormDialog.Builder(this)
+            .setTitle(getString(R.string.form_create_branch_title))
+            .field(getString(R.string.form_label_name), "شعبه مرکزی")
+            .field(getString(R.string.form_label_address), "")
+            .numberField(getString(R.string.form_label_open_hour), "9")
+            .numberField(getString(R.string.form_label_close_hour), "18")
+            .onSubmit { values ->
+                val businessId = "" // populated by admin context if needed
+                val name = values.getOrNull(0).orEmpty()
+                val address = values.getOrNull(1).orEmpty()
+                val openHour = values.getOrNull(2)?.toIntOrNull() ?: 9
+                val closeHour = values.getOrNull(3)?.toIntOrNull() ?: 18
+                if (name.isBlank()) {
+                    Snackbar.make(findViewById(R.id.swipeRefresh), R.string.msg_invalid_input, Snackbar.LENGTH_SHORT).show()
+                    return@onSubmit
+                }
+                viewModel.create(ManagementBranchInput(
+                    businessId = businessId,
+                    name = name,
+                    address = address,
+                    openHour = openHour,
+                    closeHour = closeHour,
+                ))
+            }
+            .show()
     }
 
     override fun observeViewModel() {

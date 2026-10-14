@@ -9,10 +9,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
 import com.leon.be_nobat.databinding.ItemAdminAppointmentBinding
 import com.leon.be_nobat.domain.model.ManagementCategory
+import com.leon.be_nobat.domain.model.ManagementCategoryInput
+import com.leon.be_nobat.helpers.AdminFormDialog
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
 import com.leon.be_nobat.ui.adapters.simpleDiff
@@ -46,6 +49,34 @@ class PlatformCategoriesActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@PlatformCategoriesActivity)
             this.adapter = this@PlatformCategoriesActivity.adapter
         }
+
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd).apply {
+            visibility = View.VISIBLE
+            setOnClickListener { showCreateCategoryDialog() }
+        }
+    }
+
+    private fun showCreateCategoryDialog() {
+        AdminFormDialog.Builder(this)
+            .setTitle(getString(R.string.form_create_category_title))
+            .field(getString(R.string.form_label_name))
+            .field(getString(R.string.form_label_kind), "Business")
+            .numberField(getString(R.string.form_label_sort_order), "0")
+            .onSubmit { values ->
+                val name = values.getOrNull(0).orEmpty()
+                val kind = values.getOrNull(1).orEmpty().ifBlank { "Business" }
+                val sortOrder = values.getOrNull(2)?.toIntOrNull() ?: 0
+                if (name.isBlank()) {
+                    Snackbar.make(findViewById(R.id.swipeRefresh), R.string.msg_invalid_input, Snackbar.LENGTH_SHORT).show()
+                    return@onSubmit
+                }
+                viewModel.create(ManagementCategoryInput(
+                    name = name,
+                    kind = kind,
+                    sortOrder = sortOrder,
+                ))
+            }
+            .show()
     }
 
     override fun observeViewModel() {

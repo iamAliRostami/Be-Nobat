@@ -20,6 +20,7 @@ ktorClientLogging = "3.6.0"
 ktorClientAuth = "3.6.0"
 kotlinxSerializationJson = "1.11.0"
 kotlinxCoroutines = "1.10.2"
+kotlinxCoroutinesTest = "1.10.2"
 kotlinxDatetime = "0.6.1"
 # Storage / Security
 securityCrypto = "1.1.0"
@@ -52,9 +53,12 @@ ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-conte
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktorClientLogging" }
 ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktorClientAuth" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktorClientAndroid" }
+ktor-client-mock = { group = "io.ktor", name = "ktor-client-mock", version.ref = "ktorClientAndroid" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktorClientAndroid" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 # Storage / Security
 androidx-security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "securityCrypto" }

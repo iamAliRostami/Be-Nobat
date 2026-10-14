@@ -52,4 +52,21 @@ class AdminServicesViewModel(
             _state.value = _state.value.copy(items = items, message = "updated")
         }.onFailure { e -> _state.value = _state.value.copy(error = e.message) }
     }
+
+    fun createService(input: com.leon.be_nobat.domain.model.ManagementServiceInput) = viewModelScope.launch {
+        create(input)
+            .onSuccess { created ->
+                _state.value = _state.value.copy(items = listOf(created) + _state.value.items, message = "created")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
+
+    fun updateService(id: String, input: com.leon.be_nobat.domain.model.ManagementServiceInput) = viewModelScope.launch {
+        update(id, input)
+            .onSuccess { updated ->
+                val items = _state.value.items.map { if (it.id == id) updated else it }
+                _state.value = _state.value.copy(items = items, message = "updated")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
 }

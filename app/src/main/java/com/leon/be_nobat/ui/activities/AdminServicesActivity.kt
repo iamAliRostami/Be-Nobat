@@ -14,6 +14,8 @@ import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
 import com.leon.be_nobat.databinding.ItemAdminAppointmentBinding
 import com.leon.be_nobat.domain.model.ManagementService
+import com.leon.be_nobat.domain.model.ManagementServiceInput
+import com.leon.be_nobat.helpers.AdminFormDialog
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
 import com.leon.be_nobat.ui.adapters.simpleDiff
@@ -49,6 +51,38 @@ class AdminServicesActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@AdminServicesActivity)
             this.adapter = this@AdminServicesActivity.adapter
         }
+
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd).apply {
+            visibility = View.VISIBLE
+            setOnClickListener { showCreateServiceDialog() }
+        }
+    }
+
+    private fun showCreateServiceDialog() {
+        AdminFormDialog.Builder(this)
+            .setTitle(getString(R.string.form_create_service_title))
+            .field(getString(R.string.form_label_name))
+            .field(getString(R.string.form_label_description))
+            .numberField(getString(R.string.form_label_duration_minutes), "30")
+            .numberField(getString(R.string.form_label_price), "0")
+            .onSubmit { values ->
+                val name = values.getOrNull(0).orEmpty()
+                val description = values.getOrNull(1).orEmpty()
+                val duration = values.getOrNull(2)?.toIntOrNull() ?: 30
+                val price = values.getOrNull(3)?.toDoubleOrNull() ?: 0.0
+                if (name.isBlank()) {
+                    Snackbar.make(findViewById(R.id.swipeRefresh), R.string.msg_invalid_input, Snackbar.LENGTH_SHORT).show()
+                    return@onSubmit
+                }
+                viewModel.createService(ManagementServiceInput(
+                    businessId = "",
+                    name = name,
+                    description = description,
+                    durationMinutes = duration,
+                    price = price,
+                ))
+            }
+            .show()
     }
 
     override fun observeViewModel() {

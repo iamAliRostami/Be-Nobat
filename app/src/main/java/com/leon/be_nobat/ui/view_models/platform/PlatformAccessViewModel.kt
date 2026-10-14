@@ -72,4 +72,16 @@ class PlatformAccessViewModel(
     }
 
     fun clearMessage() { _state.value = _state.value.copy(message = null, temporaryPassword = null) }
+
+    fun createUser(input: com.leon.be_nobat.domain.model.ManagementUserInput) = viewModelScope.launch {
+        createUseCase(input)
+            .onSuccess { created ->
+                _state.value = _state.value.copy(
+                    temporaryPassword = created.temporaryPassword,
+                    message = "user_created_temporary_password_shown_once",
+                )
+                load() // refresh the list
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
 }
