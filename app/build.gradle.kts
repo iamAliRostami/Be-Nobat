@@ -59,6 +59,12 @@ android {
 }
 
 dependencies {
+    constraints {
+        implementation("androidx.exifinterface:exifinterface:1.4.2") {
+            because("Use the locally available version for Coil's image metadata dependency")
+        }
+    }
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -91,7 +97,6 @@ dependencies {
     // Lifecycle / ViewModel
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     // Image loading
     implementation(libs.coil)
