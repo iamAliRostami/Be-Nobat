@@ -9,18 +9,34 @@ class DemoAuthRepository(private val dataStore: DemoDataStore, private val token
     override var cachedSession: MobileSession? = null
         private set
 
-    private fun ManagementUser.toUser(avatar: String? = null) = User(id = id, displayName = displayName, email = email, phoneNumber = phoneNumber, roles = roles, avatarUrl = avatar)
+    private fun ManagementUser.toUser(avatar: String? = null) = User(
+        id = id,
+        displayName = displayName,
+        email = email,
+        phoneNumber = phoneNumber,
+        roles = roles,
+        avatarUrl = avatar
+    )
+
     private suspend fun save(user: User): MobileSession {
-        val session = MobileSession(accessToken = "demo_${user.id}", tokenType = "Bearer", expiresAt = "2099-12-31T23:59:59Z", user = user)
+        val session = MobileSession(
+            accessToken = "demo_${user.id}",
+            tokenType = "Bearer",
+            expiresAt = "2099-12-31T23:59:59Z",
+            user = user
+        )
         tokenManager.save(session)
         cachedSession = session
         return session
     }
+
     private suspend fun current() = requireNotNull(tokenManager.currentSession()) { "ابتدا وارد حساب شوید." }.user
 
     override suspend fun login(email: String, password: String): Result<MobileSession> = runCatching {
+        simulateNetworkDelay()
         val user = dataStore.read { s ->
-            val u = s.users.firstOrNull { it.email.equals(email.trim(), true) || it.phoneNumber == email.trim() } ?: throw AuthException.InvalidCredentials
+            val u = s.users.firstOrNull { it.email.equals(email.trim(), true) || it.phoneNumber == email.trim() }
+                ?: throw AuthException.InvalidCredentials
             if (!u.active) throw AuthException.AccountLocked
             if (password != (s.passwords[u.id] ?: "Demo1234!")) throw AuthException.InvalidCredentials
             u.toUser(s.avatars[u.id])
@@ -29,30 +45,59 @@ class DemoAuthRepository(private val dataStore: DemoDataStore, private val token
     }
 
     override suspend fun register(input: RegisterInput): Result<MobileSession> = runCatching {
+        simulateNetworkDelay()
         require(!input.displayName.isNullOrBlank() && !input.email.isNullOrBlank() && !input.password.isNullOrBlank())
         val user = dataStore.update { s ->
             if (s.users.any { it.email.equals(input.email, true) }) throw AuthException.DuplicateEmail
-            val u = ManagementUser(id = demoId(), displayName = input.displayName.trim(), email = input.email.trim(), phoneNumber = input.phoneNumber, roles = listOf("Customer"), active = true)
+            val u = ManagementUser(
+                id = demoId(),
+                displayName = input.displayName.trim(),
+                email = input.email.trim(),
+                phoneNumber = input.phoneNumber,
+                roles = listOf("Customer"),
+                active = true
+            )
             s.copy(users = s.users + u, passwords = s.passwords + (u.id to input.password)) to u.toUser()
         }
         save(user)
     }
 
-    override suspend fun logout(): Result<Unit> = runCatching { tokenManager.clear(); cachedSession = null }
-    override suspend fun getMe(): Result<User> = runCatching {
-        val id = current().id
-        val user = dataStore.read { s -> val u = s.users.first { it.id == id }; check(u.active); u.toUser(s.avatars[id]) }
-        save(user).user
+    override suspend fun logout(): Result<Unit> = runCatching {
+        simulateNetworkDelay(minMs = 80L, maxMs = 150L)
+        tokenManager.clear()
+        cachedSession = null
     }
-    override suspend fun updateProfile(input: ProfileInput): Result<User> = runCatching {
+
+    override suspend fun getMe(): Result<User> = runCatching {
+        simulateNetworkDelay(minMs = 100L, maxMs = 200L)
         val id = current().id
-        val user = dataStore.update { s ->
-            val u = s.users.first { it.id == id }.copy(displayName = input.displayName ?: s.users.first { it.id == id }.displayName, phoneNumber = input.phoneNumber ?: s.users.first { it.id == id }.phoneNumber)
-            s.copy(users = s.users.map { if (it.id == id) u else it }, appointments = s.appointments.map { if (it.customerId == id) it.copy(customerName = u.displayName, customerPhoneNumber = u.phoneNumber) else it }, memberships = s.memberships.map { if (it.userId == id) it.copy(displayName = u.displayName) else it }) to u.toUser(s.avatars[id])
+        val user = dataStore.read { s ->
+            val u = s.users.first { it.id == id }
+            check(u.active)
+            u.toUser(s.avatars[id])
         }
         save(user).user
     }
+
+    override suspend fun updateProfile(input: ProfileInput): Result<User> = runCatching {
+        simulateNetworkDelay()
+        val id = current().id
+        val user = dataStore.update { s ->
+            val u = s.users.first { it.id == id }.copy(
+                displayName = input.displayName ?: s.users.first { it.id == id }.displayName,
+                phoneNumber = input.phoneNumber ?: s.users.first { it.id == id }.phoneNumber
+            )
+            s.copy(
+                users = s.users.map { if (it.id == id) u else it },
+                appointments = s.appointments.map { if (it.customerId == id) it.copy(customerName = u.displayName, customerPhoneNumber = u.phoneNumber) else it },
+                memberships = s.memberships.map { if (it.userId == id) it.copy(displayName = u.displayName) else it }
+            ) to u.toUser(s.avatars[id])
+        }
+        save(user).user
+    }
+
     override suspend fun changePassword(input: PasswordInput): Result<MobileSession> = runCatching {
+        simulateNetworkDelay()
         val user = current()
         dataStore.update { s ->
             if (input.currentPassword != (s.passwords[user.id] ?: "Demo1234!")) throw AuthException.InvalidCredentials
@@ -61,7 +106,9 @@ class DemoAuthRepository(private val dataStore: DemoDataStore, private val token
         }
         save(user)
     }
+
     override suspend fun changeEmail(input: EmailInput): Result<MobileSession> = runCatching {
+        simulateNetworkDelay()
         val id = current().id
         val user = dataStore.update { s ->
             if (input.currentPassword != (s.passwords[id] ?: "Demo1234!")) throw AuthException.InvalidCredentials
@@ -72,14 +119,18 @@ class DemoAuthRepository(private val dataStore: DemoDataStore, private val token
         }
         save(user)
     }
+
     override suspend fun uploadAvatar(input: AvatarInput): Result<User> = runCatching {
+        simulateNetworkDelay()
         val user = current()
         require(!input.dataBase64.isNullOrBlank())
         val url = "data:${input.contentType ?: "image/jpeg"};base64,${input.dataBase64}"
         dataStore.update { s -> s.copy(avatars = s.avatars + (user.id to url)) to Unit }
         save(user.copy(avatarUrl = url)).user
     }
+
     override suspend fun deleteAvatar(): Result<User> = runCatching {
+        simulateNetworkDelay()
         val user = current()
         dataStore.update { s -> s.copy(avatars = s.avatars - user.id) to Unit }
         save(user.copy(avatarUrl = null)).user

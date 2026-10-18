@@ -23,6 +23,7 @@ class DemoBusinessRepository(
         page: Int,
         pageSize: Int,
     ): Result<ApiPage<Business>> = runCatching {
+        simulateNetworkDelay(180, 320)
         dataStore.read { state ->
             val filtered = state.businesses
                 .filter { it.active }
@@ -43,7 +44,7 @@ class DemoBusinessRepository(
             val mapped = paged.map { mb ->
                 val branchCount = state.branches.count { it.businessId == mb.id && it.active }
                 val serviceCount = state.services.count { it.businessId == mb.id && it.active }
-                val bizReviews = state.reviews.filter { it.businessId == mb.id && it.active && it.status == "Approved" }
+                val bizReviews = state.reviews.filter { it.businessId == mb.id && it.active && it.status in listOf("Approved", "Published") }
                 val rating = if (bizReviews.isNotEmpty()) bizReviews.map { it.rating }.average() else null
                 Business(
                     id = mb.id,
@@ -70,6 +71,7 @@ class DemoBusinessRepository(
     }
 
     override suspend fun getBusiness(id: String): Result<BusinessDetail> = runCatching {
+        simulateNetworkDelay(120, 250)
         dataStore.read { state ->
             val mb = state.businesses.firstOrNull { it.id == id }
                 ?: error("کسب‌وکار با شناسه $id یافت نشد.")
@@ -98,7 +100,7 @@ class DemoBusinessRepository(
                 )
             }
 
-            val reviews = state.reviews.filter { it.businessId == id && it.active && it.status == "Approved" }.map { r ->
+            val reviews = state.reviews.filter { it.businessId == id && it.active && it.status in listOf("Approved", "Published") }.map { r ->
                 PublicReview(
                     id = r.id,
                     rating = r.rating,
@@ -135,8 +137,9 @@ class DemoBusinessRepository(
         page: Int,
         pageSize: Int,
     ): Result<ApiPage<PublicReview>> = runCatching {
+        simulateNetworkDelay(120, 250)
         dataStore.read { state ->
-            val reviews = state.reviews.filter { it.businessId == id && it.active && it.status == "Approved" }
+            val reviews = state.reviews.filter { it.businessId == id && it.active && it.status in listOf("Approved", "Published") }
             val total = reviews.size
             val start = ((page - 1) * pageSize).coerceAtLeast(0)
             val paged = if (start < total) reviews.drop(start).take(pageSize) else emptyList()
@@ -155,6 +158,7 @@ class DemoBusinessRepository(
     }
 
     override suspend fun listBranches(businessId: String): Result<ApiItems<Branch>> = runCatching {
+        simulateNetworkDelay(120, 250)
         dataStore.read { state ->
             val branches = state.branches.filter { it.businessId == businessId && it.active }.map { b ->
                 Branch(
@@ -175,6 +179,7 @@ class DemoBusinessRepository(
         businessId: String,
         branchId: String,
     ): Result<ApiItems<Service>> = runCatching {
+        simulateNetworkDelay(120, 250)
         dataStore.read { state ->
             val services = state.services
                 .filter { it.businessId == businessId && it.active && it.branchIds.contains(branchId) }
@@ -198,6 +203,7 @@ class DemoBusinessRepository(
         branchId: String,
         serviceIds: String,
     ): Result<ApiItems<Provider>> = runCatching {
+        simulateNetworkDelay(120, 250)
         dataStore.read { state ->
             val neededServices = serviceIds.split(",").map { it.trim() }.filter { it.isNotBlank() }
             val providers = state.resources
@@ -206,7 +212,7 @@ class DemoBusinessRepository(
                     if (neededServices.isEmpty()) true
                     else {
                         val qualified = state.resourceServices[res.id] ?: emptyList()
-                        qualified.containsAll(neededServices)
+                        qualified.isEmpty() || qualified.containsAll(neededServices)
                     }
                 }
                 .map { res ->
@@ -223,6 +229,7 @@ class DemoBusinessRepository(
     }
 
     override suspend fun getCategories(): Result<ApiItems<Category>> = runCatching {
+        simulateNetworkDelay(100, 200)
         dataStore.read { state ->
             val categories = state.categories.filter { it.active }.map { c ->
                 Category(id = c.id, name = c.name, kind = c.kind, sortOrder = c.sortOrder)
@@ -232,6 +239,7 @@ class DemoBusinessRepository(
     }
 
     override suspend fun getCatalog(page: Int, pageSize: Int): Result<ApiPage<ServiceCatalogItem>> = runCatching {
+        simulateNetworkDelay(120, 250)
         dataStore.read { state ->
             val catalog = state.catalog.filter { it.active && it.isPublished }
             val total = catalog.size

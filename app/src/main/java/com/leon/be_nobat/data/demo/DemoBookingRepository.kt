@@ -8,12 +8,8 @@ import com.leon.be_nobat.domain.model.ManagementAppointment
 import com.leon.be_nobat.domain.model.ManagementReview
 import com.leon.be_nobat.domain.model.ReviewCreated
 import com.leon.be_nobat.domain.model.ReviewInput
-import com.leon.be_nobat.domain.model.Slot
 import com.leon.be_nobat.domain.model.SlotsResponse
 import com.leon.be_nobat.domain.repository.BookingRepository
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 import kotlin.random.Random
 
@@ -29,10 +25,12 @@ class DemoBookingRepository(
         date: String,
         resourceId: String?,
     ): Result<SlotsResponse> = runCatching {
+        simulateNetworkDelay(180, 320)
         dataStore.read { it.slots(businessId, branchId, serviceIds.split(",").map(String::trim).filter(String::isNotBlank), date, resourceId) }
     }
 
     override suspend fun createAppointment(input: BookingInput): Result<Appointment> = runCatching {
+        simulateNetworkDelay(250, 450)
         val user = requireNotNull(tokenManager.currentSession()) { "ابتدا وارد حساب شوید." }.user
         val customerName = user.displayName
         val customerPhone = input.phoneNumber ?: user.phoneNumber ?: "09120000000"
@@ -93,6 +91,7 @@ class DemoBookingRepository(
         page: Int,
         pageSize: Int,
     ): Result<ApiPage<Appointment>> = runCatching {
+        simulateNetworkDelay(150, 280)
         val currentId = requireNotNull(tokenManager.currentSession()).user.id
         dataStore.read { state ->
 
@@ -102,7 +101,12 @@ class DemoBookingRepository(
                     appt.customerId == currentId
                 }
                 .filter { appt ->
-                    status.isNullOrBlank() || appt.status.equals(status, ignoreCase = true)
+                    if (status.isNullOrBlank()) {
+                        // "Upcoming" tab: future appointments or pending/confirmed
+                        appt.status in listOf("Pending", "Confirmed")
+                    } else {
+                        appt.status.equals(status, ignoreCase = true)
+                    }
                 }
 
             val result = filtered.demoPage(page, pageSize)
@@ -111,6 +115,7 @@ class DemoBookingRepository(
     }
 
     override suspend fun getAppointment(id: String): Result<Appointment> = runCatching {
+        simulateNetworkDelay(100, 200)
         val currentId = requireNotNull(tokenManager.currentSession()).user.id
         dataStore.read { state ->
             val appt = state.appointments.firstOrNull { it.id == id }
@@ -121,23 +126,25 @@ class DemoBookingRepository(
     }
 
     override suspend fun cancelAppointment(id: String): Result<Appointment> = runCatching {
+        simulateNetworkDelay(200, 350)
         val currentId = requireNotNull(tokenManager.currentSession()).user.id
         dataStore.update { state ->
             require(state.appointments.any { it.id == id && it.customerId == currentId && it.status in listOf("Pending", "Confirmed") })
-            var updatedAppt: ManagementAppointment? = null
+            var managementAppointment: ManagementAppointment? = null
             val list = state.appointments.map { appt ->
                 if (appt.id == id) {
                     val mod = appt.copy(status = "Cancelled")
-                    updatedAppt = mod
+                    managementAppointment = mod
                     mod
                 } else appt
             }
-            if (updatedAppt == null) error("نوبت با شناسه $id یافت نشد.")
-            state.copy(appointments = list) to updatedAppt!!.toDomainAppointment()
+            if (managementAppointment == null) error("نوبت با شناسه $id یافت نشد.")
+            state.copy(appointments = list) to managementAppointment.toDomainAppointment()
         }
     }
 
     override suspend fun createReview(id: String, input: ReviewInput): Result<ReviewCreated> = runCatching {
+        simulateNetworkDelay(220, 380)
         val user = requireNotNull(tokenManager.currentSession()) { "ابتدا وارد حساب شوید." }.user
         val nowIso = demoNow()
         val newRevId = "rev_${UUID.randomUUID().toString().take(8)}"

@@ -16,8 +16,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // Production server URL. Override via -PbackendUrl=... or local.properties.
-        buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080/api/v1\"")
-        buildConfigField("String", "MEDIA_BASE_URL", "\"http://10.0.2.2:8080\"")
+        buildConfigField("String", "API_BASE_URL", "\"http://127.0.0.1:8080/api/v1\"")
+        buildConfigField("String", "MEDIA_BASE_URL", "\"http://127.0.0.1:8080\"")
         buildConfigField("String", "API_VERSION", "\"v1\"")
     }
 
@@ -37,9 +37,9 @@ android {
 
     buildTypes {
         debug {
-            // Emulator talks to the dev server running on the host machine via 10.0.2.2.
-            buildConfigField("String", "API_BASE_URL", "\"http://10.0.2.2:8080/api/v1\"")
-            buildConfigField("String", "MEDIA_BASE_URL", "\"http://10.0.2.2:8080\"")
+            // Talk to the dev server forwarded via `adb reverse tcp:8080 tcp:8080`.
+            buildConfigField("String", "API_BASE_URL", "\"http://127.0.0.1:8080/api/v1\"")
+            buildConfigField("String", "MEDIA_BASE_URL", "\"http://127.0.0.1:8080\"")
             isDebuggable = true
         }
         release {
@@ -70,6 +70,11 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    lint {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 

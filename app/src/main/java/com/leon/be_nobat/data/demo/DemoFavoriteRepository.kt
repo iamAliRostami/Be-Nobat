@@ -10,6 +10,7 @@ class DemoFavoriteRepository(
 ) : FavoriteRepository {
 
     override suspend fun listFavorites(page: Int, pageSize: Int): Result<ApiPage<Business>> = runCatching {
+        simulateNetworkDelay(150, 280)
         val uid = tokenManager.currentSession()?.user?.id ?: "guest"
         dataStore.read { state ->
             val favBusinesses = state.businesses
@@ -22,7 +23,7 @@ class DemoFavoriteRepository(
             val mapped = paged.map { mb ->
                 val branchCount = state.branches.count { it.businessId == mb.id && it.active }
                 val serviceCount = state.services.count { it.businessId == mb.id && it.active }
-                val reviews = state.reviews.filter { it.businessId == mb.id && it.active && it.status == "Approved" }
+                val reviews = state.reviews.filter { it.businessId == mb.id && it.active && it.status in listOf("Approved", "Published") }
                 val rating = if (reviews.isNotEmpty()) reviews.map { it.rating }.average() else null
                 Business(
                     id = mb.id,
@@ -43,6 +44,7 @@ class DemoFavoriteRepository(
     }
 
     override suspend fun addFavorite(businessId: String): Result<Unit> = runCatching {
+        simulateNetworkDelay(120, 220)
         val uid = tokenManager.currentSession()?.user?.id ?: "guest"
         dataStore.update { state ->
             val favorites = state.userFavorites[uid] ?: if (uid == "user_customer_1") state.favorites else emptyList()
@@ -52,6 +54,7 @@ class DemoFavoriteRepository(
     }
 
     override suspend fun removeFavorite(businessId: String): Result<Unit> = runCatching {
+        simulateNetworkDelay(120, 220)
         val uid = tokenManager.currentSession()?.user?.id ?: "guest"
         dataStore.update { state ->
             val favorites = state.userFavorites[uid] ?: if (uid == "user_customer_1") state.favorites else emptyList()

@@ -48,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                
                 android:textAppearance="@style/TextAppearance.BeNobat.Body"
                 tools:text="30 دقیقه — 150,000 ریال" />
         </LinearLayout>
