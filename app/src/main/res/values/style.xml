@@ -138,20 +138,20 @@
     </style>
 
     <style name="Widget.BeNobat.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="paddingBottomSystemWindowInsets">false</item>
+        <item name="paddingTopSystemWindowInsets">false</item>
+        <item name="paddingLeftSystemWindowInsets">false</item>
+        <item name="paddingRightSystemWindowInsets">false</item>
         <item name="itemIconSize">22dp</item>
         <item name="itemPaddingTop">4dp</item>
         <item name="itemPaddingBottom">4dp</item>
+        <item name="itemActiveIndicatorColor">?attr/colorSecondaryContainer</item>
+        <item name="itemActiveIndicatorHeight">28dp</item>
+        <item name="itemActiveIndicatorWidth">46dp</item>
         <item name="itemTextAppearanceInactive">@style/TextAppearance.BeNobat.BottomNav</item>
         <item name="itemTextAppearanceActive">@style/TextAppearance.BeNobat.BottomNav.Active</item>
-        <item name="itemActiveIndicatorStyle">@style/Widget.BeNobat.BottomNav.ActiveIndicator</item>
         <item name="android:background">?attr/colorSurface</item>
         <item name="elevation">8dp</item>
-    </style>
-
-    <style name="Widget.BeNobat.BottomNav.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:height">28dp</item>
-        <item name="android:width">46dp</item>
-        <item name="android:color">?attr/colorSecondaryContainer</item>
     </style>
 
     <style name="TextAppearance.BeNobat.BottomNav" parent="TextAppearance.Material3.LabelSmall">
