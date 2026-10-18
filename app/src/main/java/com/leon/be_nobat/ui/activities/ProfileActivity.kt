@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream
 
 class ProfileActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_profile
+    override val applyBottomInsetsOnRoot: Boolean = false
 
     private val viewModel: ProfileViewModel by viewModel()
 

@@ -21,6 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_favorites
+    override val applyBottomInsetsOnRoot: Boolean = false
 
     private val viewModel: FavoritesViewModel by viewModel()
     private lateinit var adapter: BusinessAdapter

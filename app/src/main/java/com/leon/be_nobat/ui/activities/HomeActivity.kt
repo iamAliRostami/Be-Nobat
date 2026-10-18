@@ -24,6 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_home
+    override val applyBottomInsetsOnRoot: Boolean = false
 
     private val viewModel: HomeViewModel by viewModel()
 

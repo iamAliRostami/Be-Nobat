@@ -32,6 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AppointmentsActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_appointments
+    override val applyBottomInsetsOnRoot: Boolean = false
 
     private val viewModel: AppointmentsViewModel by viewModel()
     private lateinit var adapter: AppointmentsAdapter

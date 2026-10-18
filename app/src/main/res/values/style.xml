@@ -138,10 +138,7 @@
     </style>
 
     <style name="Widget.BeNobat.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="paddingBottomSystemWindowInsets">false</item>
-        <item name="paddingTopSystemWindowInsets">false</item>
-        <item name="paddingLeftSystemWindowInsets">false</item>
-        <item name="paddingRightSystemWindowInsets">false</item>
+        <item name="android:minHeight">58dp</item>
         <item name="itemIconSize">22dp</item>
         <item name="itemPaddingTop">4dp</item>
         <item name="itemPaddingBottom">4dp</item>
