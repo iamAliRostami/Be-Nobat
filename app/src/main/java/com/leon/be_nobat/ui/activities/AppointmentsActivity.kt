@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
+import com.leon.be_nobat.data.local.TokenManager
 import com.leon.be_nobat.databinding.ItemAppointmentBinding
 import com.leon.be_nobat.domain.model.Appointment
 import com.leon.be_nobat.helpers.BaseActivity
@@ -26,6 +27,7 @@ import com.leon.be_nobat.ui.view_models.AppointmentTab
 import com.leon.be_nobat.ui.view_models.AppointmentsUiState
 import com.leon.be_nobat.ui.view_models.AppointmentsViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AppointmentsActivity : BaseActivity() {
@@ -35,9 +37,22 @@ class AppointmentsActivity : BaseActivity() {
     private lateinit var adapter: AppointmentsAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
+    private val tokenManager: TokenManager by inject()
+
     override fun setupViews() {
         setToolbarTitle(getString(R.string.orders_title))
         setMenuVisibility(false)
+
+        lifecycleScope.launch {
+            if (tokenManager.currentSession() == null) {
+                val intent = Intent(this@AppointmentsActivity, LoginActivity::class.java).apply {
+                    putExtra(LoginActivity.EXTRA_RETURN_TARGET, AppointmentsActivity::class.java.name)
+                }
+                startActivity(intent)
+                finish()
+                return@launch
+            }
+        }
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
@@ -145,9 +160,9 @@ class AppointmentsActivity : BaseActivity() {
                     tvBranch.text = item.branchName
                     tvServices.text = item.serviceNames.joinToString("، ")
                     tvProvider.text = item.resourceName ?: ""
-                    tvTime.text = "${item.startsAt.substringBefore('T')} - ${item.startsAt.substringAfter('T').substringBefore('+')}"
-                    tvPrice.text = "${item.finalPrice.toInt()} ${item.currency}"
-                    tvTrackingCode.text = root.context.getString(R.string.tracking_code_label, item.trackingCode)
+                    tvTime.text = com.leon.be_nobat.helpers.JalaliDateHelper.formatIsoDateTime(item.startsAt)
+                    tvPrice.text = com.leon.be_nobat.helpers.PersianUtils.formatPrice(item.finalPrice, item.currency)
+                    tvTrackingCode.text = "کد پیگیری: ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.trackingCode)}"
                     tvStatus.text = when (item.status) {
                         "Pending" -> root.context.getString(R.string.appointment_status_pending)
                         "Confirmed" -> root.context.getString(R.string.appointment_status_confirmed)

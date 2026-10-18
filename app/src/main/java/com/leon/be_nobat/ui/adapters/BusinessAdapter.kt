@@ -28,14 +28,10 @@ class BusinessAdapter(
                 tvCategory.text = item.category
                 tvCity.text = item.city
                 tvDescription.text = item.description
-                tvBranchCount.text = root.context.getString(
-                    com.leon.be_nobat.R.string.branch_count, item.branchCount
-                )
-                tvServiceCount.text = root.context.getString(
-                    com.leon.be_nobat.R.string.service_count, item.serviceCount
-                )
+                tvBranchCount.text = "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.branchCount)} شعبه"
+                tvServiceCount.text = "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.serviceCount)} خدمت"
                 tvRating.text = item.rating?.let {
-                    root.context.getString(com.leon.be_nobat.R.string.rating_value, it)
+                    "★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it)}"
                 } ?: ""
                 tvRequiresApproval.visibility = if (item.requiresApproval) android.view.View.VISIBLE else android.view.View.GONE
                 val fav = isFavorite(item.id)

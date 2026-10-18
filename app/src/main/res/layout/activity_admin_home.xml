@@ -21,15 +21,67 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
+                <LinearLayout
+                    android:id="@+id/adminHeaderBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnToggleDrawer"
+                        style="@style/Widget.BeNobat.Button.Tonal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/management_menu"
+                        app:icon="@drawable/ic_dashboard"
+                        app:iconGravity="textStart" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLanguage"
+                        style="@style/Widget.BeNobat.Button.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:minWidth="48dp"
+                        android:text="فا"
+                        app:icon="@drawable/ic_language" />
+
+                    <ImageButton
+                        android:id="@+id/btnThemeToggle"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/switch_theme"
+                        android:src="@drawable/ic_switch_theme" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPublicView"
+                        style="@style/Widget.BeNobat.Button.Outlined"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/public_view" />
+                </LinearLayout>
+
                 <TextView
                     android:id="@+id/tvTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:text="@string/admin_dashboard"
                     android:textAppearance="@style/TextAppearance.BeNobat.Brand"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/adminHeaderBar" />
 
                 <ProgressBar
                     android:id="@+id/loadingProgress"

@@ -12,10 +12,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.leon.be_nobat.R
+import com.leon.be_nobat.data.local.TokenManager
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.view_models.ProfileUiState
 import com.leon.be_nobat.ui.view_models.ProfileViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.ByteArrayOutputStream
 
@@ -30,9 +32,22 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
+    private val tokenManager: TokenManager by inject()
+
     override fun setupViews() {
         setToolbarTitle(getString(R.string.profile_title))
         setMenuVisibility(false)
+
+        lifecycleScope.launch {
+            if (tokenManager.currentSession() == null) {
+                val intent = Intent(this@ProfileActivity, LoginActivity::class.java).apply {
+                    putExtra(LoginActivity.EXTRA_RETURN_TARGET, ProfileActivity::class.java.name)
+                }
+                startActivity(intent)
+                finish()
+                return@launch
+            }
+        }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnUploadAvatar).setOnClickListener {
             pickImageLauncher.launch("image/*")

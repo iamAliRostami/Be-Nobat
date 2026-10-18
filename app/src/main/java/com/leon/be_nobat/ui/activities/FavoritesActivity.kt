@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.leon.be_nobat.R
+import com.leon.be_nobat.data.local.TokenManager
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.adapters.BusinessAdapter
 import com.leon.be_nobat.ui.view_models.FavoritesUiState
 import com.leon.be_nobat.ui.view_models.FavoritesViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoritesActivity : BaseActivity() {
@@ -24,9 +26,22 @@ class FavoritesActivity : BaseActivity() {
     private lateinit var adapter: BusinessAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
+    private val tokenManager: TokenManager by inject()
+
     override fun setupViews() {
         setToolbarTitle(getString(R.string.favorites_title))
         setMenuVisibility(false)
+
+        lifecycleScope.launch {
+            if (tokenManager.currentSession() == null) {
+                val intent = Intent(this@FavoritesActivity, LoginActivity::class.java).apply {
+                    putExtra(LoginActivity.EXTRA_RETURN_TARGET, FavoritesActivity::class.java.name)
+                }
+                startActivity(intent)
+                finish()
+                return@launch
+            }
+        }
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }

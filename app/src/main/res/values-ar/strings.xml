@@ -181,4 +181,18 @@
 
     <string name="example_title">مثال</string>
     <string name="example_message">هذه شاشة تجريبية</string>
+
+    <string name="management_menu">لوحة الإدارة</string>
+    <string name="public_view">العرض العام</string>
+    <string name="filter_and_sort">تصفية وترتيب</string>
+    <string name="sort_highest_rating">أعلى تقييم</string>
+    <string name="sort_most_branches">أكثر الفروع</string>
+    <string name="sort_most_services">أكثر الخدمات</string>
+    <string name="sort_name">الاسم (أبجدياً)</string>
+    <string name="sort_default">الافتراضي</string>
+    <string name="filter_instant_booking">فقط حجز فوري (بدون موافقة)</string>
+    <string name="apply_filter">تطبيق</string>
+    <string name="reset_filter">إعادة تعيين</string>
+    <string name="login_required_title">تسجيل الدخول مطلوب</string>
+    <string name="login_required_desc">يرجى تسجيل الدخول للوصول إلى هذا القسم.</string>
 </resources>

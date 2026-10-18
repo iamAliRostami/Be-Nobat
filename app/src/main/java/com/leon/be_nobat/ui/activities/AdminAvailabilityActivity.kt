@@ -67,8 +67,8 @@ class AdminAvailabilityActivity : BaseActivity() {
         BaseAdminAdapter<ManagementAvailability>(simpleDiff({ a, b -> a.id == b.id }, { a, b -> a == b })) {
         override fun bindHolder(holder: AdminViewHolder, item: ManagementAvailability) {
             holder.binding.apply {
-                tvTitle.text = "${item.dayOfWeek} • ${item.startsAt} - ${item.endsAt}"
-                tvSubtitle.text = item.effectiveDate ?: item.dayOfWeek
+                tvTitle.text = "${item.dayOfWeek} • ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.startsAt)} - ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.endsAt)}"
+                tvSubtitle.text = item.effectiveDate?.let { com.leon.be_nobat.helpers.JalaliDateHelper.formatIsoToJalali(it) } ?: item.dayOfWeek
                 tvBody.text = if (item.isAvailable) "در دسترس" else "غیرفعال"
                 tvStatus.text = if (item.isAvailable) root.context.getString(R.string.set_active) else root.context.getString(R.string.set_inactive)
                 btnAction1.isVisible = false

@@ -11,9 +11,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+enum class BusinessSortOption {
+    DEFAULT,
+    RATING,
+    BRANCHES,
+    SERVICES,
+    NAME
+}
+
 data class HomeUiState(
     val loading: Boolean = false,
     val refreshing: Boolean = false,
+    val rawItems: List<Business> = emptyList(),
     val items: List<Business> = emptyList(),
     val page: Int = 1,
     val total: Int = 0,
@@ -21,6 +30,8 @@ data class HomeUiState(
     val query: String = "",
     val city: String = "",
     val category: String = "",
+    val sortOption: BusinessSortOption = BusinessSortOption.DEFAULT,
+    val filterInstantOnly: Boolean = false,
     val error: String? = null,
     val favoriteSnapshot: Map<String, Boolean> = emptyMap(),
 )
@@ -41,9 +52,12 @@ class HomeViewModel(
             val s = _state.value
             listBusinesses(s.query.ifBlank { null }, s.city.ifBlank { null }, s.category.ifBlank { null }, page = 1)
                 .onSuccess { page: ApiPage<Business> ->
+                    val filtered = applyFilterAndSort(page.items, s.sortOption, s.filterInstantOnly)
                     _state.value = _state.value.copy(
                         loading = false, refreshing = false,
-                        items = page.items, page = 1, total = page.total,
+                        rawItems = page.items,
+                        items = filtered,
+                        page = 1, total = page.total,
                         hasMore = page.items.size < page.total,
                         error = null,
                     )
@@ -61,11 +75,14 @@ class HomeViewModel(
             _state.value = s.copy(loading = true)
             listBusinesses(s.query.ifBlank { null }, s.city.ifBlank { null }, s.category.ifBlank { null }, page = s.page + 1)
                 .onSuccess { page ->
+                    val newRaw = s.rawItems + page.items
+                    val filtered = applyFilterAndSort(newRaw, s.sortOption, s.filterInstantOnly)
                     _state.value = _state.value.copy(
                         loading = false,
-                        items = s.items + page.items,
+                        rawItems = newRaw,
+                        items = filtered,
                         page = s.page + 1,
-                        hasMore = (s.items + page.items).size < page.total,
+                        hasMore = newRaw.size < page.total,
                     )
                 }
                 .onFailure { e ->
@@ -84,6 +101,28 @@ class HomeViewModel(
 
     fun updateCategory(cat: String) {
         _state.value = _state.value.copy(category = cat)
+    }
+
+    fun setSortAndFilter(sortOption: BusinessSortOption, instantOnly: Boolean) {
+        val s = _state.value
+        val filtered = applyFilterAndSort(s.rawItems, sortOption, instantOnly)
+        _state.value = s.copy(sortOption = sortOption, filterInstantOnly = instantOnly, items = filtered)
+    }
+
+    private fun applyFilterAndSort(
+        source: List<Business>,
+        sortOption: BusinessSortOption,
+        instantOnly: Boolean,
+    ): List<Business> {
+        var result = if (instantOnly) source.filter { !it.requiresApproval } else source
+        result = when (sortOption) {
+            BusinessSortOption.DEFAULT -> result
+            BusinessSortOption.RATING -> result.sortedByDescending { it.rating ?: 0.0 }
+            BusinessSortOption.BRANCHES -> result.sortedByDescending { it.branchCount }
+            BusinessSortOption.SERVICES -> result.sortedByDescending { it.serviceCount }
+            BusinessSortOption.NAME -> result.sortedBy { it.name }
+        }
+        return result
     }
 
     fun toggleFavoriteFor(businessId: String, isFav: Boolean) {

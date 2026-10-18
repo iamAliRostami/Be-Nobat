@@ -54,12 +54,8 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (isMenuVisible) {
             menuInflater.inflate(R.menu.main_menu, menu)
-            menu.findItem(R.id.search)?.isVisible = isHorizontalButtonsVisible
-            menu.findItem(R.id.filter)?.isVisible = isHorizontalButtonsVisible
-            menu.findItem(R.id.sort)?.isVisible = isHorizontalButtonsVisible
-            menu.findItem(R.id.refresh)?.isVisible = isHorizontalButtonsVisible
+            menu.findItem(R.id.action_language)?.isVisible = isHorizontalButtonsVisible
             menu.findItem(R.id.switchTheme)?.isVisible = isHorizontalButtonsVisible
-
             return true
         }
         return super.onCreateOptionsMenu(menu)
@@ -67,23 +63,38 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.search -> onSearchClicked()
-            R.id.filter -> onFilterClicked()
-            R.id.sort -> onSortClicked()
-            R.id.refresh -> onRefreshClicked()
+            R.id.action_language -> {
+                val anchor = findViewById<View>(R.id.action_language) ?: toolbar
+                showLanguageMenu(anchor)
+            }
             R.id.switchTheme -> setupThemeToggle()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
     }
 
-    protected fun setupThemeToggle() {
+    fun getCurrentLanguage(): String {
+        val locales = androidx.appcompat.app.AppCompatDelegate.getApplicationLocales()
+        if (!locales.isEmpty) {
+            val tag = locales.get(0)?.language
+            if (!tag.isNullOrBlank()) return tag
+        }
+        return "fa"
+    }
+
+    fun getCurrentLanguageLabel(): String = when (getCurrentLanguage()) {
+        "en" -> "EN"
+        "ar" -> "عر"
+        else -> "فا"
+    }
+
+    fun setupThemeToggle() {
         val isNight =
             resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         viewModel.toggleTheme(isNight)
     }
 
-    protected fun showLanguageMenu(anchor: View) {
+    fun showLanguageMenu(anchor: View) {
         showPopupMenu(anchor, R.menu.language_menu) { menuItemId ->
             val languageTag = when (menuItemId) {
                 R.id.language_persian -> "fa"
@@ -92,9 +103,7 @@ abstract class BaseActivity : AppCompatActivity() {
                 else -> return@showPopupMenu
             }
             viewModel.switchLanguage(languageTag)
-            /*AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.forLanguageTags(languageTag)
-            )*/
+            recreate()
         }
     }
 

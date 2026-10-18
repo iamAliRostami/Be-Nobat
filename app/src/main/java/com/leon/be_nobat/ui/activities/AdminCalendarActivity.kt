@@ -97,7 +97,7 @@ class AdminCalendarActivity : BaseActivity() {
             holder.binding.apply {
                 tvTitle.text = item.businessName
                 tvSubtitle.text = "${item.branchName} • ${item.customerName} • ${item.serviceNames.joinToString("، ")}"
-                tvBody.text = "${item.startsAt.substringBefore('T')} • ${item.trackingCode} • ${item.finalPrice.toInt()} ${item.currency}"
+                tvBody.text = "${com.leon.be_nobat.helpers.JalaliDateHelper.formatIsoDateTime(item.startsAt)} • کد: ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.trackingCode)} • ${com.leon.be_nobat.helpers.PersianUtils.formatPrice(item.finalPrice, item.currency)}"
                 tvStatus.text = item.status
                 btnAction1.text = root.context.getString(R.string.complete_appointment)
                 btnAction2.text = root.context.getString(R.string.cancel_appointment_admin)

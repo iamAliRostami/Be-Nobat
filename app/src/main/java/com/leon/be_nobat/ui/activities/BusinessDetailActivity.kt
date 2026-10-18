@@ -32,8 +32,19 @@ class BusinessDetailActivity : BaseActivity() {
         val businessId = intent.getStringExtra("businessId") ?: ""
         viewModel.setBusinessId(businessId)
 
+        val tokenManager = org.koin.java.KoinJavaComponent.get<com.leon.be_nobat.data.local.TokenManager>(com.leon.be_nobat.data.local.TokenManager::class.java)
         findViewById<android.widget.ImageButton>(R.id.btnFavorite).setOnClickListener {
-            viewModel.toggleFavorite()
+            lifecycleScope.launch {
+                if (tokenManager.currentSession() == null) {
+                    val intent = Intent(this@BusinessDetailActivity, LoginActivity::class.java).apply {
+                        putExtra(LoginActivity.EXTRA_RETURN_TARGET, BusinessDetailActivity::class.java.name)
+                        putExtra(LoginActivity.EXTRA_BUSINESS_ID, businessId)
+                    }
+                    startActivity(intent)
+                } else {
+                    viewModel.toggleFavorite()
+                }
+            }
         }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnBook).setOnClickListener {
@@ -64,13 +75,14 @@ class BusinessDetailActivity : BaseActivity() {
         findViewById<android.widget.TextView>(R.id.tvName).text = b.name
         findViewById<android.widget.TextView>(R.id.tvCategoryCity).text = "${b.category} • ${b.city}"
         findViewById<android.widget.TextView>(R.id.tvDescription).text = b.description
-        findViewById<android.widget.TextView>(R.id.tvStats).text = "${b.branchCount} شعب • ${b.serviceCount} خدمات • ★ ${b.rating ?: "—"} (${b.reviewCount} نظر)"
+        findViewById<android.widget.TextView>(R.id.tvStats).text =
+            "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.branchCount)} شعب • ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.serviceCount)} خدمات • ★ ${b.rating?.let { com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it) } ?: "—"} (${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.reviewCount)} نظر)"
         findViewById<android.widget.TextView>(R.id.tvBranches).text = b.branches.joinToString("\n\n") { "• ${it.name} — ${it.address}" }
         findViewById<android.widget.TextView>(R.id.tvServices).text = b.services.joinToString("\n\n") {
-            "• ${it.name} (${it.durationMinutes} دقیقه) — ${it.price.toInt()} ${it.currency}"
+            "• ${it.name} (${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it.durationMinutes)} دقیقه) — ${com.leon.be_nobat.helpers.PersianUtils.formatPrice(it.price, it.currency)}"
         }
         findViewById<android.widget.TextView>(R.id.tvReviews).text = b.reviews.joinToString("\n\n") {
-            "★ ${it.rating} — ${it.customerName}\n${it.comment}"
+            "★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it.rating)} — ${it.customerName}\n${it.comment}"
         }
         findViewById<android.widget.ImageButton>(R.id.btnFavorite).setColorFilter(if (state.isFavorite) getColor(R.color.error_red) else getColor(R.color.brand_accent))
     }

@@ -228,4 +228,19 @@
     <!-- legacy / example screen -->
     <string name="example_title">فعالیت نمونه</string>
     <string name="example_message">این یک صفحه نمونه است</string>
+
+    <!-- Management, Filter, Sort and Auth Redirect -->
+    <string name="management_menu">منوی مدیریت</string>
+    <string name="public_view">نمای عمومی</string>
+    <string name="filter_and_sort">فیلتر و مرتب‌سازی</string>
+    <string name="sort_highest_rating">بالاترین امتیاز</string>
+    <string name="sort_most_branches">بیشترین شعب</string>
+    <string name="sort_most_services">بیشترین خدمات</string>
+    <string name="sort_name">نام (الفبایی)</string>
+    <string name="sort_default">پیش‌فرض</string>
+    <string name="filter_instant_booking">فقط بدون نیاز به تأیید (فوری)</string>
+    <string name="apply_filter">اعمال</string>
+    <string name="reset_filter">حذف فیلترها</string>
+    <string name="login_required_title">ورود به حساب</string>
+    <string name="login_required_desc">برای دسترسی به این بخش، ابتدا وارد حساب کاربری خود شوید.</string>
 </resources>

@@ -89,7 +89,7 @@ class AdminReviewsActivity : BaseActivity() {
     ) : BaseAdminAdapter<ManagementReview>(simpleDiff({ a, b -> a.id == b.id }, { a, b -> a == b })) {
         override fun bindHolder(holder: AdminViewHolder, item: ManagementReview) {
             holder.binding.apply {
-                tvTitle.text = "${item.customerName} • ★ ${item.rating}"
+                tvTitle.text = "${item.customerName} • ★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.rating)}"
                 tvSubtitle.text = item.status
                 tvBody.text = item.comment
                 tvStatus.text = item.status

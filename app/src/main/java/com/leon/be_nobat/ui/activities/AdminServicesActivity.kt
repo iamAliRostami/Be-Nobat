@@ -107,7 +107,7 @@ class AdminServicesActivity : BaseActivity() {
         override fun bindHolder(holder: AdminViewHolder, item: ManagementService) {
             holder.binding.apply {
                 tvTitle.text = item.name
-                tvSubtitle.text = "${item.durationMinutes} دقیقه • ${item.price.toInt()} ${item.currency}"
+                tvSubtitle.text = "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.durationMinutes)} دقیقه • ${com.leon.be_nobat.helpers.PersianUtils.formatPrice(item.price, item.currency)}"
                 tvBody.text = item.description
                 tvStatus.text = if (item.active) root.context.getString(R.string.set_active) else root.context.getString(R.string.set_inactive)
                 btnAction1.text = if (item.active) root.context.getString(R.string.set_inactive) else root.context.getString(R.string.set_active)

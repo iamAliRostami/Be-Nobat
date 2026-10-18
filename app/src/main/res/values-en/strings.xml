@@ -181,4 +181,18 @@
 
     <string name="example_title">Example</string>
     <string name="example_message">This is an example screen</string>
+
+    <string name="management_menu">Management</string>
+    <string name="public_view">Public View</string>
+    <string name="filter_and_sort">Filter &amp; Sort</string>
+    <string name="sort_highest_rating">Highest Rating</string>
+    <string name="sort_most_branches">Most Branches</string>
+    <string name="sort_most_services">Most Services</string>
+    <string name="sort_name">Name (A-Z)</string>
+    <string name="sort_default">Default</string>
+    <string name="filter_instant_booking">Instant confirmation only</string>
+    <string name="apply_filter">Apply</string>
+    <string name="reset_filter">Reset Filters</string>
+    <string name="login_required_title">Sign In Required</string>
+    <string name="login_required_desc">Please sign in to access this section.</string>
 </resources>

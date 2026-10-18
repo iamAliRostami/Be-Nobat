@@ -69,7 +69,7 @@ class AdminTeamActivity : BaseActivity() {
             holder.binding.apply {
                 tvTitle.text = item.displayName
                 tvSubtitle.text = item.email ?: ""
-                tvBody.text = item.phoneNumber ?: ""
+                tvBody.text = item.phoneNumber?.let { com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it) } ?: ""
                 tvStatus.text = if (item.active) root.context.getString(R.string.set_active) else root.context.getString(R.string.set_inactive)
                 btnAction1.isVisible = false
                 btnAction2.isVisible = false

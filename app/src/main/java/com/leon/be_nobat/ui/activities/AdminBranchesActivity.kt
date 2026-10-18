@@ -112,7 +112,7 @@ class AdminBranchesActivity : BaseActivity() {
             holder.binding.apply {
                 tvTitle.text = item.name
                 tvSubtitle.text = item.address
-                tvBody.text = "${item.openHour}:00 - ${item.closeHour}:00"
+                tvBody.text = "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.openHour)}:۰۰ - ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.closeHour)}:۰۰"
                 tvStatus.text = if (item.active) root.context.getString(R.string.set_active) else root.context.getString(R.string.set_inactive)
                 btnAction1.text = if (item.active) root.context.getString(R.string.set_inactive) else root.context.getString(R.string.set_active)
                 btnAction2.isVisible = false

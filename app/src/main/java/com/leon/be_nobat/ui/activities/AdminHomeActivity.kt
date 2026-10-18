@@ -23,16 +23,35 @@ class AdminHomeActivity : BaseActivity() {
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.admin_dashboard))
-        setMenuVisibility(true)
-        // Make the toolbar home (hamburger) button open the drawer.
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_more_vert)
-        // Note: toolbar.setNavigationOnClickListener is overridden below.
+        setToolbarTitle(true) // Remove the dull base toolbar
 
         drawerLayout = findViewById(R.id.drawerLayout)
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
+
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnToggleDrawer).setOnClickListener {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            } else {
+                drawerLayout.openDrawer(GravityCompat.START)
+            }
+        }
+
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLanguage).apply {
+            text = getCurrentLanguageLabel()
+            setOnClickListener { showLanguageMenu(it) }
+        }
+
+        findViewById<android.widget.ImageButton>(R.id.btnThemeToggle).setOnClickListener {
+            setupThemeToggle()
+        }
+
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPublicView).setOnClickListener {
+            startActivity(Intent(this, HomeActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            })
+            finishAffinity()
+        }
 
         val navView = findViewById<NavigationView>(R.id.navView)
         navView.setNavigationItemSelectedListener { item ->
@@ -64,10 +83,6 @@ class AdminHomeActivity : BaseActivity() {
             }
         }
 
-        // Set toolbar navigation icon to open the drawer
-        val toolbar = findViewById<com.google.android.material.appbar.MaterialToolbar>(R.id.baseToolbar)
-        toolbar.setNavigationOnClickListener { drawerLayout.openDrawer(GravityCompat.START) }
-
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCalendar).setOnClickListener {
             startActivity(Intent(this, AdminCalendarActivity::class.java))
         }
@@ -97,14 +112,22 @@ class AdminHomeActivity : BaseActivity() {
             }
         }
         state.dashboard?.let { d ->
-            findViewById<android.widget.TextView>(R.id.tvBusinessesValue).text = d.businesses.toString()
-            findViewById<android.widget.TextView>(R.id.tvBranchesValue).text = d.branches.toString()
-            findViewById<android.widget.TextView>(R.id.tvAppointmentsValue).text = d.appointments.toString()
-            findViewById<android.widget.TextView>(R.id.tvPendingValue).text = d.pending.toString()
-            findViewById<android.widget.TextView>(R.id.tvUpcomingValue).text = d.upcoming.toString()
-            findViewById<android.widget.TextView>(R.id.tvCompletedValue).text = d.completed.toString()
-            findViewById<android.widget.TextView>(R.id.tvRevenueValue).text = d.revenue.toInt().toString()
-            findViewById<android.widget.TextView>(R.id.tvPendingReviewsValue).text = d.pendingReviews.toString()
+            findViewById<android.widget.TextView>(R.id.tvBusinessesValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.businesses)
+            findViewById<android.widget.TextView>(R.id.tvBranchesValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.branches)
+            findViewById<android.widget.TextView>(R.id.tvAppointmentsValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.appointments)
+            findViewById<android.widget.TextView>(R.id.tvPendingValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.pending)
+            findViewById<android.widget.TextView>(R.id.tvUpcomingValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.upcoming)
+            findViewById<android.widget.TextView>(R.id.tvCompletedValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.completed)
+            findViewById<android.widget.TextView>(R.id.tvRevenueValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.formatNumber(d.revenue.toLong())
+            findViewById<android.widget.TextView>(R.id.tvPendingReviewsValue).text =
+                com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.pendingReviews)
         }
     }
 }

@@ -89,7 +89,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btnThemeToggle -> setupThemeToggle()
-            R.id.btnLanguage -> v?.let(::showLanguageMenu)
+            R.id.btnLanguage -> showLanguageMenu(v)
             R.id.btnGuest -> {
                 startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
             }
@@ -129,7 +129,25 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    companion object {
+        const val EXTRA_RETURN_TARGET = "extra_return_target"
+        const val EXTRA_BUSINESS_ID = "extra_business_id"
+    }
+
     private fun routeAfterLogin(user: com.leon.be_nobat.domain.model.User) {
+        val returnTarget = intent.getStringExtra(EXTRA_RETURN_TARGET)
+        if (!returnTarget.isNullOrBlank()) {
+            try {
+                val targetClass = Class.forName(returnTarget)
+                val targetIntent = Intent(this, targetClass).apply {
+                    intent.getStringExtra(EXTRA_BUSINESS_ID)?.let { putExtra("businessId", it) }
+                }
+                startActivity(targetIntent)
+                finish()
+                return
+            } catch (_: Exception) {}
+        }
+
         // Role-based routing: admin/managers/staff go to admin home; customers to customer home.
         val target = if (user.isStaff) {
             Intent(this, AdminHomeActivity::class.java)
