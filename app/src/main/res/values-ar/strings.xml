@@ -161,6 +161,37 @@
     <string name="action_back">رجوع</string>
     <string name="action_continue">متابعة</string>
     <string name="action_skip">تخطي</string>
+    <string name="action_add">إضافة</string>
+    <string name="action_create">إنشاء</string>
+
+    <string name="form_create_branch_title">إنشاء فرع جديد</string>
+    <string name="form_create_service_title">إنشاء خدمة جديدة</string>
+    <string name="form_create_business_title">إنشاء نشاط تجاري</string>
+    <string name="form_create_catalog_title">إنشاء عنصر دليل</string>
+    <string name="form_create_category_title">إنشاء فئة</string>
+    <string name="form_create_user_title">إنشاء مستخدم جديد</string>
+
+    <string name="form_label_name">الاسم</string>
+    <string name="form_label_slug">المعرف اللاتيني (Slug)</string>
+    <string name="form_label_category">الفئة</string>
+    <string name="form_label_city">المدينة</string>
+    <string name="form_label_description">الوصف</string>
+    <string name="form_label_address">العنوان</string>
+    <string name="form_label_open_hour">ساعة البدء (٠-٢٣)</string>
+    <string name="form_label_close_hour">ساعة الإغلاق (١-٢٤)</string>
+    <string name="form_label_duration_minutes">المدة (بالدقائق)</string>
+    <string name="form_label_price">السعر (ريال)</string>
+    <string name="form_label_currency">العملة</string>
+    <string name="form_label_email">البريد الإلكتروني</string>
+    <string name="form_label_phone">رقم الهاتف</string>
+    <string name="form_label_role">الدور</string>
+    <string name="form_label_kind">النوع</string>
+    <string name="form_label_sort_order">الترتيب</string>
+
+    <string name="msg_created">تم الإنشاء بنجاح</string>
+    <string name="msg_updated">تم التحديث بنجاح</string>
+    <string name="msg_deleted">تم الحذف بنجاح</string>
+    <string name="msg_invalid_input">يرجى ملء جميع الحقول</string>
 
     <string name="unexpected_error">حدث خطأ غير متوقع</string>
     <string name="error_invalid_identifier">أدخل بريداً إلكترونياً صالحاً (الدخول بالهاتف غير مدعوم بعد)</string>
@@ -195,4 +226,5 @@
     <string name="reset_filter">إعادة تعيين</string>
     <string name="login_required_title">تسجيل الدخول مطلوب</string>
     <string name="login_required_desc">يرجى تسجيل الدخول للوصول إلى هذا القسم.</string>
+    <string name="language">اللغة</string>
 </resources>

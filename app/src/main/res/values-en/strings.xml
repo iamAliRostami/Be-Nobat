@@ -161,6 +161,37 @@
     <string name="action_back">Back</string>
     <string name="action_continue">Continue</string>
     <string name="action_skip">Skip</string>
+    <string name="action_add">Add</string>
+    <string name="action_create">Create</string>
+
+    <string name="form_create_branch_title">Create New Branch</string>
+    <string name="form_create_service_title">Create New Service</string>
+    <string name="form_create_business_title">Create Business</string>
+    <string name="form_create_catalog_title">Create Catalog Item</string>
+    <string name="form_create_category_title">Create Category</string>
+    <string name="form_create_user_title">Create New User</string>
+
+    <string name="form_label_name">Name</string>
+    <string name="form_label_slug">Slug (English)</string>
+    <string name="form_label_category">Category</string>
+    <string name="form_label_city">City</string>
+    <string name="form_label_description">Description</string>
+    <string name="form_label_address">Address</string>
+    <string name="form_label_open_hour">Opening hour (0-23)</string>
+    <string name="form_label_close_hour">Closing hour (1-24)</string>
+    <string name="form_label_duration_minutes">Duration (minutes)</string>
+    <string name="form_label_price">Price (Rials)</string>
+    <string name="form_label_currency">Currency</string>
+    <string name="form_label_email">Email</string>
+    <string name="form_label_phone">Mobile</string>
+    <string name="form_label_role">Role</string>
+    <string name="form_label_kind">Type</string>
+    <string name="form_label_sort_order">Sort order</string>
+
+    <string name="msg_created">Created successfully</string>
+    <string name="msg_updated">Updated successfully</string>
+    <string name="msg_deleted">Deleted successfully</string>
+    <string name="msg_invalid_input">Please fill all fields</string>
 
     <string name="unexpected_error">An unexpected error occurred</string>
     <string name="error_invalid_identifier">Enter a valid email (mobile login not yet supported)</string>
@@ -195,4 +226,5 @@
     <string name="reset_filter">Reset Filters</string>
     <string name="login_required_title">Sign In Required</string>
     <string name="login_required_desc">Please sign in to access this section.</string>
+    <string name="language">Language</string>
 </resources>
