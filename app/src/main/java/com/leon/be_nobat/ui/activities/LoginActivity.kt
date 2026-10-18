@@ -38,7 +38,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             (findViewById<MaterialButton>(R.id.btnGuest).parent as android.widget.LinearLayout).addView(demoButton)
         }
         setToolbarTitle(true) // hide toolbar (login has its own header)
-        findViewById<ImageButton>(R.id.btnThemeToggle).setOnClickListener(this)
+        findViewById<View>(R.id.btnThemeToggle).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnLanguage).setOnClickListener(this)
         findViewById<MaterialButton>(R.id.btnGuest).setOnClickListener(this)
         loginButton.setOnClickListener(this)

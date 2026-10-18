@@ -46,30 +46,31 @@
                         android:layout_weight="1" />
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnLanguage"
-                        style="@style/Widget.BeNobat.Button.Outlined"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:minWidth="48dp"
-                        android:text="فا"
-                        app:icon="@drawable/ic_language" />
-
-                    <ImageButton
                         android:id="@+id/btnThemeToggle"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginEnd="6dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        style="@style/Widget.BeNobat.Button.Icon.Header"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:contentDescription="@string/switch_theme"
-                        android:src="@drawable/ic_switch_theme" />
+                        app:icon="@drawable/ic_switch_theme" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLanguage"
+                        style="@style/Widget.BeNobat.Button.Icon.Header"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/language"
+                        app:icon="@drawable/ic_language" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnPublicView"
-                        style="@style/Widget.BeNobat.Button.Outlined"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/public_view" />
+                        style="@style/Widget.BeNobat.Button.Icon.Header.Tonal"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/public_view"
+                        android:tooltipText="@string/public_view"
+                        app:icon="@drawable/ic_home" />
                 </LinearLayout>
 
                 <TextView

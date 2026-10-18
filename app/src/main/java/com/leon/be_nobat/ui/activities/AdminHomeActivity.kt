@@ -37,12 +37,11 @@ class AdminHomeActivity : BaseActivity() {
             }
         }
 
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLanguage).apply {
-            text = getCurrentLanguageLabel()
-            setOnClickListener { showLanguageMenu(it) }
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLanguage).setOnClickListener {
+            showLanguageMenu(it)
         }
 
-        findViewById<android.widget.ImageButton>(R.id.btnThemeToggle).setOnClickListener {
+        findViewById<android.view.View>(R.id.btnThemeToggle).setOnClickListener {
             setupThemeToggle()
         }
 
