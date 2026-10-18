@@ -227,4 +227,6 @@
     <string name="login_required_title">تسجيل الدخول مطلوب</string>
     <string name="login_required_desc">يرجى تسجيل الدخول للوصول إلى هذا القسم.</string>
     <string name="language">اللغة</string>
+    <string name="quick_access">الوصول السريع</string>
+    <string name="stats_overview">ملخص الأداء</string>
 </resources>

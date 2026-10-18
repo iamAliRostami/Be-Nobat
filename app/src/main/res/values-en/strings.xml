@@ -177,8 +177,8 @@
     <string name="form_label_city">City</string>
     <string name="form_label_description">Description</string>
     <string name="form_label_address">Address</string>
-    <string name="form_label_open_hour">Opening hour (0-23)</string>
-    <string name="form_label_close_hour">Closing hour (1-24)</string>
+    <string name="form_label_open_hour">Opening hour (0–23)</string>
+    <string name="form_label_close_hour">Closing hour (1–24)</string>
     <string name="form_label_duration_minutes">Duration (minutes)</string>
     <string name="form_label_price">Price (Rials)</string>
     <string name="form_label_currency">Currency</string>
@@ -227,4 +227,6 @@
     <string name="login_required_title">Sign In Required</string>
     <string name="login_required_desc">Please sign in to access this section.</string>
     <string name="language">Language</string>
+    <string name="quick_access">Quick Access</string>
+    <string name="stats_overview">Overview &amp; Stats</string>
 </resources>

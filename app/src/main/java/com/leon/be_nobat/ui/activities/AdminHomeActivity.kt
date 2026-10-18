@@ -124,7 +124,7 @@ class AdminHomeActivity : BaseActivity() {
             findViewById<android.widget.TextView>(R.id.tvCompletedValue).text =
                 com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.completed)
             findViewById<android.widget.TextView>(R.id.tvRevenueValue).text =
-                com.leon.be_nobat.helpers.PersianUtils.formatNumber(d.revenue.toLong())
+                com.leon.be_nobat.helpers.PersianUtils.formatPrice(d.revenue.toLong())
             findViewById<android.widget.TextView>(R.id.tvPendingReviewsValue).text =
                 com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(d.pendingReviews)
         }
