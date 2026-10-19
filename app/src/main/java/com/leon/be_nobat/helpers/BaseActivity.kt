@@ -163,4 +163,57 @@ abstract class BaseActivity : AppCompatActivity() {
     private fun hideToolbar() {
         toolbar.visibility = View.GONE
     }
+
+    private var lastBackPressTime = 0L
+    private var backToast: AppToast? = null
+
+    /**
+     * Shows a toast matching the application font and theme.
+     */
+    fun showToast(message: CharSequence, isLong: Boolean = false) {
+        AppToast.makeText(this, message, if (isLong) 1 else 0).show()
+    }
+
+    /**
+     * Shows a toast matching the application font and theme from a string resource.
+     */
+    fun showToast(messageRes: Int, isLong: Boolean = false) {
+        AppToast.makeText(this, messageRes, if (isLong) 1 else 0).show()
+    }
+
+    /**
+     * Enables double-back-to-exit behavior.
+     * When pressed once, shows a toast prompting the user to press again within [intervalMs].
+     * If pressed a second time within [intervalMs], triggers [onExit] (default finishAffinity()).
+     * [intercept] can return true to consume the back press (e.g. closing an open drawer)
+     * without triggering the exit flow.
+     */
+    protected fun setupDoubleBackToExit(
+        intercept: (() -> Boolean)? = null,
+        intervalMs: Long = 2000L,
+        onExit: () -> Unit = { finishAffinity() }
+    ) {
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (intercept?.invoke() == true) {
+                    return
+                }
+
+                val now = System.currentTimeMillis()
+                if (now - lastBackPressTime < intervalMs) {
+                    backToast?.cancel()
+                    onExit()
+                } else {
+                    lastBackPressTime = now
+                    backToast?.cancel()
+                    backToast = AppToast.makeText(
+                        this@BaseActivity,
+                        getString(R.string.press_back_again_to_exit),
+                        0
+                    )
+                    backToast?.show()
+                }
+            }
+        })
+    }
 }

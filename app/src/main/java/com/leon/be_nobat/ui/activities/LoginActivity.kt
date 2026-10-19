@@ -51,6 +51,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 true
             } else false
         }
+        if (intent.getStringExtra(EXTRA_RETURN_TARGET) == null) {
+            setupDoubleBackToExit()
+        }
     }
 
     private fun showDemoOptions() {
@@ -70,8 +73,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                                 runCatching {
                                     org.koin.java.KoinJavaComponent.get<com.leon.be_nobat.data.demo.DemoDataStore>(com.leon.be_nobat.data.demo.DemoDataStore::class.java).resetToSeed()
                                     org.koin.java.KoinJavaComponent.get<com.leon.be_nobat.data.local.TokenManager>(com.leon.be_nobat.data.local.TokenManager::class.java).clear()
-                                }.onSuccess { Toast.makeText(this@LoginActivity, "داده‌های دمو بازنشانی شدند.", Toast.LENGTH_LONG).show() }
-                                    .onFailure { Toast.makeText(this@LoginActivity, it.message, Toast.LENGTH_LONG).show() }
+                                }.onSuccess { showToast("داده‌های دمو بازنشانی شدند.", isLong = true) }
+                                    .onFailure { showToast(it.message ?: "", isLong = true) }
                             }
                         }.show()
                 }
@@ -118,7 +121,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 when (state.error) {
                     AuthException.InvalidIdentifier -> identityInput.error = message
                     AuthException.EmptyPassword -> passwordInput.error = message
-                    else -> Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    else -> showToast(message, isLong = true)
                 }
                 authViewModel.resetState()
             }

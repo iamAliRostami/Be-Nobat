@@ -98,7 +98,7 @@ class PlatformBusinessesActivity : BaseActivity() {
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.items.isEmpty()
         findViewById<android.widget.TextView>(R.id.emptyStateText).isVisible = !state.loading && state.items.isEmpty()
         adapter.submitList(state.items)
-        state.error?.let { Snackbar.make(swipeRefresh, it, Snackbar.LENGTH_SHORT).show() }
+        state.error?.let { Snackbar.make(swipeRefresh, com.leon.be_nobat.helpers.ErrorFormatter.format(this, it), Snackbar.LENGTH_SHORT).show() }
     }
 
     private class BusinessesAdapter(

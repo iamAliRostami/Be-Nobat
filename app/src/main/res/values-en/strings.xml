@@ -229,4 +229,11 @@
     <string name="language">Language</string>
     <string name="quick_access">Quick Access</string>
     <string name="stats_overview">Overview &amp; Stats</string>
+
+    <!-- Connection Error & Navigation -->
+    <string name="error_connection_title">Unable to Connect to Server</string>
+    <string name="error_connection_description">Please check your internet connection and swipe down to retry.</string>
+    <string name="error_connection_failed">Unable to connect to the server. Please check your connection</string>
+    <string name="error_service_unavailable_title">Service Unavailable</string>
+    <string name="press_back_again_to_exit">Press back again to exit</string>
 </resources>

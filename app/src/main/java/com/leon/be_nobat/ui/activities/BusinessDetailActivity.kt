@@ -69,7 +69,7 @@ class BusinessDetailActivity : BaseActivity() {
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.business == null
         findViewById<android.widget.TextView>(R.id.errorText).apply {
             isVisible = state.error != null
-            text = state.error
+            text = state.error?.let { com.leon.be_nobat.helpers.ErrorFormatter.format(this@BusinessDetailActivity, it) }
         }
         val b = state.business ?: return
         findViewById<android.widget.TextView>(R.id.tvName).text = b.name

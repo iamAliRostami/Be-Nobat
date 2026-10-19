@@ -119,7 +119,7 @@ class PlatformAccessActivity : BaseActivity() {
                 .setPositiveButton(R.string.action_close) { _, _ -> viewModel.clearMessage() }
                 .show()
         }
-        state.error?.let { Snackbar.make(swipeRefresh, it, Snackbar.LENGTH_SHORT).show() }
+        state.error?.let { Snackbar.make(swipeRefresh, com.leon.be_nobat.helpers.ErrorFormatter.format(this, it), Snackbar.LENGTH_SHORT).show() }
     }
 
     private class UsersAdapter(

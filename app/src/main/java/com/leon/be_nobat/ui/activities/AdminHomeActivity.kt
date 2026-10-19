@@ -91,6 +91,21 @@ class AdminHomeActivity : BaseActivity() {
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnReviews).setOnClickListener {
             startActivity(Intent(this, AdminReviewsActivity::class.java))
         }
+
+        findViewById<android.view.View>(R.id.cardError)?.setOnClickListener {
+            viewModel.load()
+        }
+
+        setupDoubleBackToExit(
+            intercept = {
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    true
+                } else {
+                    false
+                }
+            }
+        )
     }
 
     override fun observeViewModel() {
@@ -104,11 +119,18 @@ class AdminHomeActivity : BaseActivity() {
     private fun render(state: AdminDashboardUiState) {
         swipeRefresh.isRefreshing = state.loading
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.dashboard == null
-        state.error?.let {
-            findViewById<android.widget.TextView>(R.id.tvError).apply {
-                isVisible = true
-                text = it
-            }
+
+        val cardError = findViewById<android.view.View>(R.id.cardError)
+        val tvErrorTitle = findViewById<android.widget.TextView>(R.id.tvErrorTitle)
+        val tvError = findViewById<android.widget.TextView>(R.id.tvError)
+
+        if (state.error != null) {
+            val formatted = com.leon.be_nobat.helpers.ErrorFormatter.resolve(this, state.error)
+            tvErrorTitle.text = formatted.title
+            tvError.text = formatted.description
+            cardError.isVisible = true
+        } else {
+            cardError.isVisible = false
         }
         state.dashboard?.let { d ->
             findViewById<android.widget.TextView>(R.id.tvBusinessesValue).text =

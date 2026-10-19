@@ -16,4 +16,7 @@
     <color name="error_red">#FFB4AB</color>
     <color name="colorSecondaryContainer">#1E3832</color>
     <color name="colorOnSecondaryContainer">#A4E2D3</color>
+    <color name="colorErrorContainer">#2A1215</color>
+    <color name="colorOnErrorContainer">#FCA5A5</color>
+    <color name="colorErrorBorder">#5C1D24</color>
 </resources>

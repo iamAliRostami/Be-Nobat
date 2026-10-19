@@ -229,4 +229,11 @@
     <string name="language">اللغة</string>
     <string name="quick_access">الوصول السريع</string>
     <string name="stats_overview">ملخص الأداء</string>
+
+    <!-- Connection Error & Navigation -->
+    <string name="error_connection_title">تعذر الاتصال بالخادم</string>
+    <string name="error_connection_description">يرجى التحقق من اتصالك بالإنترنت واسحب الشاشة للأسفل للمحاولة مجدداً.</string>
+    <string name="error_connection_failed">تعذر الاتصال بالخادم. يرجى التحقق من اتصالك بالإنترنت</string>
+    <string name="error_service_unavailable_title">الخدمة غير متوفرة</string>
+    <string name="press_back_again_to_exit">اضغط على زر الرجوع مرة أخرى للخروج</string>
 </resources>

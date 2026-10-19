@@ -246,4 +246,11 @@
     <string name="language">زبان</string>
     <string name="quick_access">دسترسی سریع</string>
     <string name="stats_overview">خلاصه عملکرد</string>
+
+    <!-- Connection Error & Navigation -->
+    <string name="error_connection_title">عدم برقراری ارتباط با سرور</string>
+    <string name="error_connection_description">لطفاً اتصال اینترنت خود را بررسی کرده و صفحه را برای تلاش مجدد به پایین بکشید.</string>
+    <string name="error_connection_failed">ارتباط با سرور برقرار نشد. لطفاً اتصال اینترنت خود را بررسی کنید</string>
+    <string name="error_service_unavailable_title">عدم دسترسی به سرویس</string>
+    <string name="press_back_again_to_exit">برای خروج، دوباره دکمه بازگشت را بزنید</string>
 </resources>

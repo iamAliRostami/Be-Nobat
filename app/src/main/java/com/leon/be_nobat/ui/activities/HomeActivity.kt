@@ -136,9 +136,7 @@ class HomeActivity : BaseActivity() {
         }
         bottomNav.selectedItemId = R.id.nav_home
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() { finishAffinity() }
-        })
+        setupDoubleBackToExit()
     }
 
     private fun checkAuthAndNavigate(targetClass: Class<*>) {
@@ -220,7 +218,7 @@ class HomeActivity : BaseActivity() {
         loadingProgress.isVisible = state.loading && !state.refreshing && state.items.isEmpty()
         emptyStateText.isVisible = !state.loading && state.items.isEmpty() && state.error == null
         errorText.isVisible = state.error != null
-        errorText.text = state.error
+        errorText.text = state.error?.let { com.leon.be_nobat.helpers.ErrorFormatter.format(this, it) }
         adapter.submitList(state.items)
     }
 }
