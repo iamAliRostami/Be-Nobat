@@ -59,6 +59,15 @@ class AdminBranchesViewModel(
             .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
     }
 
+    fun update(id: String, input: com.leon.be_nobat.domain.model.ManagementBranchInput) = viewModelScope.launch {
+        updateUseCase(id, input)
+            .onSuccess { updated ->
+                val items = _state.value.items.map { if (it.id == id) updated else it }
+                _state.value = _state.value.copy(items = items, message = "updated")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
+
     fun delete(id: String) = viewModelScope.launch {
         deleteUseCase(id).onSuccess {
             _state.value = _state.value.copy(items = _state.value.items.filterNot { it.id == id }, message = "deleted")

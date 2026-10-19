@@ -42,6 +42,18 @@ class App : Application() {
         runBlocking {
             val savedTheme = preferences.themeMode.first()
             AppCompatDelegate.setDefaultNightMode(savedTheme)
+            val savedLanguage = preferences.language.first()
+            if (!savedLanguage.isNullOrBlank()) {
+                AppLocaleManager.currentLanguage = savedLanguage
+                val current = AppCompatDelegate.getApplicationLocales()
+                if (current.isEmpty || current.get(0)?.language != savedLanguage) {
+                    AppCompatDelegate.setApplicationLocales(
+                        androidx.core.os.LocaleListCompat.forLanguageTags(savedLanguage)
+                    )
+                }
+            } else {
+                AppLocaleManager.currentLanguage = "fa"
+            }
         }
     }
 }

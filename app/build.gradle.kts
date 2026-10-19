@@ -79,11 +79,7 @@ android {
 }
 
 dependencies {
-    constraints {
-        implementation("androidx.exifinterface:exifinterface:1.4.2") {
-            because("Use the locally available version for Coil's image metadata dependency")
-        }
-    }
+    implementation("androidx.exifinterface:exifinterface:1.4.2")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

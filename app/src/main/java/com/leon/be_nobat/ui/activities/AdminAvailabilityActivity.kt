@@ -35,8 +35,7 @@ class AdminAvailabilityActivity : BaseActivity() {
     }
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.admin_availability))
-        setMenuVisibility(false)
+        setupAdminHeader(getString(R.string.admin_availability), currentMenuItemId = R.id.drawer_availability)
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
@@ -60,6 +59,7 @@ class AdminAvailabilityActivity : BaseActivity() {
         swipeRefresh.isRefreshing = state.loading
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.items.isEmpty()
         findViewById<android.widget.TextView>(R.id.emptyStateText).isVisible = !state.loading && state.items.isEmpty()
+        renderAdminError(state.error) { viewModel.load() }
         adapter.submitList(state.items)
     }
 
@@ -67,9 +67,10 @@ class AdminAvailabilityActivity : BaseActivity() {
         BaseAdminAdapter<ManagementAvailability>(simpleDiff({ a, b -> a.id == b.id }, { a, b -> a == b })) {
         override fun bindHolder(holder: AdminViewHolder, item: ManagementAvailability) {
             holder.binding.apply {
-                tvTitle.text = "${item.dayOfWeek} • ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.startsAt)} - ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.endsAt)}"
-                tvSubtitle.text = item.effectiveDate?.let { com.leon.be_nobat.helpers.JalaliDateHelper.formatIsoToJalali(it) } ?: item.dayOfWeek
-                tvBody.text = if (item.isAvailable) "در دسترس" else "غیرفعال"
+                val dayName = com.leon.be_nobat.helpers.JalaliDateHelper.translateDayOfWeek(item.dayOfWeek)
+                tvTitle.text = "$dayName • ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.startsAt)} - ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.endsAt)}"
+                tvSubtitle.text = item.effectiveDate?.let { com.leon.be_nobat.helpers.JalaliDateHelper.formatIsoToJalali(it) } ?: dayName
+                tvBody.text = if (item.isAvailable) root.context.getString(R.string.status_available) else root.context.getString(R.string.status_unavailable)
                 tvStatus.text = if (item.isAvailable) root.context.getString(R.string.set_active) else root.context.getString(R.string.set_inactive)
                 btnAction1.isVisible = false
                 btnAction2.isVisible = false

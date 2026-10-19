@@ -39,8 +39,7 @@ class PlatformAccessActivity : BaseActivity() {
     }
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.platform_access))
-        setMenuVisibility(false)
+        setupAdminHeader(getString(R.string.platform_access), currentMenuItemId = R.id.drawer_platform_access)
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
@@ -62,12 +61,16 @@ class PlatformAccessActivity : BaseActivity() {
     }
 
     private fun showCreateUserDialog() {
+        val roleOptions = listOf(
+            AdminFormDialog.DropdownOption("Customer", getString(R.string.role_customer)),
+            AdminFormDialog.DropdownOption("PlatformAdmin", getString(R.string.role_platform_admin)),
+        )
         AdminFormDialog.Builder(this)
             .setTitle(getString(R.string.form_create_user_title))
             .field(getString(R.string.form_label_name))
-            .field(getString(R.string.form_label_email))
-            .field(getString(R.string.form_label_phone))
-            .field(getString(R.string.form_label_role), "Customer")
+            .field(getString(R.string.form_label_email), inputType = android.text.InputType.TYPE_CLASS_TEXT or android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+            .field(getString(R.string.form_label_phone), inputType = android.text.InputType.TYPE_CLASS_PHONE)
+            .dropdownField(getString(R.string.form_label_role), roleOptions, default = "Customer")
             .onSubmit { values ->
                 val name = values.getOrNull(0).orEmpty()
                 val email = values.getOrNull(1).orEmpty()
@@ -110,6 +113,7 @@ class PlatformAccessActivity : BaseActivity() {
         swipeRefresh.isRefreshing = state.loading
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.items.isEmpty()
         findViewById<android.widget.TextView>(R.id.emptyStateText).isVisible = !state.loading && state.items.isEmpty()
+        renderAdminError(state.error) { viewModel.load() }
         adapter.submitList(state.items)
 
         state.temporaryPassword?.let { pwd ->
@@ -131,12 +135,22 @@ class PlatformAccessActivity : BaseActivity() {
             holder.binding.apply {
                 tvTitle.text = item.displayName
                 tvSubtitle.text = item.email ?: ""
-                tvBody.text = "Roles: ${item.roles.joinToString(", ")}"
+                val localizedRoles = item.roles.map { role ->
+                    when (role) {
+                        "Customer" -> root.context.getString(R.string.role_customer)
+                        "PlatformAdmin" -> root.context.getString(R.string.role_platform_admin)
+                        "Owner", "Manager" -> root.context.getString(R.string.role_manager)
+                        "Staff" -> root.context.getString(R.string.role_staff)
+                        else -> role
+                    }
+                }.joinToString("، ")
+                tvBody.text = "${root.context.getString(R.string.form_label_role)}: $localizedRoles"
                 tvStatus.text = if (item.active) root.context.getString(R.string.set_active) else root.context.getString(R.string.set_inactive)
                 btnAction1.text = if (item.active) root.context.getString(R.string.set_inactive) else root.context.getString(R.string.set_active)
                 btnAction2.text = root.context.getString(R.string.reset_password)
                 btnAction1.setOnClickListener { onToggleActive(item) }
                 btnAction2.setOnClickListener { onResetPassword(item) }
+                root.setOnClickListener { onSetRole(item) }
                 root.setOnLongClickListener { onSetRole(item); true }
             }
         }

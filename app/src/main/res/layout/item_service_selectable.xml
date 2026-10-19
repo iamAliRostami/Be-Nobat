@@ -33,13 +33,17 @@
                 android:id="@+id/tvName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.BeNobat.Headline"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface"
                 tools:text="مشاوره پزشکی" />
 
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="12sp"
                 android:textAppearance="@style/TextAppearance.BeNobat.Body.Muted"
                 tools:text="توضیحات کوتاه خدمت" />
 
@@ -48,9 +52,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                
-                android:textAppearance="@style/TextAppearance.BeNobat.Body"
-                tools:text="30 دقیقه — 150,000 ریال" />
+                android:textSize="12sp"
+                android:textColor="?attr/colorPrimary"
+                tools:text="30 دقیقه — 15,000 تومان" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

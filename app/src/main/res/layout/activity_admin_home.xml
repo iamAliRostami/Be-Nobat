@@ -43,7 +43,7 @@
                         android:layout_marginEnd="10dp"
                         android:contentDescription="@string/management_menu"
                         android:tooltipText="@string/management_menu"
-                        app:icon="@drawable/ic_dashboard" />
+                        app:icon="@drawable/ic_menu" />
 
                     <TextView
                         android:id="@+id/tvTitle"
@@ -161,17 +161,36 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <TextView
-                    android:id="@+id/tvStatsTitle"
+                <!-- Section Header with View Calendar Action -->
+                <LinearLayout
+                    android:id="@+id/statsHeaderBar"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/stats_overview"
-                    android:textAppearance="@style/TextAppearance.BeNobat.Headline"
-                    android:textSize="15sp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cardError" />
+                    app:layout_constraintTop_toBottomOf="@id/cardError">
+
+                    <TextView
+                        android:id="@+id/tvStatsTitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/stats_overview"
+                        android:textAppearance="@style/TextAppearance.BeNobat.Headline"
+                        android:textSize="15sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewCalendarHeader"
+                        style="@style/Widget.BeNobat.Button.Text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/view_calendar"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
                 <!-- 2-Column Stats Cards Grid -->
                 <LinearLayout
@@ -182,7 +201,7 @@
                     android:orientation="vertical"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvStatsTitle">
+                    app:layout_constraintTop_toBottomOf="@id/statsHeaderBar">
 
                     <!-- Row 1: Total Appointments & Pending Appointments -->
                     <LinearLayout
@@ -191,11 +210,15 @@
                         android:orientation="horizontal">
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardAppointments"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -226,11 +249,15 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardPending"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -269,11 +296,15 @@
                         android:orientation="horizontal">
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardUpcoming"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -304,11 +335,15 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardCompleted"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -382,11 +417,15 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardPendingReviews"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -425,11 +464,15 @@
                         android:orientation="horizontal">
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardBusinesses"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -461,11 +504,15 @@
                         </com.google.android.material.card.MaterialCardView>
 
                         <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardBranches"
                             style="@style/Widget.BeNobat.Card"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             app:cardCornerRadius="16dp"
                             app:strokeColor="@color/colorOutline"
                             app:strokeWidth="1dp">
@@ -568,6 +615,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemTextAppearance="@style/TextAppearance.BeNobat.Body"
+        app:itemIconTint="@color/nav_item_icon_tint"
+        app:itemTextColor="@color/nav_item_text_color"
         app:menu="@menu/admin_drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

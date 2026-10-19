@@ -30,8 +30,7 @@ class FavoritesActivity : BaseActivity() {
     private val tokenManager: TokenManager by inject()
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.favorites_title))
-        setMenuVisibility(false)
+        setupMainHeader(getString(R.string.favorites_title))
 
         lifecycleScope.launch {
             if (tokenManager.currentSession() == null) {

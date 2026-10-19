@@ -2,6 +2,7 @@ package com.leon.be_nobat.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -23,7 +24,7 @@ class BusinessDetailActivity : BaseActivity() {
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.book_now))
+        setupAdminHeader(getString(R.string.business_details))
         setMenuVisibility(false)
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
@@ -72,17 +73,33 @@ class BusinessDetailActivity : BaseActivity() {
             text = state.error?.let { com.leon.be_nobat.helpers.ErrorFormatter.format(this@BusinessDetailActivity, it) }
         }
         val b = state.business ?: return
+        findViewById<android.widget.TextView>(R.id.tvHeaderTitle)?.text = b.name.ifBlank { getString(R.string.business_details) }
         findViewById<android.widget.TextView>(R.id.tvName).text = b.name
         findViewById<android.widget.TextView>(R.id.tvCategoryCity).text = "${b.category} • ${b.city}"
         findViewById<android.widget.TextView>(R.id.tvDescription).text = b.description
-        findViewById<android.widget.TextView>(R.id.tvStats).text =
-            "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.branchCount)} شعب • ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.serviceCount)} خدمات • ★ ${b.rating?.let { com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it) } ?: "—"} (${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.reviewCount)} نظر)"
+        val branchStr = if (b.branchCount == 1) getString(R.string.branch_count_single) else getString(R.string.branch_count, com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.branchCount))
+        val serviceStr = if (b.serviceCount == 1) getString(R.string.service_count_single) else getString(R.string.service_count, com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.serviceCount))
+        val reviewStr = getString(R.string.review_count, com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(b.reviewCount))
+        val ratingStr = b.rating?.let { "★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it)}" } ?: "—"
+        findViewById<android.widget.TextView>(R.id.tvStats).text = "$branchStr • $serviceStr • $ratingStr ($reviewStr)"
         findViewById<android.widget.TextView>(R.id.tvBranches).text = b.branches.joinToString("\n\n") { "• ${it.name} — ${it.address}" }
         findViewById<android.widget.TextView>(R.id.tvServices).text = b.services.joinToString("\n\n") {
-            "• ${it.name} (${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it.durationMinutes)} دقیقه) — ${com.leon.be_nobat.helpers.PersianUtils.formatPrice(it.price, it.currency)}"
+            "• ${it.name} (${com.leon.be_nobat.helpers.PersianUtils.formatDuration(it.durationMinutes)}) — ${com.leon.be_nobat.helpers.PersianUtils.formatPrice(it.price, it.currency)}"
         }
-        findViewById<android.widget.TextView>(R.id.tvReviews).text = b.reviews.joinToString("\n\n") {
-            "★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it.rating)} — ${it.customerName}\n${it.comment}"
+        val tvReviews = findViewById<android.widget.TextView>(R.id.tvReviews)
+        val cardEmptyReviews = findViewById<View>(R.id.cardEmptyReviews)
+        if (b.reviews.isNotEmpty()) {
+            cardEmptyReviews.isVisible = false
+            tvReviews.isVisible = true
+            tvReviews.text = b.reviews.joinToString("\n\n") {
+                "★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it.rating)} — ${it.customerName}\n${it.comment}"
+            }
+            tvReviews.setTextAppearance(R.style.TextAppearance_BeNobat_Body)
+        } else {
+            cardEmptyReviews.isVisible = true
+            tvReviews.isVisible = false
+            findViewById<android.widget.TextView>(R.id.tvEmptyReviewsTitle).text = getString(R.string.no_reviews_user_title)
+            findViewById<android.widget.TextView>(R.id.tvEmptyReviewsDesc).text = getString(R.string.no_reviews_user_desc)
         }
         findViewById<android.widget.ImageButton>(R.id.btnFavorite).setColorFilter(if (state.isFavorite) getColor(R.color.error_red) else getColor(R.color.brand_accent))
     }

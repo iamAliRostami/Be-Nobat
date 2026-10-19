@@ -29,10 +29,10 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
     override fun setupViews() {
         if (com.leon.be_nobat.BuildConfig.DEMO_MODE) {
-            identityInput.helperText = "دمو: user@benobat.ir / manager@benobat.ir / admin@benobat.ir / staff@benobat.ir"
-            passwordInput.helperText = "رمز اولیه حساب‌های دمو: Demo1234!"
+            identityInput.helperText = getString(R.string.demo_accounts_hint)
+            passwordInput.helperText = getString(R.string.demo_password_hint)
             val demoButton = MaterialButton(this).apply {
-                text = "حساب‌های دمو و بازنشانی داده‌ها"
+                text = getString(R.string.demo_login_button)
                 setOnClickListener { showDemoOptions() }
             }
             (findViewById<MaterialButton>(R.id.btnGuest).parent as android.widget.LinearLayout).addView(demoButton)
@@ -58,22 +58,29 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
     private fun showDemoOptions() {
         val accounts = arrayOf("user@benobat.ir", "manager@benobat.ir", "admin@benobat.ir", "staff@benobat.ir")
+        val roles = arrayOf(
+            getString(R.string.role_customer),
+            getString(R.string.role_manager),
+            getString(R.string.role_admin),
+            getString(R.string.role_staff),
+            getString(R.string.demo_reset_positive)
+        )
         androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("دموی آفلاین")
-            .setItems(arrayOf("مشتری", "مدیر کسب‌وکار", "مدیر سامانه", "کارمند", "بازنشانی تمام داده‌های دمو")) { _, index ->
+            .setTitle(R.string.demo_login_dialog_title)
+            .setItems(roles) { _, index ->
                 if (index < accounts.size) {
                     identityInput.editText?.setText(accounts[index])
                     passwordInput.editText?.setText("Demo1234!")
                 } else {
                     androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setMessage("تمام تغییرات این نسخهٔ دمو حذف و داده‌های نمونه با تاریخ امروز ساخته می‌شوند. ادامه می‌دهید؟")
-                        .setNegativeButton("انصراف", null)
-                        .setPositiveButton("بازنشانی") { _, _ ->
+                        .setMessage(getString(R.string.demo_reset_confirm_msg))
+                        .setNegativeButton(R.string.action_cancel, null)
+                        .setPositiveButton(R.string.demo_reset_positive) { _, _ ->
                             lifecycleScope.launch {
                                 runCatching {
                                     org.koin.java.KoinJavaComponent.get<com.leon.be_nobat.data.demo.DemoDataStore>(com.leon.be_nobat.data.demo.DemoDataStore::class.java).resetToSeed()
                                     org.koin.java.KoinJavaComponent.get<com.leon.be_nobat.data.local.TokenManager>(com.leon.be_nobat.data.local.TokenManager::class.java).clear()
-                                }.onSuccess { showToast("داده‌های دمو بازنشانی شدند.", isLong = true) }
+                                }.onSuccess { showToast(getString(R.string.demo_reset_success), isLong = true) }
                                     .onFailure { showToast(it.message ?: "", isLong = true) }
                             }
                         }.show()

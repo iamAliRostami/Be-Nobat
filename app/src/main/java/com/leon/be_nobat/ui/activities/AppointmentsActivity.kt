@@ -41,8 +41,7 @@ class AppointmentsActivity : BaseActivity() {
     private val tokenManager: TokenManager by inject()
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.orders_title))
-        setMenuVisibility(false)
+        setupMainHeader(getString(R.string.orders_title))
 
         lifecycleScope.launch {
             if (tokenManager.currentSession() == null) {
@@ -69,7 +68,7 @@ class AppointmentsActivity : BaseActivity() {
 
         val tabs = findViewById<TabLayout>(R.id.tabs)
         AppointmentTab.entries.forEach { tab ->
-            tabs.addTab(tabs.newTab().setText(tab.label))
+            tabs.addTab(tabs.newTab().setText(getString(tab.labelRes)))
         }
         tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -118,26 +117,53 @@ class AppointmentsActivity : BaseActivity() {
     }
 
     private fun showReviewDialog(rating: Int, comment: String, submitting: Boolean, onSubmit: (Int, String) -> Unit) {
-        val context = this
-        val container = android.widget.LinearLayout(context).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(48, 24, 48, 24)
+        val view = layoutInflater.inflate(R.layout.dialog_review, null)
+        var currentRating = if (rating in 1..5) rating else 5
+
+        val stars = listOf(
+            view.findViewById<android.widget.ImageView>(R.id.star1),
+            view.findViewById<android.widget.ImageView>(R.id.star2),
+            view.findViewById<android.widget.ImageView>(R.id.star3),
+            view.findViewById<android.widget.ImageView>(R.id.star4),
+            view.findViewById<android.widget.ImageView>(R.id.star5)
+        )
+        val tvRatingLabel = view.findViewById<android.widget.TextView>(R.id.tvRatingLabel)
+        val etComment = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etReviewComment)
+        etComment.setText(comment)
+
+        fun updateStars(r: Int) {
+            currentRating = r
+            stars.forEachIndexed { index, starView ->
+                if (index < r) {
+                    starView.setImageResource(R.drawable.ic_star_filled)
+                } else {
+                    starView.setImageResource(R.drawable.ic_star_outline)
+                }
+            }
+            val formattedR = com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(r)
+            tvRatingLabel.text = when (r) {
+                5 -> getString(R.string.rating_excellent, formattedR)
+                4 -> getString(R.string.rating_very_good, formattedR)
+                3 -> getString(R.string.rating_good, formattedR)
+                2 -> getString(R.string.rating_fair, formattedR)
+                1 -> getString(R.string.rating_poor, formattedR)
+                else -> "$formattedR / 5"
+            }
         }
-        val ratingSlider = com.google.android.material.slider.Slider(context).apply {
-            valueFrom = 1f; valueTo = 5f; stepSize = 1f; value = rating.toFloat()
+
+        stars.forEachIndexed { index, starView ->
+            starView.setOnClickListener {
+                updateStars(index + 1)
+            }
         }
-        val commentInput = com.google.android.material.textfield.TextInputEditText(context).apply {
-            hint = getString(R.string.review_comment_hint)
-            setText(comment)
-            minLines = 2
-        }
-        container.addView(ratingSlider)
-        container.addView(commentInput)
-        MaterialAlertDialogBuilder(context)
+
+        updateStars(currentRating)
+
+        MaterialAlertDialogBuilder(this)
             .setTitle(R.string.add_review)
-            .setView(container)
+            .setView(view)
             .setPositiveButton(R.string.submit_review) { _, _ ->
-                onSubmit(ratingSlider.value.toInt(), commentInput.text.toString())
+                onSubmit(currentRating, etComment.text?.toString() ?: "")
             }
             .setNegativeButton(R.string.action_close) { _, _ -> viewModel.closeReview() }
             .setOnDismissListener { viewModel.closeReview() }
@@ -158,12 +184,13 @@ class AppointmentsActivity : BaseActivity() {
             fun bind(item: Appointment) {
                 binding.apply {
                     tvBusiness.text = item.businessName
-                    tvBranch.text = item.branchName
-                    tvServices.text = item.serviceNames.joinToString("، ")
+                    val commaSep = if (com.leon.be_nobat.helpers.PersianUtils.isEnglishLocale()) ", " else "، "
+                    tvServices.text = item.serviceNames.joinToString(commaSep)
                     tvProvider.text = item.resourceName ?: ""
                     tvTime.text = com.leon.be_nobat.helpers.JalaliDateHelper.formatIsoDateTime(item.startsAt)
                     tvPrice.text = com.leon.be_nobat.helpers.PersianUtils.formatPrice(item.finalPrice, item.currency)
-                    tvTrackingCode.text = "کد پیگیری: ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.trackingCode)}"
+                    val formattedCode = com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.trackingCode)
+                    tvTrackingCode.text = root.context.getString(R.string.booking_tracking_code, "\u200E$formattedCode\u200E")
                     tvStatus.text = when (item.status) {
                         "Pending" -> root.context.getString(R.string.appointment_status_pending)
                         "Confirmed" -> root.context.getString(R.string.appointment_status_confirmed)

@@ -28,8 +28,16 @@ class BusinessAdapter(
                 tvCategory.text = item.category
                 tvCity.text = item.city
                 tvDescription.text = item.description
-                tvBranchCount.text = "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.branchCount)} شعبه"
-                tvServiceCount.text = "${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.serviceCount)} خدمت"
+                tvBranchCount.text = if (item.branchCount == 1) {
+                    root.context.getString(com.leon.be_nobat.R.string.branch_count_single)
+                } else {
+                    root.context.getString(com.leon.be_nobat.R.string.branch_count, com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.branchCount))
+                }
+                tvServiceCount.text = if (item.serviceCount == 1) {
+                    root.context.getString(com.leon.be_nobat.R.string.service_count_single)
+                } else {
+                    root.context.getString(com.leon.be_nobat.R.string.service_count, com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.serviceCount))
+                }
                 tvRating.text = item.rating?.let {
                     "★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(it)}"
                 } ?: ""

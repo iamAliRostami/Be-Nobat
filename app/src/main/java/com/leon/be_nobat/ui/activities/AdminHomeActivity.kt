@@ -1,6 +1,7 @@
 package com.leon.be_nobat.ui.activities
 
 import android.content.Intent
+import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -29,57 +30,19 @@ class AdminHomeActivity : BaseActivity() {
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
 
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnToggleDrawer).setOnClickListener {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START)
-            } else {
-                drawerLayout.openDrawer(GravityCompat.START)
-            }
-        }
+        setupAdminDrawer(R.id.drawer_dashboard)
 
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLanguage).setOnClickListener {
-            showLanguageMenu(it)
-        }
-
-        findViewById<android.view.View>(R.id.btnThemeToggle).setOnClickListener {
+        findViewById<View>(R.id.btnThemeToggle)?.setOnClickListener {
             setupThemeToggle()
         }
-
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnPublicView).setOnClickListener {
+        findViewById<View>(R.id.btnLanguage)?.setOnClickListener {
+            showLanguageMenu(it)
+        }
+        findViewById<View>(R.id.btnPublicView)?.setOnClickListener {
             startActivity(Intent(this, HomeActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             })
             finishAffinity()
-        }
-
-        val navView = findViewById<NavigationView>(R.id.navView)
-        navView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.drawer_dashboard -> { drawerLayout.closeDrawer(GravityCompat.START); true }
-                R.id.drawer_calendar -> { startActivity(Intent(this, AdminCalendarActivity::class.java)); true }
-                R.id.drawer_branches -> { startActivity(Intent(this, AdminBranchesActivity::class.java)); true }
-                R.id.drawer_services -> { startActivity(Intent(this, AdminServicesActivity::class.java)); true }
-                R.id.drawer_availability -> { startActivity(Intent(this, AdminAvailabilityActivity::class.java)); true }
-                R.id.drawer_reviews -> { startActivity(Intent(this, AdminReviewsActivity::class.java)); true }
-                R.id.drawer_customers -> { startActivity(Intent(this, AdminCustomersActivity::class.java)); true }
-                R.id.drawer_team -> { startActivity(Intent(this, AdminTeamActivity::class.java)); true }
-                R.id.drawer_platform_businesses -> { startActivity(Intent(this, PlatformBusinessesActivity::class.java)); true }
-                R.id.drawer_platform_catalog -> { startActivity(Intent(this, PlatformCatalogActivity::class.java)); true }
-                R.id.drawer_platform_categories -> { startActivity(Intent(this, PlatformCategoriesActivity::class.java)); true }
-                R.id.drawer_platform_access -> { startActivity(Intent(this, PlatformAccessActivity::class.java)); true }
-                R.id.drawer_back_to_user_view -> {
-                    startActivity(Intent(this, HomeActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    })
-                    finishAffinity()
-                    true
-                }
-                R.id.drawer_logout -> {
-                    com.leon.be_nobat.ui.activities.auth.LogoutHelper.logoutAndRestart(this)
-                    true
-                }
-                else -> false
-            }
         }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnCalendar).setOnClickListener {
@@ -90,6 +53,31 @@ class AdminHomeActivity : BaseActivity() {
         }
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnReviews).setOnClickListener {
             startActivity(Intent(this, AdminReviewsActivity::class.java))
+        }
+
+        findViewById<android.view.View>(R.id.btnViewCalendarHeader)?.setOnClickListener {
+            startActivity(AdminCalendarActivity.createIntent(this))
+        }
+        findViewById<android.view.View>(R.id.cardAppointments)?.setOnClickListener {
+            startActivity(AdminCalendarActivity.createIntent(this))
+        }
+        findViewById<android.view.View>(R.id.cardPending)?.setOnClickListener {
+            startActivity(AdminCalendarActivity.createIntent(this, status = "Pending"))
+        }
+        findViewById<android.view.View>(R.id.cardUpcoming)?.setOnClickListener {
+            startActivity(AdminCalendarActivity.createIntent(this, status = "Confirmed"))
+        }
+        findViewById<android.view.View>(R.id.cardCompleted)?.setOnClickListener {
+            startActivity(AdminCalendarActivity.createIntent(this, status = "Completed"))
+        }
+        findViewById<android.view.View>(R.id.cardPendingReviews)?.setOnClickListener {
+            startActivity(Intent(this, AdminReviewsActivity::class.java))
+        }
+        findViewById<android.view.View>(R.id.cardBusinesses)?.setOnClickListener {
+            startActivity(Intent(this, PlatformBusinessesActivity::class.java))
+        }
+        findViewById<android.view.View>(R.id.cardBranches)?.setOnClickListener {
+            startActivity(Intent(this, AdminBranchesActivity::class.java))
         }
 
         findViewById<android.view.View>(R.id.cardError)?.setOnClickListener {
@@ -106,6 +94,11 @@ class AdminHomeActivity : BaseActivity() {
                 }
             }
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.load()
     }
 
     override fun observeViewModel() {

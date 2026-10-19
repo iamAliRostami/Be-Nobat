@@ -2,6 +2,7 @@ package com.leon.be_nobat.ui.view_models
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.leon.be_nobat.domain.model.Appointment
 import com.leon.be_nobat.domain.model.BookingInput
 import com.leon.be_nobat.domain.model.Branch
 import com.leon.be_nobat.domain.model.Provider
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 data class BookingUiState(
+    val currentStep: Int = 1,
     val businessId: String = "",
     val branchId: String = "",
     val branches: List<Branch> = emptyList(),
@@ -39,6 +41,7 @@ data class BookingUiState(
     val loadingSlots: Boolean = false,
     val booking: Boolean = false,
     val bookedTrackingCode: String? = null,
+    val bookedAppointment: Appointment? = null,
     val error: String? = null,
 ) {
     val selectedServiceIds: List<String> get() = selectedServices.map { it.id }
@@ -97,7 +100,17 @@ class BookingViewModel(
         _state.value = _state.value.copy(loadingServices = true)
         listBranchServices(businessId, branchId)
             .onSuccess { res ->
-                _state.value = _state.value.copy(services = res.items, loadingServices = false)
+                val services = res.items
+                val first = services.firstOrNull()
+                val selected = if (first != null && _state.value.selectedServices.isEmpty()) listOf(first) else _state.value.selectedServices
+                _state.value = _state.value.copy(
+                    services = services,
+                    selectedServices = selected,
+                    loadingServices = false
+                )
+                if (selected.isNotEmpty()) {
+                    loadProviders()
+                }
             }
             .onFailure { e ->
                 _state.value = _state.value.copy(loadingServices = false, error = e.message)
@@ -127,7 +140,9 @@ class BookingViewModel(
         listProviders(businessId, s.branchId, s.selectedServiceIds.joinToString(","))
             .onSuccess { res ->
                 val providers = res.items
-                val autoSelectedProvider = if (providers.size == 1) providers[0].id else s.selectedProviderId
+                val autoSelectedProvider = if (providers.size == 1) providers[0].id
+                else if (providers.any { it.id == s.selectedProviderId }) s.selectedProviderId
+                else null
                 _state.value = _state.value.copy(
                     providers = providers,
                     selectedProviderId = autoSelectedProvider,
@@ -173,6 +188,10 @@ class BookingViewModel(
         _state.value = _state.value.copy(selectedSlot = slot)
     }
 
+    fun setStep(step: Int) {
+        _state.value = _state.value.copy(currentStep = step)
+    }
+
     fun setPhone(v: String) { _state.value = _state.value.copy(phoneNumber = v) }
     fun setNote(v: String) { _state.value = _state.value.copy(note = v) }
     fun setTerms(v: Boolean) { _state.value = _state.value.copy(termsAccepted = v) }
@@ -198,7 +217,17 @@ class BookingViewModel(
             expectedDurationMinutes = s.slots?.totalDurationMinutes,
         )
         createAppointment(input)
-            .onSuccess { appt -> _state.value = _state.value.copy(booking = false, bookedTrackingCode = appt.trackingCode) }
+            .onSuccess { appt ->
+                _state.value = _state.value.copy(
+                    booking = false,
+                    bookedTrackingCode = appt.trackingCode,
+                    bookedAppointment = appt
+                )
+            }
             .onFailure { e -> _state.value = _state.value.copy(booking = false, error = e.message) }
+    }
+
+    fun clearError() {
+        _state.value = _state.value.copy(error = null)
     }
 }

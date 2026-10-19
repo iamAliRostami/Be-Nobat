@@ -46,6 +46,10 @@ class PlatformCreateCatalogUseCase(private val repo: PlatformRepository) {
     suspend operator fun invoke(input: ManagementCatalogInput): Result<ManagementCatalog> = repo.createCatalogItem(input)
 }
 
+class PlatformUpdateCatalogUseCase(private val repo: PlatformRepository) {
+    suspend operator fun invoke(id: String, input: ManagementCatalogInput): Result<ManagementCatalog> = repo.updateCatalogItem(id, input)
+}
+
 class PlatformDeleteCatalogUseCase(private val repo: PlatformRepository) {
     suspend operator fun invoke(id: String): Result<Unit> = repo.deleteCatalogItem(id)
 }
@@ -58,6 +62,10 @@ class PlatformListCategoriesUseCase(private val repo: PlatformRepository) {
 
 class PlatformCreateCategoryUseCase(private val repo: PlatformRepository) {
     suspend operator fun invoke(input: ManagementCategoryInput): Result<ManagementCategory> = repo.createCategory(input)
+}
+
+class PlatformUpdateCategoryUseCase(private val repo: PlatformRepository) {
+    suspend operator fun invoke(id: String, input: ManagementCategoryInput): Result<ManagementCategory> = repo.updateCategory(id, input)
 }
 
 class PlatformDeleteCategoryUseCase(private val repo: PlatformRepository) {

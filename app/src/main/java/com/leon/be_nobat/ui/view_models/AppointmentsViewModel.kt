@@ -24,12 +24,12 @@ data class AppointmentsUiState(
     val reviewSubmitting: Boolean = false,
 )
 
-enum class AppointmentTab(val apiStatus: String?, val label: String) {
-    Upcoming(null, "آینده"),
-    Pending("Pending", "در انتظار"),
-    Confirmed("Confirmed", "تأیید شده"),
-    Completed("Completed", "انجام شده"),
-    Cancelled("Cancelled", "لغو شده"),
+enum class AppointmentTab(val apiStatus: String?, @androidx.annotation.StringRes val labelRes: Int) {
+    Upcoming(null, com.leon.be_nobat.R.string.tab_upcoming),
+    Pending("Pending", com.leon.be_nobat.R.string.tab_pending),
+    Confirmed("Confirmed", com.leon.be_nobat.R.string.tab_confirmed),
+    Completed("Completed", com.leon.be_nobat.R.string.tab_completed),
+    Cancelled("Cancelled", com.leon.be_nobat.R.string.tab_cancelled),
 }
 
 class AppointmentsViewModel(

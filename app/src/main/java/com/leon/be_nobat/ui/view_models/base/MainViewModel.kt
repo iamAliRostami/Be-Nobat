@@ -22,10 +22,12 @@ class MainViewModel(private val themeManager: ThemeManager) : ViewModel() {
     }
 
     fun switchLanguage(languageTag: String) {
+        com.leon.be_nobat.helpers.AppLocaleManager.currentLanguage = languageTag
+        AppCompatDelegate.setApplicationLocales(
+            LocaleListCompat.forLanguageTags(languageTag)
+        )
         viewModelScope.launch {
-            AppCompatDelegate.setApplicationLocales(
-                LocaleListCompat.forLanguageTags(languageTag)
-            )
+            themeManager.saveLanguage(languageTag)
         }
     }
 }

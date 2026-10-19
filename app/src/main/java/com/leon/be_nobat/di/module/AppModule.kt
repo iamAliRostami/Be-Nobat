@@ -24,6 +24,7 @@ import com.leon.be_nobat.domain.repository.FavoriteRepository
 import com.leon.be_nobat.domain.repository.ManagementRepository
 import com.leon.be_nobat.domain.repository.PlatformRepository
 import com.leon.be_nobat.domain.usecase.AdminContextUseCase
+import com.leon.be_nobat.domain.usecase.AdminCreateAvailabilityUseCase
 import com.leon.be_nobat.domain.usecase.AdminCreateBranchUseCase
 import com.leon.be_nobat.domain.usecase.AdminCreateCustomerReviewUseCase
 import com.leon.be_nobat.domain.usecase.AdminCreateMembershipUseCase
@@ -72,7 +73,9 @@ import com.leon.be_nobat.domain.usecase.LoginUseCase
 import com.leon.be_nobat.domain.usecase.LogoutUseCase
 import com.leon.be_nobat.domain.usecase.PlatformCreateBusinessUseCase
 import com.leon.be_nobat.domain.usecase.PlatformCreateCatalogUseCase
+import com.leon.be_nobat.domain.usecase.PlatformUpdateCatalogUseCase
 import com.leon.be_nobat.domain.usecase.PlatformCreateCategoryUseCase
+import com.leon.be_nobat.domain.usecase.PlatformUpdateCategoryUseCase
 import com.leon.be_nobat.domain.usecase.PlatformCreateUserUseCase
 import com.leon.be_nobat.domain.usecase.PlatformDeleteBusinessUseCase
 import com.leon.be_nobat.domain.usecase.PlatformDeleteCatalogUseCase
@@ -215,6 +218,7 @@ val useCaseModule = module {
     factory { AdminListReviewsUseCase(get()) }
     factory { AdminModerateReviewUseCase(get()) }
     factory { AdminListAvailabilityUseCase(get()) }
+    factory { AdminCreateAvailabilityUseCase(get()) }
     factory { AdminListResourceServicesUseCase(get()) }
     factory { AdminListCustomerReviewsUseCase(get()) }
     factory { AdminListPendingCustomerReviewsUseCase(get()) }
@@ -228,9 +232,11 @@ val useCaseModule = module {
     factory { PlatformDeleteBusinessUseCase(get()) }
     factory { PlatformListCatalogUseCase(get()) }
     factory { PlatformCreateCatalogUseCase(get()) }
+    factory { PlatformUpdateCatalogUseCase(get()) }
     factory { PlatformDeleteCatalogUseCase(get()) }
     factory { PlatformListCategoriesUseCase(get()) }
     factory { PlatformCreateCategoryUseCase(get()) }
+    factory { PlatformUpdateCategoryUseCase(get()) }
     factory { PlatformDeleteCategoryUseCase(get()) }
     factory { PlatformListUsersUseCase(get()) }
     factory { PlatformCreateUserUseCase(get()) }
@@ -262,8 +268,8 @@ val viewModelModule = module {
 
     // Platform
     viewModel { PlatformBusinessesViewModel(get(), get(), get(), get(), get()) }
-    viewModel { PlatformCatalogViewModel(get(), get(), get()) }
-    viewModel { PlatformCategoriesViewModel(get(), get(), get()) }
+    viewModel { PlatformCatalogViewModel(get(), get(), get(), get()) }
+    viewModel { PlatformCategoriesViewModel(get(), get(), get(), get()) }
     viewModel { PlatformAccessViewModel(get(), get(), get(), get(), get(), get()) }
 }
 

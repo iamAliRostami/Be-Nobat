@@ -7,6 +7,7 @@ import com.leon.be_nobat.domain.model.ManagementCategory
 import com.leon.be_nobat.domain.usecase.PlatformCreateCategoryUseCase
 import com.leon.be_nobat.domain.usecase.PlatformDeleteCategoryUseCase
 import com.leon.be_nobat.domain.usecase.PlatformListCategoriesUseCase
+import com.leon.be_nobat.domain.usecase.PlatformUpdateCategoryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +24,7 @@ data class PlatformCategoriesUiState(
 class PlatformCategoriesViewModel(
     private val list: PlatformListCategoriesUseCase,
     private val createUseCase: PlatformCreateCategoryUseCase,
+    private val updateUseCase: PlatformUpdateCategoryUseCase,
     private val deleteUseCase: PlatformDeleteCategoryUseCase,
 ) : ViewModel() {
 
@@ -50,6 +52,15 @@ class PlatformCategoriesViewModel(
         createUseCase(input)
             .onSuccess { created ->
                 _state.value = _state.value.copy(items = listOf(created) + _state.value.items, message = "created")
+            }
+            .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
+    }
+
+    fun update(id: String, input: com.leon.be_nobat.domain.model.ManagementCategoryInput) = viewModelScope.launch {
+        updateUseCase(id, input)
+            .onSuccess { updated ->
+                val items = _state.value.items.map { if (it.id == id) updated else it }
+                _state.value = _state.value.copy(items = items, message = "updated")
             }
             .onFailure { e -> _state.value = _state.value.copy(error = e.message) }
     }

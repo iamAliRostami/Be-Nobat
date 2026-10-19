@@ -27,8 +27,10 @@
     <string name="already_have_account">حساب دارید؟</string>
     <string name="back_to_login">بازگشت به ورود</string>
 
-    <!-- ============ Toolbar / Menu ============ -->
     <string name="search">جستجو</string>
+    <string name="action_search">جستجو…</string>
+    <string name="admin_branch">شعبه</string>
+    <string name="admin_resource">ارائه‌دهنده</string>
     <string name="filter">فیلتر</string>
     <string name="sort">مرتب‌سازی</string>
     <string name="refresh">به‌روزرسانی</string>
@@ -67,16 +69,26 @@
     <string name="home_search_hint">جستجوی کسب‌وکار، شهر، دسته‌بندی…</string>
     <string name="no_businesses_yet">هنوز کسب‌وکاری یافت نشد. بعداً تلاش کنید.</string>
     <string name="book_now">رزرو نوبت</string>
-    <string name="branch_count">شعب: %1$d</string>
-    <string name="service_count">خدمات: %1$d</string>
+    <string name="branch_count_single">۱ شعبه</string>
+    <string name="branch_count">%1$s شعبه</string>
+    <string name="service_count_single">۱ خدمت</string>
+    <string name="service_count">%1$s خدمت</string>
     <string name="rating_value">امتیاز: %1$.1f</string>
-    <string name="review_count">نظر: %1$d</string>
+    <string name="review_count">%1$s نظر</string>
     <string name="requires_approval">نیازمند تأیید</string>
 
     <!-- ============ Business detail ============ -->
+    <string name="business_details">جزئیات کسب‌وکار</string>
     <string name="branches_section">شعب</string>
     <string name="services_section">خدمات</string>
     <string name="reviews_section">نظرات</string>
+    <string name="no_reviews_user">هنوز نظری برای این کسب‌وکار ثبت نشده است.\nاولین نفری باشید که تجربه خود را با دیگران به اشتراک می‌گذارد.</string>
+    <string name="no_reviews_user_title">هنوز نظری برای این کسب‌وکار ثبت نشده است.</string>
+    <string name="no_reviews_user_desc">اولین نفری باشید که تجربه خود را با دیگران به اشتراک می‌گذارد.</string>
+    <string name="no_reviews_admin_all">هنوز هیچ نظری از سوی مشتریان ثبت نشده است.</string>
+    <string name="no_reviews_admin_pending">در حال حاضر هیچ نظری در انتظار بررسی و تأیید وجود ندارد.</string>
+    <string name="no_reviews_admin_published">هیچ نظر منتشرشده‌ای در این بخش وجود ندارد.</string>
+    <string name="no_reviews_admin_rejected">هیچ نظر ردشده‌ای در این بخش وجود ندارد.</string>
     <string name="add_to_favorites">افزودن به علاقه‌مندی</string>
     <string name="remove_from_favorites">حذف از علاقه‌مندی</string>
     <string name="duration_minutes">مدت: %1$d دقیقه</string>
@@ -93,11 +105,18 @@
     <string name="phone_for_booking">شماره تماس برای این نوبت</string>
     <string name="note_for_booking">یادداشت (اختیاری)</string>
     <string name="accept_terms">با قوانین رزرو موافقم</string>
+    <string name="error_terms_required">لطفاً ابتدا قوانین رزرو را مطالعه و با آن موافقت کنید.</string>
     <string name="confirm_booking">تأیید و ثبت نوبت</string>
     <string name="booking_in_progress">در حال ثبت نوبت…</string>
     <string name="booking_success">نوبت شما با موفقیت ثبت شد</string>
     <string name="booking_tracking_code">کد پیگیری: %1$s</string>
     <string name="no_slots_available">برای این روز ساعتی آزاد نیست</string>
+    <string name="booking_select_service_first">ابتدا حداقل یک خدمت را انتخاب کنید</string>
+    <string name="booking_available_slots_count">%1$s زمان موجود</string>
+    <string name="booking_next_window">هفته بعد</string>
+    <string name="booking_prev_window">هفته قبل</string>
+    <string name="booking_pick_calendar">انتخاب تاریخ از تقویم</string>
+    <string name="today_badge">امروز</string>
 
     <!-- ============ Appointments ============ -->
     <string name="orders_title">نوبت‌های من</string>
@@ -150,6 +169,7 @@
     <string name="admin_dashboard_completed">انجام شده</string>
     <string name="admin_dashboard_revenue">درآمد</string>
     <string name="admin_dashboard_pending_reviews">نظرات در انتظار</string>
+    <string name="view_calendar">مشاهده تقویم ←</string>
 
     <string name="customer_name_label">مشتری: %1$s</string>
     <string name="tracking_code_label">کد پیگیری: %1$s</string>
@@ -185,6 +205,21 @@
     <string name="form_create_category_title">ایجاد دسته‌بندی</string>
     <string name="form_create_user_title">ایجاد کاربر جدید</string>
 
+    <string name="form_edit_branch_title">ویرایش شعبه</string>
+    <string name="form_edit_service_title">ویرایش خدمت</string>
+    <string name="form_edit_business_title">ویرایش کسب‌وکار</string>
+    <string name="form_edit_catalog_title">ویرایش آیتم کاتالوگ</string>
+    <string name="form_edit_category_title">ویرایش دسته‌بندی</string>
+    <string name="form_edit_user_title">ویرایش کاربر</string>
+    <string name="action_edit">ویرایش</string>
+
+    <string name="category_kind_business">کسب‌وکار</string>
+    <string name="category_kind_service">خدمت</string>
+
+    <string name="review_status_pending">در انتظار بررسی</string>
+    <string name="review_status_published">منتشر شده</string>
+    <string name="review_status_rejected">رد شده</string>
+
     <string name="form_label_name">نام</string>
     <string name="form_label_slug">اسلاگ (انگلیسی)</string>
     <string name="form_label_category">دسته‌بندی</string>
@@ -194,7 +229,7 @@
     <string name="form_label_open_hour">ساعت شروع (۰-۲۳)</string>
     <string name="form_label_close_hour">ساعت پایان (۱-۲۴)</string>
     <string name="form_label_duration_minutes">مدت (دقیقه)</string>
-    <string name="form_label_price">قیمت (ریال)</string>
+    <string name="form_label_price">قیمت (تومان)</string>
     <string name="form_label_currency">ارز</string>
     <string name="form_label_email">ایمیل</string>
     <string name="form_label_phone">موبایل</string>
@@ -253,4 +288,86 @@
     <string name="error_connection_failed">ارتباط با سرور برقرار نشد. لطفاً اتصال اینترنت خود را بررسی کنید</string>
     <string name="error_service_unavailable_title">عدم دسترسی به سرویس</string>
     <string name="press_back_again_to_exit">برای خروج، دوباره دکمه بازگشت را بزنید</string>
+
+    <!-- Booking Wizard & Summary -->
+    <string name="step_services">خدمات</string>
+    <string name="step_time_provider">کارمند و زمان</string>
+    <string name="step_confirm">تأیید نهایی</string>
+    <string name="step_1_title">خدمات موردنظر را انتخاب کنید</string>
+    <string name="step_1_desc">یک یا چند خدمت را می‌توانید در یک نوبت رزرو کنید.</string>
+    <string name="step_2_title">کارمند، روز و ساعت را انتخاب کنید</string>
+    <string name="step_2_desc">فقط کارکنانی نمایش داده می‌شوند که همه خدمات انتخابی را ارائه می‌کنند.</string>
+    <string name="step_3_title">بررسی و تأیید نهایی</string>
+    <string name="step_3_desc">پیش از ثبت نوبت، مشخصات و قوانین رزرو را بررسی کنید.</string>
+    <string name="btn_continue_to_time">ادامه به انتخاب زمان</string>
+    <string name="btn_continue_to_confirm">ادامه به تأیید نهایی</string>
+    <string name="btn_back_to_services">بازگشت به انتخاب خدمات</string>
+    <string name="btn_back_to_time">بازگشت به انتخاب زمان</string>
+    <string name="booking_summary_card">خلاصه نوبت</string>
+    <string name="selected_services_badge">%1$s خدمت انتخاب شده</string>
+    <string name="total_price_label">مبلغ کل:</string>
+    <string name="total_duration_label">مدت زمان:</string>
+    <string name="specialist_label">متخصص:</string>
+    <string name="selected_time_label">زمان نوبت:</string>
+    <string name="view_my_appointments">مشاهده نوبت‌های من</string>
+    <string name="back_to_home">بازگشت به صفحه اصلی</string>
+
+    <!-- Admin Calendar Toolbar -->
+    <string name="calendar_today">امروز</string>
+    <string name="calendar_prev_day">روز قبل</string>
+    <string name="calendar_next_day">روز بعد</string>
+    <string name="calendar_all_dates">همه تاریخ‌ها</string>
+    <string name="calendar_day_mode">روز انتخابی</string>
+    <string name="all">همه</string>
+
+    <!-- Booking Confirmation / Receipt -->
+    <string name="booking_confirmed_title">رسید ثبت نوبت</string>
+    <string name="booking_success_headline">نوبت شما با موفقیت ثبت شد</string>
+    <string name="booking_success_subtitle">اطلاعات رزرو شما به شرح زیر می‌باشد:</string>
+    <string name="booking_tracking_label">شماره پیگیری</string>
+    <string name="booking_services_label">خدمات</string>
+    <string name="booking_provider_label">متخصص</string>
+    <string name="booking_time_label">زمان</string>
+    <string name="booking_business_label">کسب‌وکار</string>
+    <string name="booking_price_label">مبلغ نهایی</string>
+    <string name="tracking_code_copied">شماره پیگیری کپی شد</string>
+    <string name="action_cancel">انصراف</string>
+    <string name="tab_all">همه</string>
+    <string name="role_manager">مدیر کسب‌وکار</string>
+    <string name="role_admin">مدیر سامانه</string>
+    <string name="role_staff">کارمند</string>
+    <string name="status_available">در دسترس</string>
+    <string name="status_unavailable">غیرفعال</string>
+
+    <!-- Rating Descriptions -->
+    <string name="rating_excellent">%1$s از ۵ (عالی)</string>
+    <string name="rating_very_good">%1$s از ۵ (خیلی خوب)</string>
+    <string name="rating_good">%1$s از ۵ (خوب)</string>
+    <string name="rating_fair">%1$s از ۵ (متوسط)</string>
+    <string name="rating_poor">%1$s از ۵ (ضعیف)</string>
+
+    <!-- Calendar Dialog & Action Strings -->
+    <string name="confirm_cancel_appointment_msg">آیا از لغو نوبت «%1$s» اطمینان دارید؟</string>
+    <string name="confirm_cancel_positive">بله، لغو شود</string>
+    <string name="action_call_phone">تماس تلفنی</string>
+    <string name="label_customer">مشتری: %1$s</string>
+    <string name="label_phone">شماره تماس: %1$s</string>
+    <string name="label_email">ایمیل: %1$s</string>
+    <string name="label_business">کسب‌وکار: %1$s</string>
+    <string name="label_services">خدمات: %1$s</string>
+    <string name="label_provider">ارائه‌دهنده: %1$s</string>
+    <string name="label_time">زمان: %1$s</string>
+    <string name="label_price">مبلغ: %1$s</string>
+    <string name="label_tracking_code">کد پیگیری: %1$s</string>
+    <string name="label_status">وضعیت: %1$s</string>
+    <string name="label_customer_note">یادداشت مشتری: %1$s</string>
+
+    <!-- Login Demo Strings -->
+    <string name="demo_login_button">حساب‌های دمو و بازنشانی داده‌ها</string>
+    <string name="demo_login_dialog_title">دموی آفلاین</string>
+    <string name="demo_reset_confirm_msg">تمام تغییرات این نسخهٔ دمو حذف و داده‌های نمونه با تاریخ امروز ساخته می‌شوند. ادامه می‌دهید؟</string>
+    <string name="demo_reset_positive">بازنشانی</string>
+    <string name="demo_reset_success">داده‌های دمو بازنشانی شدند.</string>
+    <string name="demo_accounts_hint">دمو: user@benobat.ir / manager@benobat.ir / admin@benobat.ir / staff@benobat.ir</string>
+    <string name="demo_password_hint">رمز اولیه حساب‌های دمو: Demo1234!</string>
 </resources>

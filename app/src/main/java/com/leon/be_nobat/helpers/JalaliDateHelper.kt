@@ -11,7 +11,11 @@ data class JalaliDate(
     val day: Int,
 ) {
     val monthName: String
-        get() = JalaliDateHelper.PERSIAN_MONTHS.getOrElse(month - 1) { "" }
+        get() = if (PersianUtils.isEnglishLocale()) {
+            JalaliDateHelper.ENGLISH_PERSIAN_MONTHS.getOrElse(month - 1) { "" }
+        } else {
+            JalaliDateHelper.PERSIAN_MONTHS.getOrElse(month - 1) { "" }
+        }
 
     fun toFormattedString(): String {
         val y = PersianUtils.toPersianDigits(year)
@@ -39,10 +43,45 @@ object JalaliDateHelper {
         "دی", "بهمن", "اسفند"
     )
 
+    val ENGLISH_PERSIAN_MONTHS = arrayOf(
+        "Farvardin", "Ordibehesht", "Khordad",
+        "Tir", "Mordad", "Shahrivar",
+        "Mehr", "Aban", "Azar",
+        "Dey", "Bahman", "Esfand"
+    )
+
     val WEEKDAYS = arrayOf(
         "شنبه", "یکشنبه", "دوشنبه",
         "سه‌شنبه", "چهارشنبه", "پنجشنبه", "جمعه"
     )
+
+    val ENGLISH_WEEKDAYS = arrayOf(
+        "Sat", "Sun", "Mon",
+        "Tue", "Wed", "Thu", "Fri"
+    )
+
+    fun getWeekdayName(weekdayIdx: Int): String {
+        return if (PersianUtils.isEnglishLocale()) {
+            ENGLISH_WEEKDAYS.getOrElse(weekdayIdx) { "" }
+        } else {
+            WEEKDAYS.getOrElse(weekdayIdx) { "" }
+        }
+    }
+
+    fun translateDayOfWeek(day: String?): String {
+        if (day.isNullOrBlank()) return ""
+        return when (day.trim().lowercase()) {
+            "saturday", "sat" -> "شنبه"
+            "sunday", "sun" -> "یکشنبه"
+            "monday", "mon" -> "دوشنبه"
+            "tuesday", "tue" -> "سه‌شنبه"
+            "wednesday", "wed" -> "چهارشنبه"
+            "thursday", "thu" -> "پنج‌شنبه"
+            "friday", "fri" -> "جمعه"
+            else -> day
+        }
+    }
+
 
     fun gregorianToJalali(gy: Int, gm: Int, gd: Int): JalaliDate {
         val gDaysInMonth = intArrayOf(0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334)
@@ -148,7 +187,7 @@ object JalaliDateHelper {
                     Calendar.FRIDAY -> 6
                     else -> 0
                 }
-                val weekday = WEEKDAYS[weekdayIdx]
+                val weekday = getWeekdayName(weekdayIdx)
                 return "$weekday ${j.toDisplayString()}"
             }
         } catch (_: Exception) {}
@@ -173,6 +212,32 @@ object JalaliDateHelper {
         if (iso.isNullOrBlank()) return ""
         val date = formatIsoToJalali(iso)
         val time = formatIsoTime(iso)
-        return if (time.isNotBlank() && time != date) "$date ساعت $time" else date
+        val atSeparator = if (PersianUtils.isEnglishLocale()) "at" else "ساعت"
+        return if (time.isNotBlank() && time != date) "$date $atSeparator $time" else date
+    }
+
+    fun formatIsoDateTimeFull(iso: String?): String {
+        if (iso.isNullOrBlank()) return ""
+        try {
+            val datePart = iso.substringBefore('T').trim()
+            val parts = datePart.split("-")
+            if (parts.size == 3) {
+                val gy = parts[0].toInt()
+                val gm = parts[1].toInt()
+                val gd = parts[2].toInt()
+                val j = gregorianToJalali(gy, gm, gd)
+                val time = formatIsoTime(iso)
+                val y = PersianUtils.toPersianDigits(j.year)
+                val d = PersianUtils.toPersianDigits(j.day)
+                val comma = if (PersianUtils.isEnglishLocale()) "," else "،"
+                val atSeparator = if (PersianUtils.isEnglishLocale()) "at" else "ساعت"
+                return if (time.isNotBlank()) {
+                    "$d ${j.monthName}$comma $y $atSeparator $time"
+                } else {
+                    "$d ${j.monthName}$comma $y"
+                }
+            }
+        } catch (_: Exception) {}
+        return formatIsoDateTime(iso)
     }
 }

@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:textAppearance="@style/TextAppearance.BeNobat.Body.Muted"
-            tools:text="150,000 ریال" />
+            tools:text="15,000 تومان" />
 
         <TextView
             android:id="@+id/tvTrackingCode"

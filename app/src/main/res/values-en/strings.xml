@@ -25,6 +25,9 @@
     <string name="back_to_login">Back to sign-in</string>
 
     <string name="search">Search</string>
+    <string name="action_search">Search…</string>
+    <string name="admin_branch">Branch</string>
+    <string name="admin_resource">Provider</string>
     <string name="filter">Filter</string>
     <string name="sort">Sort</string>
     <string name="refresh">Refresh</string>
@@ -60,15 +63,25 @@
     <string name="home_search_hint">Search by business, city, category…</string>
     <string name="no_businesses_yet">No businesses yet. Try again later.</string>
     <string name="book_now">Book now</string>
-    <string name="branch_count">Branches: %1$d</string>
-    <string name="service_count">Services: %1$d</string>
+    <string name="branch_count_single">1 branch</string>
+    <string name="branch_count">%1$s branches</string>
+    <string name="service_count_single">1 service</string>
+    <string name="service_count">%1$s services</string>
     <string name="rating_value">Rating: %1$.1f</string>
-    <string name="review_count">Reviews: %1$d</string>
+    <string name="review_count">%1$s reviews</string>
     <string name="requires_approval">Requires approval</string>
 
+    <string name="business_details">Business Details</string>
     <string name="branches_section">Branches</string>
     <string name="services_section">Services</string>
     <string name="reviews_section">Reviews</string>
+    <string name="no_reviews_user">No reviews yet for this business.\nBe the first to share your experience with others!</string>
+    <string name="no_reviews_user_title">No reviews yet for this business.</string>
+    <string name="no_reviews_user_desc">Be the first to share your experience after receiving services!</string>
+    <string name="no_reviews_admin_all">No customer reviews have been submitted yet.</string>
+    <string name="no_reviews_admin_pending">There are currently no reviews awaiting moderation.</string>
+    <string name="no_reviews_admin_published">No published reviews in this section.</string>
+    <string name="no_reviews_admin_rejected">No rejected reviews in this section.</string>
     <string name="add_to_favorites">Add to favorites</string>
     <string name="remove_from_favorites">Remove from favorites</string>
     <string name="duration_minutes">Duration: %1$d min</string>
@@ -84,11 +97,18 @@
     <string name="phone_for_booking">Contact phone for this appointment</string>
     <string name="note_for_booking">Note (optional)</string>
     <string name="accept_terms">I accept the booking terms</string>
+    <string name="error_terms_required">Please accept the booking terms and conditions first.</string>
     <string name="confirm_booking">Confirm and book</string>
     <string name="booking_in_progress">Booking…</string>
     <string name="booking_success">Appointment booked successfully</string>
     <string name="booking_tracking_code">Tracking code: %1$s</string>
     <string name="no_slots_available">No slots available for this day</string>
+    <string name="booking_select_service_first">Please select at least one service first</string>
+    <string name="booking_available_slots_count">%1$s slots available</string>
+    <string name="booking_next_window">Next week</string>
+    <string name="booking_prev_window">Previous week</string>
+    <string name="booking_pick_calendar">Choose date from calendar</string>
+    <string name="today_badge">Today</string>
 
     <string name="orders_title">My appointments</string>
     <string name="tab_upcoming">Upcoming</string>
@@ -152,6 +172,7 @@
     <string name="temporary_password">Temporary password: %1$s</string>
     <string name="role_customer">Customer</string>
     <string name="role_platform_admin">Platform admin</string>
+    <string name="view_calendar">View Calendar →</string>
 
     <string name="loading">Loading…</string>
     <string name="error_generic">Something went wrong</string>
@@ -171,6 +192,21 @@
     <string name="form_create_category_title">Create Category</string>
     <string name="form_create_user_title">Create New User</string>
 
+    <string name="form_edit_branch_title">Edit Branch</string>
+    <string name="form_edit_service_title">Edit Service</string>
+    <string name="form_edit_business_title">Edit Business</string>
+    <string name="form_edit_catalog_title">Edit Catalog Item</string>
+    <string name="form_edit_category_title">Edit Category</string>
+    <string name="form_edit_user_title">Edit User</string>
+    <string name="action_edit">Edit</string>
+
+    <string name="category_kind_business">Business</string>
+    <string name="category_kind_service">Service</string>
+
+    <string name="review_status_pending">Pending</string>
+    <string name="review_status_published">Published</string>
+    <string name="review_status_rejected">Rejected</string>
+
     <string name="form_label_name">Name</string>
     <string name="form_label_slug">Slug (English)</string>
     <string name="form_label_category">Category</string>
@@ -180,7 +216,7 @@
     <string name="form_label_open_hour">Opening hour (0–23)</string>
     <string name="form_label_close_hour">Closing hour (1–24)</string>
     <string name="form_label_duration_minutes">Duration (minutes)</string>
-    <string name="form_label_price">Price (Rials)</string>
+    <string name="form_label_price">Price (Toman)</string>
     <string name="form_label_currency">Currency</string>
     <string name="form_label_email">Email</string>
     <string name="form_label_phone">Mobile</string>
@@ -236,4 +272,86 @@
     <string name="error_connection_failed">Unable to connect to the server. Please check your connection</string>
     <string name="error_service_unavailable_title">Service Unavailable</string>
     <string name="press_back_again_to_exit">Press back again to exit</string>
+
+    <!-- Booking Wizard & Summary -->
+    <string name="step_services">Services</string>
+    <string name="step_time_provider">Staff &amp; Time</string>
+    <string name="step_confirm">Confirmation</string>
+    <string name="step_1_title">Select services</string>
+    <string name="step_1_desc">You can book one or more services in a single appointment.</string>
+    <string name="step_2_title">Select provider, date, and time</string>
+    <string name="step_2_desc">Only staff offering all selected services are displayed.</string>
+    <string name="step_3_title">Review and confirmation</string>
+    <string name="step_3_desc">Review appointment details and booking policies before confirming.</string>
+    <string name="btn_continue_to_time">Continue to Time Selection</string>
+    <string name="btn_continue_to_confirm">Continue to Confirmation</string>
+    <string name="btn_back_to_services">Back to services</string>
+    <string name="btn_back_to_time">Back to time</string>
+    <string name="booking_summary_card">Appointment Summary</string>
+    <string name="selected_services_badge">%1$s services selected</string>
+    <string name="total_price_label">Total price:</string>
+    <string name="total_duration_label">Duration:</string>
+    <string name="specialist_label">Specialist:</string>
+    <string name="selected_time_label">Appointment time:</string>
+    <string name="view_my_appointments">View My Appointments</string>
+    <string name="back_to_home">Back to Home</string>
+
+    <!-- Admin Calendar Toolbar -->
+    <string name="calendar_today">Today</string>
+    <string name="calendar_prev_day">Previous day</string>
+    <string name="calendar_next_day">Next day</string>
+    <string name="calendar_all_dates">All dates</string>
+    <string name="calendar_day_mode">Selected day</string>
+    <string name="all">All</string>
+
+    <!-- Booking Confirmation / Receipt -->
+    <string name="booking_confirmed_title">Booking Receipt</string>
+    <string name="booking_success_headline">Your appointment has been successfully booked</string>
+    <string name="booking_success_subtitle">Your reservation details are shown below:</string>
+    <string name="booking_tracking_label">Tracking Number</string>
+    <string name="booking_services_label">Services</string>
+    <string name="booking_provider_label">Specialist</string>
+    <string name="booking_time_label">Time</string>
+    <string name="booking_business_label">Business</string>
+    <string name="booking_price_label">Total Price</string>
+    <string name="tracking_code_copied">Tracking number copied to clipboard</string>
+    <string name="role_manager">Business Manager</string>
+    <string name="role_admin">System Admin</string>
+    <string name="role_staff">Staff</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="tab_all">All</string>
+    <string name="status_available">Available</string>
+    <string name="status_unavailable">Unavailable</string>
+
+    <!-- Rating Descriptions -->
+    <string name="rating_excellent">%1$s of 5 (Excellent)</string>
+    <string name="rating_very_good">%1$s of 5 (Very good)</string>
+    <string name="rating_good">%1$s of 5 (Good)</string>
+    <string name="rating_fair">%1$s of 5 (Fair)</string>
+    <string name="rating_poor">%1$s of 5 (Poor)</string>
+
+    <!-- Calendar Dialog & Action Strings -->
+    <string name="confirm_cancel_appointment_msg">Are you sure you want to cancel the appointment for \"%1$s\"?</string>
+    <string name="confirm_cancel_positive">Yes, cancel</string>
+    <string name="action_call_phone">Call</string>
+    <string name="label_customer">Customer: %1$s</string>
+    <string name="label_phone">Phone: %1$s</string>
+    <string name="label_email">Email: %1$s</string>
+    <string name="label_business">Business: %1$s</string>
+    <string name="label_services">Services: %1$s</string>
+    <string name="label_provider">Provider: %1$s</string>
+    <string name="label_time">Time: %1$s</string>
+    <string name="label_price">Amount: %1$s</string>
+    <string name="label_tracking_code">Tracking code: %1$s</string>
+    <string name="label_status">Status: %1$s</string>
+    <string name="label_customer_note">Customer note: %1$s</string>
+
+    <!-- Login Demo Strings -->
+    <string name="demo_login_button">Demo accounts &amp; reset data</string>
+    <string name="demo_login_dialog_title">Offline Demo</string>
+    <string name="demo_reset_confirm_msg">All changes in this demo will be deleted and sample data will be created with today\'s date. Continue?</string>
+    <string name="demo_reset_positive">Reset</string>
+    <string name="demo_reset_success">Demo data has been reset.</string>
+    <string name="demo_accounts_hint">Demo: user@benobat.ir / manager@benobat.ir / admin@benobat.ir / staff@benobat.ir</string>
+    <string name="demo_password_hint">Default password for demo accounts: Demo1234!</string>
 </resources>

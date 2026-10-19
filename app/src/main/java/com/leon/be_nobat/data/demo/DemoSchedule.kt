@@ -12,7 +12,14 @@ private fun demoFormatter() = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.U
 internal fun demoMillis(value: String): Long = requireNotNull(demoFormatter().parse(value.take(19))).time
 internal fun demoFormat(value: Long): String = demoFormatter().format(java.util.Date(value))
 
-internal fun DemoDatabaseState.slots(businessId: String, branchId: String, ids: List<String>, date: String, resourceId: String?): SlotsResponse {
+internal fun DemoDatabaseState.slots(
+    businessId: String,
+    branchId: String,
+    ids: List<String>,
+    date: String,
+    resourceId: String?,
+    includePastSlots: Boolean = false
+): SlotsResponse {
     require(businesses.any { it.id == businessId && it.active })
     val branch = branches.first { it.id == branchId && it.businessId == businessId && it.active }
     require(ids.isNotEmpty() && ids.distinct().size == ids.size)
@@ -35,9 +42,11 @@ internal fun DemoDatabaseState.slots(businessId: String, branchId: String, ids: 
             val end = start + duration * 60000L
             val within = rules.filter { it.isAvailable }.let { windows -> windows.isEmpty() || windows.any { start >= demoMillis("${date}T${it.startsAt}") && end <= demoMillis("${date}T${it.endsAt}") } }
             val blocked = rules.filterNot { it.isAvailable }.any { start < demoMillis("${date}T${it.endsAt}") && end > demoMillis("${date}T${it.startsAt}") }
-            if (start <= System.currentTimeMillis() || !within || blocked || occupied.any { start < demoMillis(it.endsAt) && end > demoMillis(it.startsAt) }) null
+            if ((!includePastSlots && start <= System.currentTimeMillis()) || !within || blocked || occupied.any { start < demoMillis(it.endsAt) && end > demoMillis(it.startsAt) }) null
             else Slot(resourceId = r.id, resourceName = r.name, startsAt = demoFormat(start), endsAt = demoFormat(end))
         }.toList()
+    }.let { list ->
+        if (resourceId.isNullOrBlank()) list.distinctBy { it.startsAt } else list
     }.sortedBy { it.startsAt }
     return SlotsResponse(date = date, timeZoneId = branch.timeZoneId, totalDurationMinutes = duration, totalPrice = price, currency = selected.first().currency, slots = results)
 }

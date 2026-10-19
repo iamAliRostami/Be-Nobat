@@ -113,6 +113,40 @@
         <item name="boxBackgroundColor">?attr/colorSurface</item>
     </style>
 
+    <style name="Widget.BeNobat.TextInputLayout.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxCornerRadiusTopStart">@dimen/input_corner_radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/input_corner_radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/input_corner_radius</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/input_corner_radius</item>
+        <item name="boxStrokeColor">@color/til_border_selector</item>
+        <item name="hintTextColor">?attr/colorPrimary</item>
+        <item name="android:fontFamily">@font/app_font</item>
+        <item name="endIconTint">?attr/colorPrimary</item>
+        <item name="boxBackgroundColor">?attr/colorSurface</item>
+    </style>
+
+    <style name="Widget.BeNobat.TextInputLayout.Search" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">16dp</item>
+        <item name="boxCornerRadiusTopEnd">16dp</item>
+        <item name="boxCornerRadiusBottomStart">16dp</item>
+        <item name="boxCornerRadiusBottomEnd">16dp</item>
+        <item name="boxStrokeColor">@color/til_border_selector</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="boxBackgroundColor">?attr/colorSurface</item>
+        <item name="hintEnabled">false</item>
+        <item name="startIconTint">?attr/colorPrimary</item>
+        <item name="endIconTint">?attr/colorOnSurfaceVariant</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.BeNobat.StepTitle" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
     <style name="TextAppearance.BeNobat.Headline" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
@@ -157,5 +191,12 @@
         <item name="android:textSize">11sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/app_font</item>
+    </style>
+
+    <style name="TextAppearance.BeNobat.Tab" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/app_font</item>
+        <item name="fontFamily">@font/app_font</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

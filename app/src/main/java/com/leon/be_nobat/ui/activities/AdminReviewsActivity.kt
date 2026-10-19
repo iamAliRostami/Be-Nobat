@@ -1,7 +1,6 @@
 package com.leon.be_nobat.ui.activities
 
 import android.os.Bundle
-import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,9 +11,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.leon.be_nobat.R
-import com.leon.be_nobat.databinding.ItemAdminAppointmentBinding
 import com.leon.be_nobat.domain.model.ManagementReview
 import com.leon.be_nobat.helpers.BaseActivity
+import com.leon.be_nobat.helpers.JalaliDateHelper
+import com.leon.be_nobat.helpers.PersianUtils
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
 import com.leon.be_nobat.ui.adapters.simpleDiff
 import com.leon.be_nobat.ui.adapters.AdminViewHolder
@@ -30,14 +30,8 @@ class AdminReviewsActivity : BaseActivity() {
     private lateinit var adapter: ReviewsAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // status tabs are visible here for filtering reviews
-    }
-
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.admin_reviews))
-        setMenuVisibility(false)
+        setupAdminHeader(getString(R.string.admin_reviews), currentMenuItemId = R.id.drawer_reviews)
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
@@ -52,9 +46,11 @@ class AdminReviewsActivity : BaseActivity() {
         }
 
         val tabs = findViewById<TabLayout>(R.id.statusTabs)
-        listOf("" to "همه", "Pending" to getString(R.string.appointment_status_pending),
-            "Published" to getString(R.string.publish_review),
-            "Rejected" to getString(R.string.reject_review)
+        listOf(
+            "" to getString(R.string.tab_all),
+            "Pending" to getString(R.string.review_status_pending),
+            "Published" to getString(R.string.review_status_published),
+            "Rejected" to getString(R.string.review_status_rejected),
         ).forEach { (key, label) ->
             tabs.addTab(tabs.newTab().setText(label).also { it.tag = key })
         }
@@ -78,7 +74,18 @@ class AdminReviewsActivity : BaseActivity() {
     private fun render(state: AdminReviewsUiState) {
         swipeRefresh.isRefreshing = state.loading
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.items.isEmpty()
-        findViewById<android.widget.TextView>(R.id.emptyStateText).isVisible = !state.loading && state.items.isEmpty()
+        val emptyStateText = findViewById<android.widget.TextView>(R.id.emptyStateText)
+        val isEmpty = !state.loading && state.items.isEmpty()
+        emptyStateText.isVisible = isEmpty
+        if (isEmpty) {
+            emptyStateText.text = when (state.statusFilter) {
+                "Pending" -> getString(R.string.no_reviews_admin_pending)
+                "Published" -> getString(R.string.no_reviews_admin_published)
+                "Rejected" -> getString(R.string.no_reviews_admin_rejected)
+                else -> getString(R.string.no_reviews_admin_all)
+            }
+        }
+        renderAdminError(state.error) { viewModel.load() }
         adapter.submitList(state.items)
         state.error?.let { Snackbar.make(swipeRefresh, com.leon.be_nobat.helpers.ErrorFormatter.format(this, it), Snackbar.LENGTH_SHORT).show() }
     }
@@ -89,10 +96,22 @@ class AdminReviewsActivity : BaseActivity() {
     ) : BaseAdminAdapter<ManagementReview>(simpleDiff({ a, b -> a.id == b.id }, { a, b -> a == b })) {
         override fun bindHolder(holder: AdminViewHolder, item: ManagementReview) {
             holder.binding.apply {
-                tvTitle.text = "${item.customerName} • ★ ${com.leon.be_nobat.helpers.PersianUtils.toPersianDigits(item.rating)}"
-                tvSubtitle.text = item.status
+                tvTitle.text = "${item.customerName} • ★ ${PersianUtils.toPersianDigits(item.rating)}"
+                val jalaliDate = item.createdAt.takeIf { it.isNotBlank() }?.let { JalaliDateHelper.formatIsoToJalali(it) }
+                if (!jalaliDate.isNullOrBlank()) {
+                    tvSubtitle.isVisible = true
+                    tvSubtitle.text = jalaliDate
+                } else {
+                    tvSubtitle.isVisible = false
+                }
                 tvBody.text = item.comment
-                tvStatus.text = item.status
+                val statusLabel = when (item.status) {
+                    "Pending" -> root.context.getString(R.string.review_status_pending)
+                    "Published" -> root.context.getString(R.string.review_status_published)
+                    "Rejected" -> root.context.getString(R.string.review_status_rejected)
+                    else -> item.status
+                }
+                tvStatus.text = statusLabel
                 btnAction1.text = root.context.getString(R.string.publish_review)
                 btnAction2.text = root.context.getString(R.string.reject_review)
                 btnAction1.isVisible = item.status == "Pending"

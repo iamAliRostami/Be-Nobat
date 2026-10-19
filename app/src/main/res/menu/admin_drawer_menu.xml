@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/group_main"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_dashboard"
             android:icon="@drawable/ic_dashboard"
@@ -37,7 +39,9 @@
 
     <item android:title="@string/nav_admin">
         <menu>
-            <group android:checkableBehavior="single">
+            <group
+                android:id="@+id/group_platform"
+                android:checkableBehavior="single">
                 <item
                     android:id="@+id/drawer_platform_businesses"
                     android:icon="@drawable/ic_platform"

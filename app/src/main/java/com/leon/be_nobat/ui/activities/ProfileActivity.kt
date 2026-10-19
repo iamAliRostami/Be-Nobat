@@ -1,18 +1,24 @@
 package com.leon.be_nobat.ui.activities
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import coil.load
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.leon.be_nobat.R
 import com.leon.be_nobat.data.local.TokenManager
+import com.leon.be_nobat.data.remote.BeNobatApiConfig
 import com.leon.be_nobat.helpers.BaseActivity
 import com.leon.be_nobat.ui.view_models.ProfileUiState
 import com.leon.be_nobat.ui.view_models.ProfileViewModel
@@ -36,8 +42,7 @@ class ProfileActivity : BaseActivity() {
     private val tokenManager: TokenManager by inject()
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.profile_title))
-        setMenuVisibility(false)
+        setupMainHeader(getString(R.string.profile_title))
 
         lifecycleScope.launch {
             if (tokenManager.currentSession() == null) {
@@ -116,12 +121,33 @@ class ProfileActivity : BaseActivity() {
             findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etDisplayName).setText(state.displayName)
             findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etPhone).setText(state.phoneNumber)
         }
-        if (com.leon.be_nobat.BuildConfig.DEMO_MODE) {
-            val avatar = findViewById<android.widget.ImageView>(R.id.ivAvatar)
-            val bitmap = state.avatarUrl?.takeIf { it.startsWith("data:image/") }?.substringAfter("base64,")?.let { encoded ->
-                runCatching { val bytes = Base64.decode(encoded, Base64.DEFAULT); BitmapFactory.decodeByteArray(bytes, 0, bytes.size) }.getOrNull()
+        val avatar = findViewById<android.widget.ImageView>(R.id.ivAvatar)
+        val avatarUrl = state.avatarUrl
+        if (avatarUrl.isNullOrBlank()) {
+            avatar.setImageResource(R.drawable.ic_person)
+        } else if (avatarUrl.startsWith("data:image/")) {
+            val bitmap = runCatching {
+                val encoded = avatarUrl.substringAfter("base64,")
+                val bytes = Base64.decode(encoded, Base64.DEFAULT)
+                BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+            }.getOrNull()
+            if (bitmap != null) avatar.setImageBitmap(bitmap) else avatar.setImageResource(R.drawable.ic_person)
+        } else {
+            val fullUrl = BeNobatApiConfig.resolveMediaUrl(avatarUrl)
+            avatar.load(fullUrl) {
+                crossfade(true)
+                placeholder(R.drawable.ic_person)
+                error(R.drawable.ic_person)
             }
-            if (bitmap != null) avatar.setImageBitmap(bitmap) else avatar.setImageResource(com.leon.be_nobat.R.drawable.ic_person)
+        }
+        // Avatar upload/remove button states
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnUploadAvatar).let {
+            it.isEnabled = !state.uploadingAvatar
+            it.text = if (state.uploadingAvatar) getString(R.string.saving) else getString(R.string.upload_avatar)
+        }
+        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnRemoveAvatar).let {
+            it.isEnabled = !state.uploadingAvatar
+            it.visibility = if (state.avatarUrl.isNullOrBlank()) View.GONE else View.VISIBLE
         }
         // Save button state
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSaveProfile).let {
@@ -157,32 +183,56 @@ class ProfileActivity : BaseActivity() {
 
     private fun uploadAvatarFromUri(uri: Uri) {
         try {
-            val input = contentResolver.openInputStream(uri) ?: return
-            val bitmap = BitmapFactory.decodeStream(input)
-            input.close()
-            if (bitmap == null) {
+            val orientation = try {
+                contentResolver.openInputStream(uri)?.use { stream ->
+                    ExifInterface(stream).getAttributeInt(
+                        ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_NORMAL
+                    )
+                } ?: ExifInterface.ORIENTATION_NORMAL
+            } catch (_: Exception) {
+                ExifInterface.ORIENTATION_NORMAL
+            }
+
+            val maxDim = 2048
+            val boundsOptions = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            contentResolver.openInputStream(uri)?.use { stream ->
+                BitmapFactory.decodeStream(stream, null, boundsOptions)
+            }
+
+            var sampleSize = 1
+            while (boundsOptions.outWidth / sampleSize > maxDim * 2 || boundsOptions.outHeight / sampleSize > maxDim * 2) {
+                sampleSize *= 2
+            }
+
+            val decodeOptions = BitmapFactory.Options().apply { inSampleSize = sampleSize }
+            val rawBitmap = contentResolver.openInputStream(uri)?.use { stream ->
+                BitmapFactory.decodeStream(stream, null, decodeOptions)
+            }
+            if (rawBitmap == null) {
                 Snackbar.make(findViewById(R.id.scrollView), getString(R.string.error_generic), Snackbar.LENGTH_SHORT).show()
                 return
             }
 
+            val oriented = rotateBitmapIfRequired(rawBitmap, orientation)
+
             // Downscale large bitmaps so we stay well under the 2 MiB raw
             // server-side limit even before base64 encoding (which inflates
             // by ~33%). 2048x2048 is a generous max for a profile avatar.
-            val maxDim = 2048
-            val scaled = if (bitmap.width > maxDim || bitmap.height > maxDim) {
-                val scale = maxDim.toFloat() / maxOf(bitmap.width, bitmap.height)
-                android.graphics.Bitmap.createScaledBitmap(
-                    bitmap,
-                    (bitmap.width * scale).toInt().coerceAtLeast(1),
-                    (bitmap.height * scale).toInt().coerceAtLeast(1),
+            val scaled = if (oriented.width > maxDim || oriented.height > maxDim) {
+                val scale = maxDim.toFloat() / maxOf(oriented.width, oriented.height)
+                Bitmap.createScaledBitmap(
+                    oriented,
+                    (oriented.width * scale).toInt().coerceAtLeast(1),
+                    (oriented.height * scale).toInt().coerceAtLeast(1),
                     true,
-                ).also { if (it !== bitmap) bitmap.recycle() }
-            } else bitmap
+                ).also { if (it !== oriented) oriented.recycle() }
+            } else oriented
 
             // Encode as JPEG (much smaller than PNG for photo content),
             // then fall back to PNG if JPEG size is unexpectedly large.
             val jpegStream = ByteArrayOutputStream()
-            scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 85, jpegStream)
+            scaled.compress(Bitmap.CompressFormat.JPEG, 85, jpegStream)
             var bytes = jpegStream.toByteArray()
             var contentType = "image/jpeg"
 
@@ -190,13 +240,13 @@ class ProfileActivity : BaseActivity() {
             val maxRaw = 1_400_000
             if (bytes.size > maxRaw) {
                 val lowered = ByteArrayOutputStream()
-                scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 60, lowered)
+                scaled.compress(Bitmap.CompressFormat.JPEG, 60, lowered)
                 bytes = lowered.toByteArray()
             }
             // Final fallback: if JPEG is still too big, drop quality to 40.
             if (bytes.size > maxRaw) {
                 val last = ByteArrayOutputStream()
-                scaled.compress(android.graphics.Bitmap.CompressFormat.JPEG, 40, last)
+                scaled.compress(Bitmap.CompressFormat.JPEG, 40, last)
                 bytes = last.toByteArray()
             }
 
@@ -206,5 +256,30 @@ class ProfileActivity : BaseActivity() {
         } catch (e: Exception) {
             Snackbar.make(findViewById(R.id.scrollView), e.message ?: getString(R.string.error_generic), Snackbar.LENGTH_SHORT).show()
         }
+    }
+
+    private fun rotateBitmapIfRequired(bitmap: Bitmap, orientation: Int): Bitmap {
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+            ExifInterface.ORIENTATION_FLIP_HORIZONTAL -> matrix.postScale(-1f, 1f)
+            ExifInterface.ORIENTATION_FLIP_VERTICAL -> matrix.postScale(1f, -1f)
+            ExifInterface.ORIENTATION_TRANSPOSE -> {
+                matrix.postRotate(90f)
+                matrix.postScale(-1f, 1f)
+            }
+            ExifInterface.ORIENTATION_TRANSVERSE -> {
+                matrix.postRotate(270f)
+                matrix.postScale(-1f, 1f)
+            }
+            else -> return bitmap
+        }
+        val rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        if (rotated !== bitmap) {
+            bitmap.recycle()
+        }
+        return rotated
     }
 }

@@ -39,7 +39,7 @@ class HomeActivity : BaseActivity() {
     private val tokenManager: TokenManager by inject()
 
     override fun setupViews() {
-        setToolbarTitle(true) // Hide the dull base toolbar
+        setupMainHeader()
 
         businessList = findViewById(R.id.businessList)
         swipeRefresh = findViewById(R.id.swipeRefresh)
@@ -47,27 +47,6 @@ class HomeActivity : BaseActivity() {
         emptyStateText = findViewById(R.id.emptyStateText)
         errorText = findViewById(R.id.errorText)
         searchInput = findViewById(R.id.searchInput)
-
-        findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLanguage).setOnClickListener {
-            showLanguageMenu(it)
-        }
-
-        findViewById<android.view.View>(R.id.btnThemeToggle).setOnClickListener {
-            setupThemeToggle()
-        }
-
-        val btnAdmin = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnAdminPanel)
-        lifecycleScope.launch {
-            val session = tokenManager.currentSession()
-            if (session?.user?.isStaff == true) {
-                btnAdmin.visibility = android.view.View.VISIBLE
-                btnAdmin.setOnClickListener {
-                    startActivity(Intent(this@HomeActivity, AdminHomeActivity::class.java))
-                }
-            } else {
-                btnAdmin.visibility = android.view.View.GONE
-            }
-        }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnFilterSort).setOnClickListener {
             showFilterSortDialog()

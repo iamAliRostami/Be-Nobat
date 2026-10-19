@@ -8,6 +8,7 @@ import com.leon.be_nobat.domain.model.ManagementAppointment
 import com.leon.be_nobat.domain.model.ManagementReview
 import com.leon.be_nobat.domain.model.ReviewCreated
 import com.leon.be_nobat.domain.model.ReviewInput
+import com.leon.be_nobat.domain.model.Slot
 import com.leon.be_nobat.domain.model.SlotsResponse
 import com.leon.be_nobat.domain.repository.BookingRepository
 import java.util.UUID
@@ -41,8 +42,29 @@ class DemoBookingRepository(
 
         dataStore.update { state ->
             require(input.termsAccepted)
-            val slots = state.slots(input.businessId, input.branchId, input.serviceIds, input.startsAt.take(10), input.resourceId)
-            val slot = slots.slots.firstOrNull { it.startsAt == input.startsAt } ?: error("این زمان دیگر قابل رزرو نیست.")
+            val slots = state.slots(
+                businessId = input.businessId,
+                branchId = input.branchId,
+                ids = input.serviceIds,
+                date = input.startsAt.take(10),
+                resourceId = input.resourceId,
+                includePastSlots = true,
+            )
+            val primarySlot = slots.slots.firstOrNull { it.startsAt == input.startsAt }
+                ?: slots.slots.firstOrNull { it.startsAt.take(16) == input.startsAt.take(16) }
+            val fallbackSlot = if (primarySlot == null && input.resourceId != null) {
+                val fallback = state.slots(
+                    businessId = input.businessId,
+                    branchId = input.branchId,
+                    ids = input.serviceIds,
+                    date = input.startsAt.take(10),
+                    resourceId = null,
+                    includePastSlots = true,
+                )
+                fallback.slots.firstOrNull { it.startsAt == input.startsAt }
+                    ?: fallback.slots.firstOrNull { it.startsAt.take(16) == input.startsAt.take(16) }
+            } else null
+            val slot: Slot = primarySlot ?: fallbackSlot ?: error("این زمان دیگر قابل رزرو نیست.")
             val biz = state.businesses.firstOrNull { it.id == input.businessId }
             val branch = state.branches.firstOrNull { it.id == input.branchId }
             val services = state.services.filter { input.serviceIds.contains(it.id) }
@@ -51,7 +73,7 @@ class DemoBookingRepository(
 
             val status = if (biz?.requiresApproval == true) "Pending" else "Confirmed"
             val price = slots.totalPrice
-            require(input.expectedPrice == null || input.expectedPrice == price) { "قیمت خدمات تغییر کرده است." }
+            require(input.expectedPrice == null || kotlin.math.abs(input.expectedPrice - price) < 1.0) { "قیمت خدمات تغییر کرده است." }
 
             require(input.expectedDurationMinutes == null || input.expectedDurationMinutes == slots.totalDurationMinutes)
             val endsAt = slot.endsAt

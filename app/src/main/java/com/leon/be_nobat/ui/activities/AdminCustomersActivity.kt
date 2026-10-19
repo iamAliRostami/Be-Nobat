@@ -35,8 +35,7 @@ class AdminCustomersActivity : BaseActivity() {
     }
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.admin_customers))
-        setMenuVisibility(false)
+        setupAdminHeader(getString(R.string.admin_customers), currentMenuItemId = R.id.drawer_customers)
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         swipeRefresh.setOnRefreshListener { viewModel.load() }
@@ -60,6 +59,7 @@ class AdminCustomersActivity : BaseActivity() {
         swipeRefresh.isRefreshing = state.loading
         findViewById<android.widget.ProgressBar>(R.id.loadingProgress).isVisible = state.loading && state.items.isEmpty()
         findViewById<android.widget.TextView>(R.id.emptyStateText).isVisible = !state.loading && state.items.isEmpty()
+        renderAdminError(state.error) { viewModel.load() }
         adapter.submitList(state.items)
     }
 
