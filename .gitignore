@@ -18,3 +18,5 @@ local.properties
 /.idea/project.xml
 /planningMode.xml
 /project.xml
+/.gradle-codex/
+/.gradle-user-codex/
