@@ -320,14 +320,16 @@ class AdminServicesActivity : BaseActivity() {
                     val branch = branches[index]
                     lifecycleScope.launch {
                         findCancellationBranchService(branch.id, service.id).onSuccess { link ->
-                            val editor = com.leon.be_nobat.helpers.CancellationNoticeEditor(this@AdminServicesActivity).apply { setValue(link?.cancellationNoticeMinutes) }
+                            val editor = com.leon.be_nobat.helpers.CancellationNoticeEditor(this@AdminServicesActivity).apply { setValue(
+                                link.cancellationNoticeMinutes
+                            ) }
                             AdminFormDialog.Builder(this@AdminServicesActivity)
                                 .setTitle("مهلت لغو ${service.name} · ${branch.name}")
                                 .customView(editor).validate { editor.validate() }
                                 .onSubmit {
                                     lifecycleScope.launch {
                                         managementRepository.upsertBranchService(branch.id, service.id,
-                                            com.leon.be_nobat.domain.model.ManagementBranchServiceInput(price = link?.price, cancellationNoticeMinutes = editor.value))
+                                            com.leon.be_nobat.domain.model.ManagementBranchServiceInput(price = link.price, cancellationNoticeMinutes = editor.value))
                                             .onSuccess { com.leon.be_nobat.helpers.AppToast.show(this@AdminServicesActivity, "مهلت لغو خدمتِ شعبه ذخیره شد.") }
                                             .onFailure { com.leon.be_nobat.helpers.AppToast.show(this@AdminServicesActivity, it.message.orEmpty()) }
                                     }

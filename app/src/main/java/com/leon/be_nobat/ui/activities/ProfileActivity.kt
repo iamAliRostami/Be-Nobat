@@ -312,7 +312,7 @@ class ProfileActivity : BaseActivity() {
                 tvDesc.text = "درخواست قبلی شما برای کسب‌وکار «${req?.businessName}» مورد تأیید قرار نگرفت."
                 if (!req?.reviewNote.isNullOrBlank()) {
                     tvNote.visibility = View.VISIBLE
-                    tvNote.text = getString(R.string.business_request_review_note, req?.reviewNote)
+                    tvNote.text = getString(R.string.business_request_review_note, req.reviewNote)
                 } else {
                     tvNote.visibility = View.GONE
                 }
