@@ -8,7 +8,9 @@
     <string name="welcome_message">مرحباً! سجّل الدخول لحجز موعد</string>
     <string name="login_title">تسجيل الدخول إلى حسابك</string>
     <string name="mobile_phone">رقم الهاتف</string>
-    <string name="email_or_mobile">البريد الإلكتروني (الدخول بالهاتف غير مدعوم بعد)</string>
+    <string name="email_or_mobile">البريد الإلكتروني أو رقم الهاتف</string>
+    <string name="email_optional">البريد الإلكتروني (اختياري)</string>
+    <string name="phone_number_required">رقم الهاتف (مطلوب)</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="password">كلمة المرور</string>
     <string name="login">تسجيل الدخول</string>
@@ -340,11 +342,12 @@
     <string name="msg_invalid_input">يرجى ملء جميع الحقول</string>
 
     <string name="unexpected_error">حدث خطأ غير متوقع</string>
-    <string name="error_invalid_identifier">أدخل بريداً إلكترونياً صالحاً (الدخول بالهاتف غير مدعوم بعد)</string>
+    <string name="error_invalid_identifier">أدخل بريداً إلكترونياً صالحاً أو رقم هاتف صالحاً</string>
     <string name="error_empty_password">كلمة المرور مطلوبة</string>
-    <string name="error_invalid_credentials">البريد الإلكتروني أو كلمة المرور غير صحيحة</string>
+    <string name="error_invalid_credentials">البريد الإلكتروني/الهاتف أو كلمة المرور غير صحيحة</string>
     <string name="error_account_locked">حسابك مقفل مؤقتاً</string>
     <string name="error_duplicate_email">هذا البريد مسجل مسبقاً</string>
+    <string name="error_duplicate_phone">رقم الهاتف هذا مسجل مسبقاً</string>
     <string name="error_password_mismatch">كلمة المرور الحالية غير صحيحة</string>
     <string name="error_weak_password">كلمة المرور يجب أن تكون 6 أحرف على الأقل وتحتوي على أحرف وأرقام</string>
     <string name="error_too_many_requests">محاولات كثيرة. يرجى المحاولة لاحقاً</string>

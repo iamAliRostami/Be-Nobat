@@ -26,6 +26,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.time.Duration.Companion.milliseconds
+import androidx.core.net.toUri
 
 class AppointmentNotificationMonitor(private val context: Context, private val tokens: TokenManager,
     private val bookings: BookingRepository) {
@@ -53,10 +55,12 @@ class AppointmentNotificationMonitor(private val context: Context, private val t
                     scheduler.cancel(JOB_ID)
                 } else {
                     if (scheduler.getPendingJob(JOB_ID) == null) {
-                        val job = JobInfo.Builder(JOB_ID, ComponentName(context, AppointmentNotificationJob::class.java))
-                            .setPeriodic(15 * 60 * 1000L).setPersisted(true)
-                        if (!BuildConfig.DEMO_MODE) job.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                        scheduler.schedule(job.build())
+                        runCatching {
+                            val job = JobInfo.Builder(JOB_ID, ComponentName(context, AppointmentNotificationJob::class.java))
+                                .setPeriodic(15 * 60 * 1000L).setPersisted(true)
+                            if (!BuildConfig.DEMO_MODE) job.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                            scheduler.schedule(job.build())
+                        }
                     }
                     try { sync() } catch (e: CancellationException) { throw e } catch (_: Exception) { }
                 }
@@ -68,7 +72,7 @@ class AppointmentNotificationMonitor(private val context: Context, private val t
                 if (started++ == 0) foreground = scope.launch {
                     while (isActive) {
                         try { sync() } catch (e: CancellationException) { throw e } catch (_: Exception) { }
-                        delay(30_000)
+                        delay(30_000.milliseconds)
                     }
                 }
             }
@@ -130,7 +134,7 @@ class AppointmentNotificationMonitor(private val context: Context, private val t
     private fun post(userId: String, notice: AppointmentNotice): Boolean {
         val intent = Intent(context, AppointmentNotificationsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            data = android.net.Uri.parse("benobat-notice://${notice.id}")
+            data = "benobat-notice://${notice.id}".toUri()
             putExtra("account_id", userId)
         }
         val pending = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)

@@ -31,6 +31,7 @@ class AdminServicesActivity : BaseActivity() {
 
     private val viewModel: AdminServicesViewModel by viewModel()
     private val managementRepository: com.leon.be_nobat.domain.repository.ManagementRepository by inject()
+    private val businessRepository: com.leon.be_nobat.domain.repository.BusinessRepository by inject()
     private lateinit var adapter: ServicesAdapter
     private lateinit var swipeRefresh: SwipeRefreshLayout
 
@@ -73,34 +74,171 @@ class AdminServicesActivity : BaseActivity() {
 
     private fun showCreateServiceDialog() {
         lifecycleScope.launch {
-            loadCancellationBranches().onSuccess { available ->
-                val branches = available.filter { it.active }
-                if (branches.isEmpty()) {
-                    com.leon.be_nobat.helpers.AppToast.show(this@AdminServicesActivity, "ابتدا یک شعبهٔ فعال ایجاد کنید.")
-                    return@onSuccess
+            val branchesResult = loadCancellationBranches()
+            val branches = branchesResult.getOrNull()?.filter { it.active }.orEmpty()
+            if (branches.isEmpty()) {
+                com.leon.be_nobat.helpers.AppToast.show(this@AdminServicesActivity, "ابتدا یک شعبهٔ فعال ایجاد کنید.")
+                return@launch
+            }
+
+            val catalogItems = businessRepository.getCatalog(page = 1, pageSize = 200).getOrNull()?.items.orEmpty()
+            val categories = listOf("همهٔ دسته‌ها") + catalogItems.map { it.category }.filter { it.isNotBlank() }.distinct().sorted()
+
+            val dialogView = layoutInflater.inflate(R.layout.dialog_admin_service_create, null)
+            val spBranch = dialogView.findViewById<android.widget.Spinner>(R.id.spBranch)
+            val rgSource = dialogView.findViewById<android.widget.RadioGroup>(R.id.rgSource)
+            val rbCatalog = dialogView.findViewById<android.widget.RadioButton>(R.id.rbCatalog)
+            val layoutCatalogSection = dialogView.findViewById<View>(R.id.layoutCatalogSection)
+            val spCatalogCategory = dialogView.findViewById<android.widget.Spinner>(R.id.spCatalogCategory)
+            val etCatalogSearch = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCatalogSearch)
+            val spCatalogItem = dialogView.findViewById<android.widget.Spinner>(R.id.spCatalogItem)
+            val tilName = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilName)
+            val etName = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etName)
+            val etDescription = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etDescription)
+            val spDuration = dialogView.findViewById<android.widget.Spinner>(R.id.spDuration)
+            val tilPrice = dialogView.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilPrice)
+            val etPrice = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etPrice)
+            val layoutCancellation = dialogView.findViewById<android.widget.FrameLayout>(R.id.layoutCancellation)
+            val btnCancel = dialogView.findViewById<View>(R.id.btnCancel)
+            val btnSubmit = dialogView.findViewById<View>(R.id.btnSubmit)
+
+            val cancellation = com.leon.be_nobat.helpers.CancellationNoticeEditor(this@AdminServicesActivity)
+            layoutCancellation.addView(cancellation)
+
+            val branchLabels = branches.map { "${it.businessName.orEmpty()} · ${it.name}" }
+            spBranch.adapter = android.widget.ArrayAdapter(this@AdminServicesActivity, android.R.layout.simple_spinner_item, branchLabels).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+
+            val durationLabels = durationOptions.map { it.label }
+            spDuration.adapter = android.widget.ArrayAdapter(this@AdminServicesActivity, android.R.layout.simple_spinner_item, durationLabels).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+            spDuration.setSelection(1)
+
+            spCatalogCategory.adapter = android.widget.ArrayAdapter(this@AdminServicesActivity, android.R.layout.simple_spinner_item, categories).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+
+            var currentFilteredCatalog = catalogItems.toList()
+            var selectedCatalogItem: com.leon.be_nobat.domain.model.ServiceCatalogItem? = null
+
+            fun updateCatalogItemsDropdown() {
+                val selectedCatIdx = spCatalogCategory.selectedItemPosition
+                val selectedCat = if (selectedCatIdx > 0) categories[selectedCatIdx] else ""
+                val query = etCatalogSearch.text?.toString()?.trim().orEmpty()
+
+                currentFilteredCatalog = catalogItems.filter { item ->
+                    (selectedCat.isBlank() || item.category == selectedCat) &&
+                    (query.isBlank() || item.name.contains(query, ignoreCase = true) || item.category.contains(query, ignoreCase = true))
                 }
-                val cancellation = com.leon.be_nobat.helpers.CancellationNoticeEditor(this@AdminServicesActivity)
-                AdminFormDialog.Builder(this@AdminServicesActivity)
-                    .setTitle(getString(R.string.form_create_service_title))
-                    .dropdownField("شعبه", branches.map { AdminFormDialog.DropdownOption(it.id, "${it.businessName.orEmpty()} · ${it.name}") }, default = branches.first().id)
-                    .field(getString(R.string.form_label_name))
-                    .field(getString(R.string.form_label_description))
-                    .dropdownField(getString(R.string.form_label_duration_minutes), durationOptions, default = "30")
-                    .numberField(getString(R.string.form_label_price), "0")
-                    .customView(cancellation)
-                    .validate { cancellation.validate() }
-                    .onSubmit { values ->
-                        val branch = branches.firstOrNull { it.id == values.getOrNull(0) } ?: return@onSubmit
-                        val name = values.getOrNull(1).orEmpty()
-                        if (name.isBlank()) return@onSubmit
-                        viewModel.createService(ManagementServiceInput(
-                            businessId = branch.businessId, branchId = branch.id, name = name,
-                            description = values.getOrNull(2).orEmpty(), durationMinutes = values.getOrNull(3)?.toIntOrNull() ?: 30,
-                            price = (values.getOrNull(4)?.toDoubleOrNull() ?: 0.0) * 10.0,
-                            cancellationNoticeMinutes = cancellation.value,
-                        ))
-                    }.show()
-            }.onFailure { com.leon.be_nobat.helpers.AppToast.show(this@AdminServicesActivity, it.message.orEmpty()) }
+
+                val itemLabels = if (currentFilteredCatalog.isEmpty()) {
+                    listOf("— موردی یافت نشد —")
+                } else {
+                    currentFilteredCatalog.map { "${it.category} · ${it.name}" }
+                }
+
+                val itemAdapter = android.widget.ArrayAdapter(this@AdminServicesActivity, android.R.layout.simple_spinner_item, itemLabels).apply {
+                    setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                }
+                spCatalogItem.adapter = itemAdapter
+
+                if (currentFilteredCatalog.isNotEmpty()) {
+                    val first = currentFilteredCatalog.first()
+                    selectedCatalogItem = first
+                    etName.setText(first.name)
+                    etDescription.setText(first.description)
+                    val durIdx = durationOptions.indexOfFirst { it.value == first.suggestedDurationMinutes.toString() }
+                    if (durIdx >= 0) spDuration.setSelection(durIdx)
+                } else {
+                    selectedCatalogItem = null
+                }
+            }
+
+            updateCatalogItemsDropdown()
+
+            spCatalogCategory.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: android.widget.AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    updateCatalogItemsDropdown()
+                }
+                override fun onNothingSelected(p0: android.widget.AdapterView<*>?) {}
+            }
+
+            etCatalogSearch.addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    updateCatalogItemsDropdown()
+                }
+                override fun afterTextChanged(s: android.text.Editable?) {}
+            })
+
+            spCatalogItem.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: android.widget.AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+                    val item = currentFilteredCatalog.getOrNull(position) ?: return
+                    selectedCatalogItem = item
+                    etName.setText(item.name)
+                    etDescription.setText(item.description)
+                    val durIdx = durationOptions.indexOfFirst { it.value == item.suggestedDurationMinutes.toString() }
+                    if (durIdx >= 0) spDuration.setSelection(durIdx)
+                }
+                override fun onNothingSelected(p0: android.widget.AdapterView<*>?) {}
+            }
+
+            rgSource.setOnCheckedChangeListener { _, checkedId ->
+                if (checkedId == R.id.rbCatalog) {
+                    layoutCatalogSection.visibility = View.VISIBLE
+                    updateCatalogItemsDropdown()
+                } else {
+                    layoutCatalogSection.visibility = View.GONE
+                    selectedCatalogItem = null
+                    etName.setText("")
+                    etDescription.setText("")
+                }
+            }
+
+            val dialog = com.google.android.material.dialog.MaterialAlertDialogBuilder(this@AdminServicesActivity)
+                .setView(dialogView)
+                .create()
+
+            btnCancel.setOnClickListener { dialog.dismiss() }
+
+            btnSubmit.setOnClickListener {
+                tilName.error = null
+                tilPrice.error = null
+
+                val name = etName.text?.toString()?.trim().orEmpty()
+                if (name.isBlank()) {
+                    tilName.error = getString(R.string.msg_invalid_input)
+                    return@setOnClickListener
+                }
+
+                val cancelError = cancellation.validate()
+                if (cancelError != null) {
+                    return@setOnClickListener
+                }
+
+                val selectedBranch = branches.getOrNull(spBranch.selectedItemPosition) ?: return@setOnClickListener
+                val durOption = durationOptions.getOrNull(spDuration.selectedItemPosition) ?: durationOptions[1]
+                val duration = durOption.value.toIntOrNull() ?: 30
+                val priceToman = etPrice.text?.toString()?.toDoubleOrNull() ?: 0.0
+
+                val catalogId = if (rbCatalog.isChecked) selectedCatalogItem?.id else null
+
+                viewModel.createService(ManagementServiceInput(
+                    businessId = selectedBranch.businessId,
+                    branchId = selectedBranch.id,
+                    catalogItemId = catalogId,
+                    name = name,
+                    description = etDescription.text?.toString()?.trim().orEmpty(),
+                    durationMinutes = duration,
+                    price = priceToman * 10.0,
+                    cancellationNoticeMinutes = cancellation.value,
+                ))
+                dialog.dismiss()
+            }
+
+            dialog.show()
         }
     }
 

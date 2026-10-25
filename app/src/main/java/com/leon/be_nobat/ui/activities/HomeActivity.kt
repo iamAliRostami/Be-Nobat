@@ -75,8 +75,11 @@ class HomeActivity : BaseActivity() {
         }
 
         // Setup Bank Mehr Quick Shortcuts
-        findViewById<View>(R.id.btnShortcutAppointments)?.setOnClickListener {
-            checkAuthAndNavigate(AppointmentsActivity::class.java)
+        findViewById<View>(R.id.btnShortcutTopCenters)?.setOnClickListener {
+            viewModel.setSortAndFilter(com.leon.be_nobat.ui.view_models.BusinessSortOption.RATING, instantOnly = false)
+            val target = findViewById<View>(R.id.tvTopCentersTitle) ?: businessList
+            homeScrollView.smoothScrollTo(0, target.top)
+            target.requestFocus()
         }
         findViewById<View>(R.id.btnShortcutSlots)?.setOnClickListener {
             viewModel.setSortAndFilter(viewModel.state.value.sortOption, instantOnly = true)
@@ -84,11 +87,11 @@ class HomeActivity : BaseActivity() {
             homeScrollView.smoothScrollTo(0, target.top)
             target.requestFocus()
         }
-        findViewById<View>(R.id.btnShortcutFavorites)?.setOnClickListener {
-            checkAuthAndNavigate(FavoritesActivity::class.java)
+        findViewById<View>(R.id.btnShortcutHowItWorks)?.setOnClickListener {
+            showHowItWorksDialog()
         }
-        findViewById<View>(R.id.btnShortcutProfile)?.setOnClickListener {
-            checkAuthAndNavigate(ProfileActivity::class.java)
+        findViewById<View>(R.id.btnShortcutUpgrade)?.setOnClickListener {
+            checkAuthAndNavigate(BusinessUpgradeActivity::class.java)
         }
 
         // Setup Categories Horizontal List
@@ -268,6 +271,29 @@ class HomeActivity : BaseActivity() {
                 viewModel.setSortAndFilter(com.leon.be_nobat.ui.view_models.BusinessSortOption.DEFAULT, false)
             }
             .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showHowItWorksDialog() {
+        val message = buildString {
+            append(getString(R.string.how_it_works_subtitle))
+            append("\n\n")
+            append(getString(R.string.how_it_works_step1_title))
+            append("\n")
+            append(getString(R.string.how_it_works_step1_desc))
+            append("\n\n")
+            append(getString(R.string.how_it_works_step2_title))
+            append("\n")
+            append(getString(R.string.how_it_works_step2_desc))
+            append("\n\n")
+            append(getString(R.string.how_it_works_step3_title))
+            append("\n")
+            append(getString(R.string.how_it_works_step3_desc))
+        }
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.how_it_works_title)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok, null)
             .show()
     }
 

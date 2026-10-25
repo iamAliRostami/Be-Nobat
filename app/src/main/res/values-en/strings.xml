@@ -8,7 +8,9 @@
     <string name="welcome_message">Welcome! Sign in to book an appointment</string>
     <string name="login_title">Sign in to your account</string>
     <string name="mobile_phone">Mobile number</string>
-    <string name="email_or_mobile">Email (mobile login not yet supported)</string>
+    <string name="email_or_mobile">Email or mobile number</string>
+    <string name="email_optional">Email (optional)</string>
+    <string name="phone_number_required">Mobile number (required)</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Sign in</string>
@@ -340,11 +342,12 @@
     <string name="msg_invalid_input">Please fill all fields</string>
 
     <string name="unexpected_error">An unexpected error occurred</string>
-    <string name="error_invalid_identifier">Enter a valid email (mobile login not yet supported)</string>
+    <string name="error_invalid_identifier">Enter a valid email or mobile number</string>
     <string name="error_empty_password">Password is required</string>
-    <string name="error_invalid_credentials">Email or password is incorrect</string>
+    <string name="error_invalid_credentials">Email/phone or password is incorrect</string>
     <string name="error_account_locked">Your account is temporarily locked</string>
     <string name="error_duplicate_email">This email is already registered</string>
+    <string name="error_duplicate_phone">This mobile number is already registered</string>
     <string name="error_password_mismatch">Current password is incorrect</string>
     <string name="error_weak_password">Password must be at least 6 characters with letters and digits</string>
     <string name="error_too_many_requests">Too many attempts. Please try again later</string>
@@ -489,7 +492,7 @@
     <string name="business_request_description">Description (optional)</string>
     <string name="business_request_submit_btn">Submit Business Request</string>
     <string name="business_request_submitted_success">Your business request has been submitted and is pending platform administrator review.</string>
-    <string name="business_request_status_pending">Your business registration request (\"%1$s\") is currently pending admin review.</string>
+    <string name="business_request_status_pending">Your business registration request for \"%1$s\" is currently pending admin review.</string>
     <string name="business_request_status_approved">Your request was approved and your account upgraded to business manager.</string>
     <string name="business_request_status_rejected">Your business registration request was rejected.</string>
     <string name="business_request_review_note">Reason: %1$s</string>

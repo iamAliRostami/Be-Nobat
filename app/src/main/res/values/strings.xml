@@ -10,7 +10,9 @@
     <string name="welcome_message">خوش آمدید! برای رزرو نوبت وارد شوید</string>
     <string name="login_title">ورود به حساب</string>
     <string name="mobile_phone">شماره موبایل</string>
-    <string name="email_or_mobile">ایمیل (ورود با موبایل هنوز پشتیبانی نمی‌شود)</string>
+    <string name="email_or_mobile">ایمیل یا شماره موبایل</string>
+    <string name="email_optional">ایمیل (اختیاری)</string>
+    <string name="phone_number_required">شماره موبایل (الزامی)</string>
     <string name="email">ایمیل</string>
     <string name="password">گذرواژه</string>
     <string name="login">ورود</string>
@@ -354,11 +356,12 @@
 
     <!-- ============ Error messages ============ -->
     <string name="unexpected_error">خطای غیرمنتظره‌ای رخ داد</string>
-    <string name="error_invalid_identifier">ایمیل معتبر وارد کنید (ورود با موبایل هنوز فعال نیست)</string>
+    <string name="error_invalid_identifier">ایمیل یا شماره موبایل معتبر وارد کنید</string>
     <string name="error_empty_password">گذرواژه الزامی است</string>
-    <string name="error_invalid_credentials">ایمیل یا گذرواژه صحیح نیست</string>
+    <string name="error_invalid_credentials">ایمیل، شماره موبایل یا گذرواژه صحیح نیست</string>
     <string name="error_account_locked">حساب شما موقتاً قفل شده است</string>
     <string name="error_duplicate_email">این ایمیل قبلاً ثبت شده است</string>
+    <string name="error_duplicate_phone">این شماره موبایل قبلاً ثبت شده است</string>
     <string name="error_password_mismatch">گذرواژه فعلی نادرست است</string>
     <string name="error_weak_password">گذرواژه باید حداقل ۶ کاراکتر و شامل حرف و عدد باشد</string>
     <string name="error_too_many_requests">تعداد تلاش‌ها زیاد است؛ کمی بعد دوباره امتحان کنید</string>
@@ -505,7 +508,7 @@
     <string name="business_request_description">توضیحات (اختیاری)</string>
     <string name="business_request_submit_btn">ارسال درخواست کسب‌وکار</string>
     <string name="business_request_submitted_success">درخواست کسب‌وکار شما با موفقیت ثبت شد و در صف بررسی مدیر سامانه قرار گرفت.</string>
-    <string name="business_request_status_pending">درخواست ثبت کسب‌وکار شما («%1$s») در صف بررسی مدیر سامانه قرار دارد.</string>
+    <string name="business_request_status_pending">درخواست ثبت کسب‌وکار شما «%1$s» در صف بررسی مدیر سامانه قرار دارد.</string>
     <string name="business_request_status_approved">درخواست کسب‌وکار شما تأیید شد و به مدیر کسب‌وکار ارتقا یافتید.</string>
     <string name="business_request_status_rejected">درخواست ثبت کسب‌وکار شما رد شد.</string>
     <string name="business_request_review_note">علت رد: %1$s</string>
@@ -533,8 +536,8 @@
     <string name="add_team_member">افزودن عضو تیم</string>
     <string name="add_customer">افزودن مشتری</string>
     <string name="person_name_hint">نام و نام خانوادگی</string>
-    <string name="person_email_hint">ایمیل</string>
-    <string name="person_phone_hint">شماره تماس (مثلاً ۰۹۱۲۱۲۳۴۵۶۷)</string>
+    <string name="person_email_hint">ایمیل (اختیاری)</string>
+    <string name="person_phone_hint">شماره موبایل (الزامی، مثلاً ۰۹۱۲۱۲۳۴۵۶۷)</string>
     <string name="person_branch_hint">شعبه</string>
     <string name="person_role_hint">نقش در شعبه</string>
     <string name="person_visits_count">%1$s نوبت</string>
@@ -550,6 +553,8 @@
     <string name="person_status_updated">وضعیت کاربر به‌روزرسانی شد.</string>
     <string name="error_phone_invalid">شماره موبایل باید ۱۱ رقم و با ۰۹ شروع شود.</string>
     <string name="error_name_email_required">نام و ایمیل معتبر الزامی است.</string>
+    <string name="error_name_phone_required">نام و شماره موبایل معتبر الزامی است.</string>
+    <string name="error_invalid_email">ایمیل وارد شده معتبر نیست.</string>
     <string name="error_branch_required">انتخاب شعبه الزامی است.</string>
     <string name="empty_team_filtered">عضوی با این فیلترها پیدا نشد.</string>
     <string name="empty_customers_filtered">مشتری‌ای با این فیلترها پیدا نشد.</string>

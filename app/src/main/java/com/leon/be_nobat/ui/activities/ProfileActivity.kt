@@ -46,6 +46,15 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
+    private val upgradeLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        viewModel.loadBusinessRequest()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadBusinessRequest()
+    }
+
     private val tokenManager: TokenManager by inject()
 
     companion object {
@@ -115,12 +124,19 @@ class ProfileActivity : BaseActivity() {
         }
 
         findViewById<com.google.android.material.button.MaterialButton>(R.id.btnLogout).setOnClickListener {
-            viewModel.logout()
-            val intent = Intent(this, StartActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
-            startActivity(intent)
-            finishAffinity()
+            MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.logout_confirm_title)
+                .setMessage(R.string.logout_confirm_message)
+                .setPositiveButton(R.string.logout_confirm_positive) { _, _ ->
+                    viewModel.logout()
+                    val intent = Intent(this, StartActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    startActivity(intent)
+                    finishAffinity()
+                }
+                .setNegativeButton(R.string.action_cancel, null)
+                .show()
         }
 
         val btnResetDemo = findViewById<com.google.android.material.button.MaterialButton>(R.id.btnResetDemo)
@@ -302,7 +318,9 @@ class ProfileActivity : BaseActivity() {
                 }
                 btnRequest.visibility = View.VISIBLE
                 btnRequest.text = getString(R.string.business_request_resubmit_btn)
-                btnRequest.setOnClickListener { showBusinessRequestDialog(req) }
+                btnRequest.setOnClickListener {
+                    upgradeLauncher.launch(Intent(this, BusinessUpgradeActivity::class.java))
+                }
                 btnGoAdmin.visibility = View.GONE
             }
             else -> {
@@ -313,7 +331,9 @@ class ProfileActivity : BaseActivity() {
                 tvNote.visibility = View.GONE
                 btnRequest.visibility = View.VISIBLE
                 btnRequest.text = getString(R.string.business_request_submit_btn)
-                btnRequest.setOnClickListener { showBusinessRequestDialog(null) }
+                btnRequest.setOnClickListener {
+                    upgradeLauncher.launch(Intent(this, BusinessUpgradeActivity::class.java))
+                }
                 btnGoAdmin.visibility = View.GONE
             }
         }
