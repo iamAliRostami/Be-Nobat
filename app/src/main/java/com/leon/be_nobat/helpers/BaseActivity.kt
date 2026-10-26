@@ -75,6 +75,15 @@ abstract class BaseActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.baseToolbar)
         setSupportActionBar(toolbar)
 
+        findViewById<View?>(R.id.bottomNav)?.let { nav ->
+            ViewCompat.setOnApplyWindowInsetsListener(nav) { v, insets ->
+                val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+                val extraPadding = (6 * resources.displayMetrics.density).toInt()
+                v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, maxOf(navBars.bottom, extraPadding))
+                insets
+            }
+        }
+
         setupViews()
         observeViewModel()
     }

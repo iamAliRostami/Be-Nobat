@@ -51,7 +51,7 @@ class AppointmentNotificationMonitor(private val context: Context, private val t
                 val scheduler = context.getSystemService(JobScheduler::class.java)
                 if (previousId != user?.id) manager.cancelAll()
                 previousId = user?.id
-                if (user == null || !user.isCustomer) {
+                if (user == null) {
                     scheduler.cancel(JOB_ID)
                 } else {
                     if (scheduler.getPendingJob(JOB_ID) == null) {
@@ -87,8 +87,7 @@ class AppointmentNotificationMonitor(private val context: Context, private val t
 
     suspend fun sync() = lock.withLock {
         val session = tokens.currentSession() ?: return@withLock
-        if (!session.user.isCustomer) return@withLock
-        val appointments = mutableListOf<Appointment>()
+                val appointments = mutableListOf<Appointment>()
         var page = 1
         do {
             val result = bookings.listAppointments(page = page, pageSize = 100).getOrThrow()
@@ -118,8 +117,7 @@ class AppointmentNotificationMonitor(private val context: Context, private val t
 
     suspend fun inbox(): List<AppointmentNotice> = lock.withLock {
         val user = tokens.currentSession()?.user ?: return@withLock emptyList()
-        if (!user.isCustomer) return@withLock emptyList()
-        store.read(user.id).notices
+                store.read(user.id).notices
     }
 
     suspend fun markRead() = lock.withLock {

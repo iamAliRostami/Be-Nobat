@@ -28,7 +28,12 @@ class BusinessUpgradeActivity : BaseActivity() {
 
     private val viewModel: ProfileViewModel by viewModel()
 
-    private val categories = listOf("عمومی", "آرایشی و بهداشتی", "پزشکی و سلامت", "خدمات خودرو", "ورزشی و تفریحی", "آموزشی")
+    private val fallbackCategories = listOf(
+        "زیبایی و آرایش", "پیرایش آقایان", "پزشکی", "دندانپزشکی", "فیزیوتراپی و توان‌بخشی",
+        "ماساژ و تندرستی", "مشاوره و روان‌شناسی", "ورزش و تناسب اندام", "دامپزشکی",
+        "آموزش", "خدمات خودرو", "خدمات منزل", "عمومی"
+    )
+    private var currentCategories: List<String> = fallbackCategories
     private var initializedFromState = false
 
     override fun setupViews() {
@@ -38,13 +43,19 @@ class BusinessUpgradeActivity : BaseActivity() {
         findViewById<View>(R.id.btnThemeToggle)?.setOnClickListener { setupThemeToggle() }
 
         val spCategory = findViewById<Spinner>(R.id.spReqCategory)
-        val catAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categories).apply {
+        val initialCategories = viewModel.state.value.categories.ifEmpty { fallbackCategories }
+        currentCategories = initialCategories
+        val catAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currentCategories).apply {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         spCategory.adapter = catAdapter
 
         findViewById<MaterialButton>(R.id.btnSubmitReq).setOnClickListener {
             submitRequest()
+        }
+
+        if (viewModel.state.value.categories.isEmpty()) {
+            viewModel.loadCategories()
         }
     }
 
@@ -69,7 +80,10 @@ class BusinessUpgradeActivity : BaseActivity() {
         tilAddress.error = null
 
         val name = etName.text?.toString()?.trim().orEmpty()
-        val cat = categories.getOrNull(spCategory.selectedItemPosition) ?: categories[0]
+        val cat = currentCategories.getOrNull(spCategory.selectedItemPosition)
+            ?: spCategory.selectedItem?.toString()
+            ?: currentCategories.firstOrNull()
+            ?: "عمومی"
         val city = etCity.text?.toString()?.trim().orEmpty()
         val phone = etPhone.text?.toString()?.trim().orEmpty()
         val branch = etBranch.text?.toString()?.trim().orEmpty()
@@ -78,23 +92,23 @@ class BusinessUpgradeActivity : BaseActivity() {
 
         var hasError = false
         if (name.isBlank()) {
-            tilName.error = getString(R.string.msg_invalid_input)
+            tilName.error = getString(R.string.platform_biz_name_required)
             hasError = true
         }
         if (city.isBlank()) {
-            tilCity.error = getString(R.string.msg_invalid_input)
+            tilCity.error = getString(R.string.error_city_required)
             hasError = true
         }
         if (phone.isBlank()) {
-            tilPhone.error = getString(R.string.msg_invalid_input)
+            tilPhone.error = getString(R.string.error_phone_required)
             hasError = true
         }
         if (branch.isBlank()) {
-            tilBranch.error = getString(R.string.msg_invalid_input)
+            tilBranch.error = getString(R.string.platform_biz_branch_required)
             hasError = true
         }
         if (address.isBlank()) {
-            tilAddress.error = getString(R.string.msg_invalid_input)
+            tilAddress.error = getString(R.string.error_address_required)
             hasError = true
         }
         if (hasError) return
@@ -124,7 +138,33 @@ class BusinessUpgradeActivity : BaseActivity() {
         btnSubmit.isEnabled = !state.submittingBusinessRequest
         btnSubmit.text = if (state.submittingBusinessRequest) getString(R.string.saving) else getString(R.string.business_request_submit_btn)
 
+        val spCategory = findViewById<Spinner>(R.id.spReqCategory)
+        val newCategories = state.categories.ifEmpty { fallbackCategories }
         val req = state.businessRequest
+
+        if (newCategories != currentCategories) {
+            val selectedItem = spCategory?.selectedItem?.toString()
+            currentCategories = newCategories
+            val newAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currentCategories).apply {
+                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            }
+            spCategory?.adapter = newAdapter
+
+            val targetCategory = if (initializedFromState) selectedItem else req?.category ?: selectedItem
+            if (!targetCategory.isNullOrBlank()) {
+                val idx = currentCategories.indexOf(targetCategory).takeIf { it >= 0 }
+                    ?: run {
+                        currentCategories = listOf(targetCategory) + currentCategories
+                        val updatedAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currentCategories).apply {
+                            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        }
+                        spCategory?.adapter = updatedAdapter
+                        0
+                    }
+                spCategory?.setSelection(idx)
+            }
+        }
+
         val cardStatus = findViewById<View>(R.id.cardExistingStatus)
         val tvStatusTitle = findViewById<TextView>(R.id.tvStatusTitle)
         val tvStatusBadge = findViewById<TextView>(R.id.tvStatusBadge)
@@ -159,8 +199,18 @@ class BusinessUpgradeActivity : BaseActivity() {
             if (!initializedFromState) {
                 initializedFromState = true
                 findViewById<TextInputEditText>(R.id.etReqBusinessName)?.setText(req.businessName)
-                val catIdx = categories.indexOf(req.category).takeIf { it >= 0 } ?: 0
-                findViewById<Spinner>(R.id.spReqCategory)?.setSelection(catIdx)
+                val catIdx = currentCategories.indexOf(req.category).takeIf { it >= 0 }
+                    ?: run {
+                        if (req.category.isNotBlank()) {
+                            currentCategories = listOf(req.category) + currentCategories
+                            val updatedAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currentCategories).apply {
+                                setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                            }
+                            spCategory?.adapter = updatedAdapter
+                            0
+                        } else 0
+                    }
+                spCategory?.setSelection(catIdx)
                 findViewById<TextInputEditText>(R.id.etReqCity)?.setText(req.city)
                 findViewById<TextInputEditText>(R.id.etReqContactPhone)?.setText(req.contactPhone)
                 findViewById<TextInputEditText>(R.id.etReqFirstBranchName)?.setText(req.firstBranchName)

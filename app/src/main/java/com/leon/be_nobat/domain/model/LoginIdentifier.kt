@@ -4,7 +4,7 @@ import com.leon.be_nobat.data.remote.BeNobatApiException
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.HttpRequestTimeoutException
-import io.ktor.utils.io.errors.IOException
+import java.io.IOException
 import java.net.UnknownHostException
 
 /**
@@ -70,7 +70,10 @@ sealed interface LoginIdentifier {
  * [BeNobatApiException] (HTTP-level) into one of these typed errors so the
  * UI can show a localized message per case.
  */
+@Suppress("ExceptionShouldNotBeAnObject")
 sealed class AuthException : Exception() {
+    override fun fillInStackTrace(): Throwable = this
+
     data object InvalidIdentifier : AuthException()
     data object EmptyPassword : AuthException()
     data object WeakPassword : AuthException()

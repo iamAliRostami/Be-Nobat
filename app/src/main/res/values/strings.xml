@@ -125,7 +125,7 @@
     <!-- ============ Admin drawer items ============ -->
     <string name="admin_dashboard">داشبورد</string>
     <string name="admin_calendar">تقویم نوبت‌ها</string>
-    <string name="drawer_analytics">آمار و گزارشات</string>
+    <string name="drawer_analytics">آمار و گزارش‌ها</string>
     <string name="admin_analytics_title">آمار و گزارش فعالیت‌ها</string>
     <string name="analytics_period_7d">۷ روز</string>
     <string name="analytics_period_30d">۳۰ روز</string>
@@ -201,6 +201,14 @@
     <string name="phone_for_booking">شماره تماس برای این نوبت</string>
     <string name="note_for_booking">یادداشت (اختیاری)</string>
     <string name="accept_terms">با قوانین رزرو موافقم</string>
+    <string name="accept_terms_with_link"><![CDATA[با <font color="#00838F"><u>قوانین رزرو</u></font> موافقم (مشاهده قوانین)]]></string>
+    <string name="booking_rules_title">قوانین و مقررات رزرو نوبت</string>
+    <string name="booking_rule_1">۱. برای حضور به‌موقع، حداقل ۱۰ دقیقه پیش از شروع نوبت در محل شعبه حاضر باشید.</string>
+    <string name="booking_rule_2">۲. لغو اینترنتی نوبت فقط تا ۲ ساعت پیش از شروع نوبت امکان‌پذیر است.</string>
+    <string name="booking_rule_3">۳. در صورت تأخیر، مدت خدمت ممکن است کوتاه شده یا با هماهنگی شعبه جابه‌جا گردد.</string>
+    <string name="booking_rule_4">۴. مبلغ نمایش‌داده‌شده بر اساس خدمات انتخابی است و هرگونه خدمات اضافه در محل محاسبه می‌شود.</string>
+    <string name="booking_rule_5">۵. به همراه داشتن کد پیگیری هنگام مراجعه به شعبه الزامی است.</string>
+    <string name="accept_rules">قوانین را خواندم و می‌پذیرم</string>
     <string name="error_terms_required">لطفاً ابتدا قوانین رزرو را مطالعه و با آن موافقت کنید.</string>
     <string name="confirm_booking">تأیید و ثبت نوبت</string>
     <string name="booking_in_progress">در حال ثبت نوبت…</string>
@@ -231,6 +239,7 @@
     <string name="appointment_status_cancelled">لغو شده</string>
     <string name="appointment_status_no_show">عدم حضور</string>
     <string name="submit_review">ارسال نظر</string>
+    <string name="review_submitted_success">نظر شما با موفقیت ثبت شد.</string>
     <string name="review_rating_hint">امتیاز شما</string>
     <string name="review_comment_hint">نظر شما درباره این نوبت…</string>
 
@@ -574,4 +583,76 @@
     <!-- Registration Welcome -->
     <string name="welcome_registered_user">به به‌نوبت خوش آمدید، %s! حساب کاربری شما با موفقیت ایجاد شد.</string>
     <string name="welcome_registered_default">به به‌نوبت خوش آمدید! حساب کاربری شما با موفقیت ایجاد شد.</string>
+
+    <!-- Auto-added localized resources -->
+    <string name="msg_availability_created">بازه زمانی با موفقیت ثبت شد.</string>
+    <string name="msg_availability_updated">بازه زمانی با موفقیت ویرایش شد.</string>
+    <string name="msg_availability_deleted">بازه زمانی با موفقیت حذف شد.</string>
+    <string name="platform_biz_edit_title">ویرایش کسب‌وکار</string>
+    <string name="platform_biz_new_title">کسب‌وکار جدید</string>
+    <string name="platform_biz_save_btn">ذخیره تغییرات</string>
+    <string name="platform_biz_create_btn">ایجاد کسب‌وکار</string>
+    <string name="platform_biz_system_id">شناسه سیستمی کسب‌وکار: %1$s</string>
+    <string name="platform_biz_activated">کسب‌وکار فعال شد.</string>
+    <string name="platform_biz_deactivated">کسب‌وکار غیرفعال شد.</string>
+    <string name="platform_biz_status_error">خطا در تغییر وضعیت</string>
+    <string name="platform_biz_load_error">خطا در بارگذاری مشخصات کسب‌وکار</string>
+    <string name="platform_biz_name_required">نام کسب‌وکار الزامی است.</string>
+    <string name="platform_biz_branch_required">نام شعبه مرکزی الزامی است.</string>
+    <string name="platform_biz_created_success">کسب‌وکار با موفقیت ایجاد شد.</string>
+    <string name="platform_biz_create_error">خطا در ایجاد کسب‌وکار</string>
+    <string name="platform_biz_saved_success">کسب‌وکار با موفقیت ذخیره شد.</string>
+    <string name="platform_biz_save_error">خطا در ذخیره کسب‌وکار</string>
+    <string name="platform_request_confirm_approve">آیا از تأیید درخواست کسب‌وکار «%1$s» و ارتقای کاربر «%2$s» به مدیر کسب‌وکار اطمینان دارید؟</string>
+    <string name="platform_request_applicant_label">متقاضی: %1$s</string>
+    <string name="platform_request_branch_label">اولین شعبه: %1$s (%2$s)</string>
+    <string name="platform_request_desc_label">توضیحات: %1$s</string>
+    <string name="platform_request_rejection_label">علت رد: %1$s</string>
+    <string name="profile_manager_active_desc">شما به عنوان مدیر کسب‌وکار فعال هستید و به پنل مدیریت نوبت‌ها، شعب و پرسنل دسترسی دارید.</string>
+    <string name="profile_request_business_title">درخواست ثبت %1$s</string>
+    <string name="profile_request_meta_format">دسته‌بندی: %1$s  •  شهر: %2$s  •  شعبه: %3$s</string>
+    <string name="profile_request_rejected_info">درخواست قبلی شما برای کسب‌وکار «%1$s» مورد تأیید قرار نگرفت.</string>
+    <string name="analytics_percent_format">%1$s٪</string>
+    <string name="analytics_breakdown_ratio">%1$s از %2$s</string>
+    <string name="platform_access_sms_permission_notice">برای ارسال رمز جدید با سیم‌کارت پیش‌فرض گوشی، مجوز پیامک لازم است؛ هزینه طبق تعرفهٔ سیم‌کارت است.</string>
+    <string name="platform_access_sms_action_reset">رمز بازنشانی شد</string>
+    <string name="platform_access_temp_password_title">رمز موقت کاربر</string>
+    <string name="platform_access_invalid_reset_response">پاسخ بازنشانی رمز معتبر نیست؛ پیامک ارسال نشد.</string>
+    <string name="cat_auto">تعمیرگاه و خودرو</string>
+    <string name="cat_photography">آتلیه و عکاسی</string>
+    <string name="duration_minutes_val">%1$s دقیقه</string>
+    <string name="duration_15m">۱۵ دقیقه</string>
+    <string name="duration_30m">۳۰ دقیقه</string>
+    <string name="duration_45m">۴۵ دقیقه</string>
+    <string name="duration_1h">۱ ساعت</string>
+    <string name="duration_1_5h">۱.۵ ساعت</string>
+    <string name="duration_2h">۲ ساعت</string>
+    <string name="error_city_required">نام شهر الزامی است.</string>
+    <string name="error_address_required">آدرس شعبه الزامی است.</string>
+    <string name="error_phone_required">شماره تماس کاری الزامی است.</string>
+    <string name="btn_add_another_range">+ بازه دیگر</string>
+    <string name="btn_copy_all_days">کپی برای همه روزها</string>
+    <string name="analytics_revenue_value">%1$s تومان</string>
+    <string name="analytics_hours_value">%1$s ساعت</string>
+    <string name="analytics_total_appts_sub">از %1$s نوبت کل</string>
+    <string name="analytics_cancelled_noshow_sub">%1$s لغو / %2$s غیبت</string>
+    <string name="branch_system_id">شناسه سیستمی شعبه: %1$s</string>
+    <string name="service_system_id">شناسه سیستمی خدمت: %1$s</string>
+    <string name="branch_working_hours">ساعت کاری: %1$s</string>
+    <string name="availability_hours_range">ساعت %1$s تا %2$s</string>
+    <string name="share_booking_link_title">Ù„ÛŒÙ†Ú© Ùˆ Ø¨Ø§Ø±Ú©Ø¯ Ø§Ø®ØªØµØ§ØµÛŒ Ø±Ø²Ø±Ùˆ</string>
+    <string name="share_branch_booking_link">Ù„ÛŒÙ†Ú© Ùˆ Ø¨Ø§Ø±Ú©Ø¯ Ø§Ø®ØªØµØ§ØµÛŒ Ø§ÛŒÙ† Ø´Ø¹Ø¨Ù‡</string>
+    <string name="share_booking_link_desc">Ù…Ø´ØªØ±ÛŒØ§Ù† Ø¨Ø§ Ú©Ù„ÛŒÚ© Ø±ÙˆÛŒ Ù„ÛŒÙ†Ú© ÛŒØ§ Ø§Ø³Ú©Ù† Ø¨Ø§Ø±Ú©Ø¯ØŒ Ù…Ø³ØªÙ‚ÛŒÙ…Ø§Ù‹ ÙˆØ§Ø±Ø¯ ØµÙØ­Ù‡ Ø§Ø·Ù„Ø§Ø¹Ø§Øª Ú©Ø³Ø¨â€ŒÙˆÚ©Ø§Ø± Ø´Ø¯Ù‡ Ùˆ Ù†ÙˆØ¨Øª Ø®ÙˆØ¯ Ø±Ø§ Ø±Ø²Ø±Ùˆ Ù…ÛŒâ€ŒÚ©Ù†Ù†Ø¯.</string>
+    <string name="copy_link">Ú©Ù¾ÛŒ Ù„ÛŒÙ†Ú©</string>
+    <string name="link_copied_success">Ù„ÛŒÙ†Ú© Ø§Ø®ØªØµØ§ØµÛŒ Ø¯Ø± Ø­Ø§ÙØ¸Ù‡ Ú©Ù¾ÛŒ Ø´Ø¯.</string>
+    <string name="share_link_action">Ø§Ø´ØªØ±Ø§Ú©â€ŒÚ¯Ø°Ø§Ø±ÛŒ</string>
+    <string name="share_link_message_business">Ø±Ø²Ø±Ùˆ Ø¢Ù†Ù„Ø§ÛŒÙ† Ù†ÙˆØ¨Øª Ø¯Ø± %1 Ø§Ø² Ø·Ø±ÛŒÙ‚ Ø³Ø§Ù…Ø§Ù†Ù‡ Ø¨Ù‡â€ŒÙ†ÙˆØ¨Øª:</string>
+    <string name="share_link_message_branch">Ø±Ø²Ø±Ùˆ Ø¢Ù†Ù„Ø§ÛŒÙ† Ù†ÙˆØ¨Øª Ø¯Ø± %1 (%2) Ø§Ø² Ø·Ø±ÛŒÙ‚ Ø³Ø§Ù…Ø§Ù†Ù‡ Ø¨Ù‡â€ŒÙ†ÙˆØ¨Øª:</string>
+    <string name="selected_branch_banner_title">Ø´Ø¹Ø¨Ù‡ Ø§Ù†ØªØ®Ø§Ø¨â€ŒØ´Ø¯Ù‡: %1</string>
+    <string name="selected_branch_banner_desc">Ù†ÙˆØ¨Øª Ø´Ù…Ø§ Ø¯Ø± Ø§ÛŒÙ† Ø´Ø¹Ø¨Ù‡ Ø«Ø¨Øª Ø®ÙˆØ§Ù‡Ø¯ Ø´Ø¯.</string>
+    <string name="book_at_branch">Ø±Ø²Ø±Ùˆ Ù†ÙˆØ¨Øª Ø¯Ø± %1</string>
+    <string name="selected_branch_tag">Ø´Ø¹Ø¨Ù‡ Ø§Ù†ØªØ®Ø§Ø¨ÛŒ</string>
+    <string name="qr_code_ready">Ø¨Ø§Ø±Ú©Ø¯ Ø§Ø®ØªØµØ§ØµÛŒ Ø¢Ù…Ø§Ø¯Ù‡ Ø§Ø³Ú©Ù†</string>
+    <string name="no_business_found">Ø§Ø·Ù„Ø§Ø¹Ø§Øª Ú©Ø³Ø¨â€ŒÙˆÚ©Ø§Ø± Ø¯Ø± Ø¯Ø³ØªØ±Ø³ Ù†ÛŒØ³Øª.</string>
+    <string name="my_business">Ú©Ø³Ø¨â€ŒÙˆÚ©Ø§Ø± Ù…Ù†</string>
 </resources>

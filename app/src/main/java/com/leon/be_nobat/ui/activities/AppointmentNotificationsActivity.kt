@@ -70,8 +70,7 @@ class AppointmentNotificationsActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.btnHeaderRefresh).setOnClickListener { refresh() }
-        findViewById<View>(R.id.btnRefresh).setOnClickListener { refresh() }
-        findViewById<View>(R.id.btnViewAppointments).setOnClickListener {
+                findViewById<View>(R.id.btnViewAppointments).setOnClickListener {
             startActivity(Intent(this, AppointmentsActivity::class.java))
         }
 
@@ -85,16 +84,20 @@ class AppointmentNotificationsActivity : AppCompatActivity() {
         recyclerNotices.adapter = adapter
 
         lifecycleScope.launch {
-            val user = tokens.currentSession()?.user
-            val targetAccount = intent.getStringExtra("account_id")
-            if (user == null || !user.isCustomer || (targetAccount != null && targetAccount != user.id)) {
-                AppToast.show(this@AppointmentNotificationsActivity, "برای مشاهدهٔ اعلان‌ها با حساب نوبت‌گیرنده وارد شوید.")
+            if (tokens.currentSession() == null) {
+                val intent = Intent(this@AppointmentNotificationsActivity, LoginActivity::class.java).apply {
+                    putExtra(LoginActivity.EXTRA_RETURN_TARGET, AppointmentNotificationsActivity::class.java.name)
+                }
+                startActivity(intent)
                 finish()
                 return@launch
             }
+
+            val user = tokens.currentSession()?.user ?: return@launch
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 monitor.revision.collect {
-                    if (tokens.currentSession()?.user?.id != user.id) {
+                    val currentSession = tokens.currentSession()
+                    if (currentSession == null || currentSession.user.id != user.id) {
                         finish()
                         return@collect
                     }
