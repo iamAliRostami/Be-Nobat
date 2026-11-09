@@ -58,6 +58,10 @@ class AdminBranchEditActivity : BaseActivity() {
     private lateinit var spinnerTimeZone: Spinner
     private lateinit var tilBranchAddress: TextInputLayout
     private lateinit var etBranchAddress: TextInputEditText
+    private lateinit var etDepositPercentage: TextInputEditText
+    private lateinit var etDepositCardNumber: TextInputEditText
+    private lateinit var etDepositIban: TextInputEditText
+    private lateinit var etDepositAccountHolder: TextInputEditText
     private lateinit var weeklyHoursEditor: WeeklyHoursEditor
     private lateinit var cancellationEditor: com.leon.be_nobat.helpers.CancellationNoticeEditor
     private lateinit var cardBranchDetails: View
@@ -106,6 +110,10 @@ class AdminBranchEditActivity : BaseActivity() {
         spinnerTimeZone = findViewById(R.id.spinnerTimeZone)
         tilBranchAddress = findViewById(R.id.tilBranchAddress)
         etBranchAddress = findViewById(R.id.etBranchAddress)
+        etDepositPercentage = findViewById(R.id.etDepositPercentage)
+        etDepositCardNumber = findViewById(R.id.etDepositCardNumber)
+        etDepositIban = findViewById(R.id.etDepositIban)
+        etDepositAccountHolder = findViewById(R.id.etDepositAccountHolder)
         weeklyHoursEditor = findViewById(R.id.weeklyHoursEditor)
         cancellationEditor = com.leon.be_nobat.helpers.CancellationNoticeEditor(this)
         cancellationEditor.setValue(null)
@@ -280,6 +288,10 @@ class AdminBranchEditActivity : BaseActivity() {
             cancellationEditor.setValue(branch.cancellationNoticeMinutes)
             etBranchName.setText(branch.name)
             etBranchAddress.setText(branch.address)
+            branch.depositPercentage?.let { etDepositPercentage.setText(it.toInt().toString()) }
+            branch.depositCardNumber?.let { etDepositCardNumber.setText(it) }
+            branch.depositIban?.let { etDepositIban.setText(it) }
+            branch.depositAccountHolder?.let { etDepositAccountHolder.setText(it) }
 
             // Select business
             val biz = businessesList.firstOrNull { it.first == branch.businessId }
@@ -382,6 +394,11 @@ class AdminBranchEditActivity : BaseActivity() {
             return
         }
 
+        val depositPct = etDepositPercentage.text?.toString()?.trim()?.toDoubleOrNull()
+        val depositCard = etDepositCardNumber.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+        val depositIban = etDepositIban.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+        val depositHolder = etDepositAccountHolder.text?.toString()?.trim()?.takeIf { it.isNotBlank() }
+
         val input = ManagementBranchInput(
             businessId = businessId,
             name = name,
@@ -391,6 +408,10 @@ class AdminBranchEditActivity : BaseActivity() {
             closeHour = existingBranch?.closeHour ?: 20,
             weeklyHours = hours,
             cancellationNoticeMinutes = cancellationEditor.value,
+            depositPercentage = depositPct,
+            depositCardNumber = depositCard,
+            depositIban = depositIban,
+            depositAccountHolder = depositHolder,
         )
 
         btnSave.isEnabled = false

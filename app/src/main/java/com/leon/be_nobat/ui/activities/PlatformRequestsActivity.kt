@@ -1,10 +1,14 @@
 package com.leon.be_nobat.ui.activities
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
@@ -18,20 +22,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputEditText
-import android.graphics.BitmapFactory
-import android.util.Base64
-import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
-import java.text.NumberFormat
-import java.util.Locale
 import com.leon.be_nobat.R
 import com.leon.be_nobat.domain.model.BusinessRequest
 import com.leon.be_nobat.helpers.AdminFormDialog
 import com.leon.be_nobat.helpers.BaseActivity
+import com.leon.be_nobat.helpers.PersianUtils
 import com.leon.be_nobat.helpers.StatusBadgeHelper
 import com.leon.be_nobat.ui.adapters.AdminViewHolder
 import com.leon.be_nobat.ui.adapters.BaseAdminAdapter
@@ -40,6 +36,8 @@ import com.leon.be_nobat.ui.view_models.platform.PlatformRequestsUiState
 import com.leon.be_nobat.ui.view_models.platform.PlatformRequestsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.NumberFormat
+import java.util.Locale
 
 class PlatformRequestsActivity : BaseActivity() {
     override val layoutResourceId: Int = R.layout.activity_admin_list
@@ -115,6 +113,7 @@ class PlatformRequestsActivity : BaseActivity() {
         adapter = RequestsAdapter(
             onApprove = { req -> showApproveConfirmDialog(req) },
             onReject = { req -> showRejectDialog(req) },
+            onShowReceipt = { req -> showReceiptDialog(req) },
         )
         findViewById<RecyclerView>(R.id.list).apply {
             layoutManager = LinearLayoutManager(this@PlatformRequestsActivity)
@@ -146,6 +145,38 @@ class PlatformRequestsActivity : BaseActivity() {
                 val note = values.getOrNull(0)?.ifBlank { null }
                 viewModel.reject(req.id, note)
             }
+            .show()
+    }
+
+    private fun showReceiptDialog(req: BusinessRequest) {
+        val base64 = req.receiptImageBase64
+        val iv = ImageView(this).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                (280 * resources.displayMetrics.density).toInt()
+            )
+            adjustViewBounds = true
+            scaleType = ImageView.ScaleType.FIT_CENTER
+        }
+        if (!base64.isNullOrBlank()) {
+            try {
+                val clean = if (base64.contains(",")) base64.substringAfter(",") else base64
+                val bytes = Base64.decode(clean, Base64.DEFAULT)
+                val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                iv.setImageBitmap(bmp)
+            } catch (_: Exception) {
+                iv.setImageResource(R.drawable.ic_document)
+            }
+        } else {
+            iv.setImageResource(R.drawable.ic_document)
+        }
+
+        val trackInfo = if (!req.receiptTrackingCode.isNullOrBlank()) "\nکد پیگیری: ${req.receiptTrackingCode}" else ""
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.business_request_receipt_view_btn)
+            .setMessage("فیش واریزی ارسال شده برای کسب‌وکار «${req.businessName}»$trackInfo")
+            .setView(iv)
+            .setPositiveButton(R.string.action_close, null)
             .show()
     }
 
@@ -190,6 +221,7 @@ class PlatformRequestsActivity : BaseActivity() {
     private class RequestsAdapter(
         private val onApprove: (BusinessRequest) -> Unit,
         private val onReject: (BusinessRequest) -> Unit,
+        private val onShowReceipt: (BusinessRequest) -> Unit,
     ) : BaseAdminAdapter<BusinessRequest>(simpleDiff({ a, b -> a.id == b.id }, { a, b -> a == b })) {
 
         override fun bindHolder(holder: AdminViewHolder, item: BusinessRequest) {
@@ -236,6 +268,21 @@ class PlatformRequestsActivity : BaseActivity() {
                     bodyLines.add(root.context.getString(R.string.platform_request_applicant_label, applicant))
                 }
                 bodyLines.add(root.context.getString(R.string.platform_request_branch_label, item.firstBranchName, item.firstBranchAddress))
+
+                val nf = NumberFormat.getNumberInstance(Locale.forLanguageTag("fa-IR"))
+                if (item.totalBranchesCount > 1 || item.additionalBranches.isNotEmpty()) {
+                    bodyLines.add("تعداد کل شعب: ${PersianUtils.toPersianDigits(item.totalBranchesCount)} شعبه")
+                }
+                if (item.totalFee > 0) {
+                    bodyLines.add("مبلغ تعرفه: ${nf.format(item.totalFee.toLong())} تومان")
+                }
+                if (item.hasReceipt) {
+                    val track = if (!item.receiptTrackingCode.isNullOrBlank()) " (کد رهگیری: ${item.receiptTrackingCode})" else ""
+                    bodyLines.add("فیش واریزی: ارسال شده$track")
+                } else {
+                    bodyLines.add("فیش واریزی: هنوز ثبت نشده است")
+                }
+
                 if (item.description.isNotBlank()) {
                     bodyLines.add(root.context.getString(R.string.platform_request_desc_label, item.description))
                 }
@@ -244,6 +291,14 @@ class PlatformRequestsActivity : BaseActivity() {
                 }
                 tvBody.isVisible = true
                 tvBody.text = bodyLines.joinToString("\n")
+
+                if (item.hasReceipt) {
+                    btnAction3.isVisible = true
+                    btnAction3.text = root.context.getString(R.string.business_request_receipt_view_btn)
+                    btnAction3.setOnClickListener { onShowReceipt(item) }
+                } else {
+                    btnAction3.isVisible = false
+                }
 
                 if (isPending) {
                     btnAction1.isVisible = true

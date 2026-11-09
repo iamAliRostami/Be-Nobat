@@ -243,6 +243,108 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Card 2.5: Deposit Settings (Optional) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/colorOutline"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="?attr/colorSurface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="تنظیمات بیعانه نوبت (اختیاری)"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="در صورت تعیین درصد بیعانه، کاربر برای ثبت نوبت موظف به پرداخت بیعانه و الصاق تصویر فیش واریز خواهد بود."
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <!-- Deposit Percentage -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDepositPercentage"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="درصد بیعانه (۰ تا ۱۰۰)">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDepositPercentage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:textDirection="ltr" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Deposit Card Number -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDepositCardNumber"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="شماره کارت جهت واریز">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDepositCardNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:textDirection="ltr" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Deposit IBAN -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDepositIban"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:hint="شماره شبا (اختیاری)">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDepositIban"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:textDirection="ltr" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Deposit Account Holder -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDepositAccountHolder"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="نام صاحب حساب">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDepositAccountHolder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPersonName" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Card 3: Details & Management (Visible when editing) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardBranchDetails"

@@ -545,6 +545,8 @@
     <string name="business_request_submit_to_admin_btn">ارسال درخواست برای مدیریت</string>
     <string name="business_request_cancel_resubmit">انصراف</string>
     <string name="business_request_pending_header">درخواست شما در انتظار بررسی مدیریت سامانه است</string>
+    <string name="business_request_pending_payment_header">در انتظار پرداخت و ارسال فیش واریزی</string>
+    <string name="business_request_pending_payment_msg">درخواست کسب‌وکار «%1$s» ثبت شد. لطفاً مبلغ تعرفه را به شماره کارت زیر واریز کرده و تصویر فیش را ارسال کنید.</string>
     <string name="business_request_pending_detail_msg">اطلاعات کسب‌وکار «%1$s» ثبت شده و پس از بررسی و تأیید مدیر کل، حساب شما به «مدیر کسب‌وکار» ارتقا خواهد یافت.</string>
     <string name="business_request_pending_notice">امکان ارسال درخواست هم‌زمان دیگر وجود ندارد. پس از تعیین تکلیف توسط مدیریت سامانه، اطلاع‌رسانی خواهد شد.</string>
     <string name="business_request_rejected_header">درخواست قبلی شما رد شد</string>
@@ -729,6 +731,7 @@
     <string name="business_request_receipt_upload_btn">انتخاب و ارسال تصویر فیش</string>
     <string name="business_request_receipt_change_btn">تغییر تصویر فیش</string>
     <string name="business_request_receipt_tracking_hint">کد پیگیری یا شماره ارجاع واریز (اختیاری)</string>
+    <string name="business_request_receipt_view_btn">مشاهده فیش واریزی</string>
     <string name="business_request_receipt_success">تصویر فیش واریز با موفقیت ارسال شد.</string>
     <string name="business_request_field_total_branches">تعداد کل شعب:</string>
     <string name="business_request_field_total_fee">مبلغ کل تعرفه:</string>

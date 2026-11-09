@@ -1,5 +1,6 @@
 package com.leon.be_nobat.domain.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
@@ -278,8 +279,8 @@ data class RequestedBranch(
 
 @Serializable
 data class PlatformPricing(
-    val baseBusinessPrice: Long = 500_000L,
-    val extraBranchPrice: Long = 200_000L,
+    val baseBusinessPrice: Double = 500_000.0,
+    val extraBranchPrice: Double = 200_000.0,
     val cardNumber: String = "",
     val iban: String = "",
     val accountHolder: String = "",
@@ -302,12 +303,13 @@ data class BusinessRequest(
     val firstBranchName: String = "شعبه مرکزی",
     val firstBranchAddress: String = "",
     val additionalBranches: List<RequestedBranch> = emptyList(),
-    val basePrice: Long = 0L,
-    val extraBranchPrice: Long = 0L,
+    val basePrice: Double = 0.0,
+    val extraBranchPrice: Double = 0.0,
     val totalBranchesCount: Int = 1,
-    val totalFee: Long = 0L,
+    val totalFee: Double = 0.0,
     val receiptTrackingCode: String? = null,
     val receiptUploadedAt: String? = null,
+    @SerialName("hasReceipt")
     val hasReceiptImage: Boolean = false,
     val receiptImageBase64: String? = null,
     val status: String = "Pending",
@@ -328,7 +330,7 @@ data class ManagementAnalyticsSummary(
     val confirmedAppointments: Int = 0,
     val cancelledAppointments: Int = 0,
     val noShowAppointments: Int = 0,
-    val totalRevenue: Long = 0L,
+    val totalRevenue: Double = 0.0,
     val totalWorkMinutes: Long = 0L,
     val totalWorkHours: Double = 0.0,
     val byBusiness: List<ManagementBreakdownItem> = emptyList(),
@@ -345,7 +347,7 @@ data class ManagementBreakdownItem(
     val branchName: String? = null,
     val totalAppointments: Int = 0,
     val completedAppointments: Int = 0,
-    val revenue: Long = 0L,
+    val revenue: Double = 0.0,
     val workMinutes: Long = 0L,
 )
 
@@ -354,7 +356,7 @@ data class ManagementDailyTrendItem(
     val date: String = "",
     val total: Int = 0,
     val completed: Int = 0,
-    val revenue: Long = 0L,
+    val revenue: Double = 0.0,
     val workMinutes: Long = 0L,
 )
 
