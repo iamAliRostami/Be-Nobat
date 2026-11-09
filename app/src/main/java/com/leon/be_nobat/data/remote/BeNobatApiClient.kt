@@ -149,6 +149,9 @@ class BeNobatApiClient(
     /** POST /business-request/receipt - uploads payment receipt. */
     suspend inline fun <reified T> uploadBusinessRequestReceipt(body: JsonObject): Result<T> = post("/business-request/receipt", body)
 
+    /** POST /contact - sends contact message. */
+    suspend inline fun <reified T> sendContactMessage(body: JsonObject): Result<T> = post("/contact", body)
+
     // ====================  PUBLIC DISCOVERY  ====================
 
     /** GET /categories — `{items: CategoryDto[]}`. */
@@ -330,6 +333,10 @@ class BeNobatApiClient(
 
     /** DELETE /admin/branches/{id}. */
     suspend fun adminDeleteBranch(id: String): Result<Unit> = delete("/admin/branches/$id")
+
+    /** POST /admin/branches/{id}/receipt - uploads payment receipt for branch. */
+    suspend inline fun <reified T> adminUploadBranchReceipt(id: String, body: JsonObject): Result<T> =
+        post("/admin/branches/$id/receipt", body)
 
     /** POST /platform/branches/{id}/approve. */
     suspend inline fun <reified T> platformApproveBranch(id: String): Result<T> =

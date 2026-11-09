@@ -80,6 +80,11 @@ data class ManagementBranch(
     val depositCardNumber: String? = null,
     val depositIban: String? = null,
     val depositAccountHolder: String? = null,
+    val fee: Double? = null,
+    val hasReceipt: Boolean = false,
+    val receiptTrackingCode: String? = null,
+    val receiptUploadedAt: String? = null,
+    val receiptImageUrl: String? = null,
     val gallery: List<GalleryItem> = emptyList(),
 )
 
@@ -316,10 +321,37 @@ data class BusinessRequest(
     val reviewNote: String? = null,
     val approvedBusinessId: String? = null,
     val createdAt: String = "",
+    @SerialName("userName")
+    val userName: String? = null,
     val userDisplayName: String? = null,
+    @SerialName("userPhone")
+    val userPhone: String? = null,
     val userPhoneNumber: String? = null,
+    val userEmail: String? = null,
 ) {
     val hasReceipt: Boolean get() = hasReceiptImage || !receiptTrackingCode.isNullOrBlank() || !receiptImageBase64.isNullOrBlank()
+
+    val applicantName: String?
+        get() = userName?.trim().takeUnless { it.isNullOrBlank() }
+            ?: userDisplayName?.trim().takeUnless { it.isNullOrBlank() }
+
+    val applicantPhone: String?
+        get() = userPhone?.trim().takeUnless { it.isNullOrBlank() }
+            ?: userPhoneNumber?.trim().takeUnless { it.isNullOrBlank() }
+            ?: contactPhone.trim().takeUnless { it.isBlank() }
+
+    val applicantDisplayName: String
+        get() {
+            val name = applicantName
+            val phone = applicantPhone
+            return when {
+                name != null && phone != null && !name.contains(phone) -> "$name ($phone)"
+                name != null -> name
+                phone != null -> phone
+                !userEmail.isNullOrBlank() -> userEmail
+                else -> "کاربر متقاضی"
+            }
+        }
 }
 
 @Serializable

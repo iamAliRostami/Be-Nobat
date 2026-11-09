@@ -63,6 +63,32 @@
     <string name="home_shortcut_my_appointments_sub">مشاهده و پیگیری</string>
     <string name="home_shortcut_top_centers">مراکز برتر</string>
     <string name="home_shortcut_top_centers_sub">برترین‌های هر دسته</string>
+    <string name="home_shortcut_contact">ارتباط با ما</string>
+    <string name="home_shortcut_contact_sub">پشتیبانی و پیام</string>
+    <string name="contact_us_title">ارتباط با ما</string>
+    <string name="contact_us_subtitle">آماده پاسخگویی به پرسش‌ها و نظرات شما هستیم</string>
+    <string name="contact_info_section">راه‌های تماس مستقیم</string>
+    <string name="contact_phone_title">تلفن پشتیبانی</string>
+    <string name="contact_phone_number">021-91002424</string>
+    <string name="contact_mobile_title">شماره همراه</string>
+    <string name="contact_mobile_number">09134588221</string>
+    <string name="contact_email_title">ایمیل پشتیبانی</string>
+    <string name="contact_email_address">support@benobat.ir</string>
+    <string name="contact_address_title">نشانی دفتر مرکزی</string>
+    <string name="contact_address_text">اصفهان، خیابان شریعتی، مجتمع اداری به‌نوبت، طبقه ۴، واحد ۴۰۲</string>
+    <string name="contact_hours_title">ساعات پاسخگویی</string>
+    <string name="contact_hours_text">شنبه تا چهارشنبه ۸:۳۰ تا ۱۸:۰۰ | پنجشنبه‌ها ۸:۳۰ تا ۱۳:۰۰</string>
+    <string name="contact_action_call">تماس</string>
+    <string name="contact_action_email">ارسال ایمیل</string>
+    <string name="contact_action_copy">کپی</string>
+    <string name="contact_send_message_title">ارسال پیام به پشتیبانی</string>
+    <string name="contact_input_name">نام و نام خانوادگی</string>
+    <string name="contact_input_contact">شماره تماس یا ایمیل</string>
+    <string name="contact_input_subject">موضوع پیام</string>
+    <string name="contact_input_message">متن پیام شما</string>
+    <string name="contact_btn_send">ارسال پیام</string>
+    <string name="contact_send_success">پیام شما با موفقیت ثبت شد و به زودی با شما تماس خواهیم گرفت.</string>
+    <string name="contact_error_fill_fields">لطفاً همه فیلدهای ستاره‌دار را تکمیل نمایید.</string>
     <string name="home_shortcut_free_slots">نوبت‌های خالی</string>
     <string name="home_shortcut_free_slots_sub">رزرو بدون معطلی</string>
     <string name="home_shortcut_how_it_works">چطور کار می‌کند؟</string>
@@ -566,6 +592,7 @@
     <string name="platform_tab_approved">تأیید شده</string>
     <string name="platform_tab_rejected">رد شده</string>
     <string name="platform_request_approve">تأیید و ارتقا به مدیر</string>
+    <string name="platform_request_approve_btn">تأیید و ارتقا</string>
     <string name="platform_request_reject">رد درخواست</string>
     <string name="platform_request_reject_dialog_title">رد درخواست کسب‌وکار</string>
     <string name="platform_request_reject_note_hint">دلیل رد درخواست (اختیاری)</string>
@@ -731,7 +758,7 @@
     <string name="business_request_receipt_upload_btn">انتخاب و ارسال تصویر فیش</string>
     <string name="business_request_receipt_change_btn">تغییر تصویر فیش</string>
     <string name="business_request_receipt_tracking_hint">کد پیگیری یا شماره ارجاع واریز (اختیاری)</string>
-    <string name="business_request_receipt_view_btn">مشاهده فیش واریزی</string>
+    <string name="business_request_receipt_view_btn">مشاهده تصویر فیش واریزی</string>
     <string name="business_request_receipt_success">تصویر فیش واریز با موفقیت ارسال شد.</string>
     <string name="business_request_field_total_branches">تعداد کل شعب:</string>
     <string name="business_request_field_total_fee">مبلغ کل تعرفه:</string>
@@ -747,4 +774,27 @@
     <string name="platform_request_total_branches">تعداد کل شعب: %1 شعبه</string>
     <string name="platform_request_total_fee">مبلغ کل: %1 تومان</string>
     <string name="platform_request_other_branches">سایر شعب درخواستی (%1 شعبه):</string>
+    <string name="platform_request_fee_label">مبلغ تعرفه: %1$s</string>
+    <string name="platform_request_total_branches_label">تعداد کل شعب: %1$s شعبه</string>
+    <string name="platform_request_receipt_uploaded">فیش واریزی: ارسال شده</string>
+    <string name="platform_request_receipt_uploaded_with_track">فیش واریزی: ارسال شده (کد رهگیری: %1$s)</string>
+    <string name="platform_request_receipt_not_uploaded">فیش واریزی: هنوز ثبت نشده است</string>
+    <string name="platform_request_applicant_default">کاربر متقاضی</string>
+    <string name="action_view_reviews">مشاهده نظرها</string>
+    <string name="no_reviews_short">جدید</string>
+
+    <!-- Branch Fee & Receipt -->
+    <string name="branch_payment_title">پرداخت هزینه و ثبت فیش شعبه</string>
+    <string name="branch_payment_fee_label">هزینه ثبت شعبه: %1$s</string>
+    <string name="branch_fee_display">مبلغ تعرفه: %1$s</string>
+    <string name="branch_receipt_uploaded">فیش واریزی: ارسال شده</string>
+    <string name="branch_receipt_uploaded_with_track">فیش واریزی: ارسال شده (کد رهگیری: %1$s)</string>
+    <string name="branch_receipt_not_uploaded">فیش واریزی: هنوز ثبت نشده است</string>
+    <string name="branch_attach_receipt">الصاق فیش واریز</string>
+    <string name="branch_view_receipt">مشاهده تصویر فیش</string>
+    <string name="branch_receipt_success">فیش واریز با موفقیت ارسال شد و در انتظار تأیید است.</string>
+    <string name="branch_receipt_image_required">لطفاً ابتدا تصویر فیش واریز را انتخاب نمایید.</string>
+    <string name="branch_pay_later">بعداً ارسال می‌کنم</string>
+    <string name="branch_upload_receipt_action">ارسال فیش واریز</string>
+    <string name="branch_dialog_receipt_title">تصویر فیش واریز شعبه «%1$s»</string>
 </resources>

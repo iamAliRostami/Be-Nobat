@@ -221,6 +221,11 @@
 
 
 
+        <activity
+            android:name=".ui.activities.ContactUsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
         <!-- Admin surface -->
 
         <activity android:name=".ui.activities.AdminHomeActivity" android:exported="false" />

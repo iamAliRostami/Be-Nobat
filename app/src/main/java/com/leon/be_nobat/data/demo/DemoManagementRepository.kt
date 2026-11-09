@@ -219,6 +219,7 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
             val id = demoId()
             val bizName = s.businesses.firstOrNull { it.id == resolvedBusinessId }?.name
             val isPlatform = actor.roles.contains("PlatformAdmin")
+            val branchFee = if (isPlatform) 0.0 else s.platformPricing.extraBranchPrice
             val value = ManagementBranch(
                 id = id,
                 businessId = resolvedBusinessId,
@@ -231,6 +232,7 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 cancellationNoticeMinutes = input.cancellationNoticeMinutes,
                 active = true,
                 isApproved = isPlatform,
+                fee = branchFee,
                 businessName = bizName,
                 depositPercentage = input.depositPercentage,
                 depositCardNumber = input.depositCardNumber,
@@ -260,6 +262,30 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
             val approved = branch.copy(isApproved = true)
             s.copy(branches = s.branches.map { if (it.id == id) approved else it }) to approved
         }
+    }
+
+    override suspend fun uploadBranchReceipt(
+        branchId: String,
+        input: com.leon.be_nobat.domain.model.ReceiptUploadInput
+    ): Result<ManagementBranch> = runCatching {
+        simulateNetworkDelay()
+        requireActor(true)
+        update { s ->
+            val branch = s.branches.firstOrNull { it.id == branchId } ?: error("شعبه یافت نشد.")
+            val rawData = input.dataBase64.ifBlank { input.imageBase64 }
+            val updated = branch.copy(
+                hasReceipt = true,
+                receiptTrackingCode = input.trackingCode?.trim()?.takeIf { it.isNotBlank() },
+                receiptUploadedAt = java.time.Instant.now().toString(),
+                receiptImageUrl = "data:${input.contentType};base64,$rawData"
+            )
+            s.copy(branches = s.branches.map { if (it.id == branchId) updated else it }) to updated
+        }
+    }
+
+    override suspend fun getPlatformPricing(): Result<com.leon.be_nobat.domain.model.PlatformPricing> = runCatching {
+        simulateNetworkDelay()
+        read { s -> s.platformPricing }
     }
 
     override suspend fun getBranch(id: String): Result<ManagementBranch> = runCatching {

@@ -14,6 +14,8 @@ import android.widget.ListView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import android.net.Uri
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
@@ -24,6 +26,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.leon.be_nobat.R
+import com.leon.be_nobat.helpers.BranchPaymentReceiptHelper
 import com.leon.be_nobat.domain.model.ManagementBranch
 import com.leon.be_nobat.domain.model.ManagementBranchInput
 import com.leon.be_nobat.domain.model.WeeklyHours
@@ -50,6 +53,13 @@ class AdminBranchEditActivity : BaseActivity() {
     private var businessesList: List<Pair<String, String>> = emptyList() // ID to Name
     private var selectedBusinessId: String? = null
     private var businessFilterAdapter: BusinessFilterAdapter? = null
+
+    private var onImagePickedCallback: ((Uri) -> Unit)? = null
+    private val pickReceiptLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        if (uri != null) {
+            onImagePickedCallback?.invoke(uri)
+        }
+    }
 
     private lateinit var tilBusiness: TextInputLayout
     private lateinit var autoCompleteBusiness: MaterialAutoCompleteTextView
@@ -417,10 +427,29 @@ class AdminBranchEditActivity : BaseActivity() {
         btnSave.isEnabled = false
         lifecycleScope.launch {
             if (editingBranchId == null) {
-                createBranchUseCase(input).onSuccess {
-                    Toast.makeText(this@AdminBranchEditActivity, "شعبه با موفقیت ایجاد شد.", Toast.LENGTH_SHORT).show()
-                    setResult(RESULT_OK)
-                    finish()
+                createBranchUseCase(input).onSuccess { created ->
+                    btnSave.isEnabled = true
+                    if (!isPlatformAdmin()) {
+                        BranchPaymentReceiptHelper.showPaymentAndUploadDialog(
+                            activity = this@AdminBranchEditActivity,
+                            branch = created,
+                            managementRepository = managementRepository,
+                            pickImageLauncher = pickReceiptLauncher,
+                            onSelectedUriCallbackSetter = { callback -> onImagePickedCallback = callback },
+                            onReceiptUploaded = {
+                                setResult(RESULT_OK)
+                                finish()
+                            },
+                            onDismiss = {
+                                setResult(RESULT_OK)
+                                finish()
+                            }
+                        )
+                    } else {
+                        Toast.makeText(this@AdminBranchEditActivity, "شعبه با موفقیت ایجاد شد.", Toast.LENGTH_SHORT).show()
+                        setResult(RESULT_OK)
+                        finish()
+                    }
                 }.onFailure { err ->
                     btnSave.isEnabled = true
                     Snackbar.make(btnSave, err.message ?: "خطا در ثبت شعبه", Snackbar.LENGTH_LONG).show()

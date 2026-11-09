@@ -127,13 +127,21 @@ class PlatformRequestsActivity : BaseActivity() {
     }
 
     private fun showApproveConfirmDialog(req: BusinessRequest) {
+        val name = req.applicantName
+        val phone = req.applicantPhone?.let { PersianUtils.toPersianDigits(it) }
+        val applicantDisplay = when {
+            name != null && phone != null && !name.contains(phone) -> "$name ($phone)"
+            name != null -> name
+            phone != null -> phone
+            !req.userEmail.isNullOrBlank() -> req.userEmail
+            else -> getString(R.string.platform_request_applicant_default)
+        }
         MaterialAlertDialogBuilder(this)
             .setTitle(R.string.platform_request_approve)
-            .setMessage(getString(R.string.platform_request_confirm_approve, req.businessName, req.userDisplayName ?: req.userId))
+            .setMessage(getString(R.string.platform_request_confirm_approve, req.businessName, applicantDisplay))
             .setNegativeButton(R.string.action_cancel, null)
-            .setPositiveButton(R.string.platform_request_approve) { _, _ ->
-                viewModel.approve(req.id)
-            }
+            .setPositiveButton(R.string.platform_request_approve)
+            { _, _ -> viewModel.approve(req.id) }
             .show()
     }
 
@@ -257,30 +265,35 @@ class PlatformRequestsActivity : BaseActivity() {
                 val categoryCityPhone = listOf(
                     item.category.takeIf { it.isNotBlank() },
                     item.city.takeIf { it.isNotBlank() },
-                    item.contactPhone.takeIf { it.isNotBlank() }?.let { "☎ $it" }
+                    item.contactPhone.takeIf { it.isNotBlank() }?.let { "☎ ${PersianUtils.toPersianDigits(it)}" }
                 ).filterNotNull().joinToString("   •   ")
                 tvSubtitle.isVisible = categoryCityPhone.isNotBlank()
                 tvSubtitle.text = categoryCityPhone
 
                 val bodyLines = mutableListOf<String>()
-                val applicant = listOfNotNull(item.userDisplayName, item.userPhoneNumber).joinToString(" - ")
+                val applicantPhone = item.applicantPhone?.let { PersianUtils.toPersianDigits(it) }
+                val applicant = listOfNotNull(item.applicantName, applicantPhone).distinct().joinToString(" - ")
                 if (applicant.isNotBlank()) {
                     bodyLines.add(root.context.getString(R.string.platform_request_applicant_label, applicant))
                 }
                 bodyLines.add(root.context.getString(R.string.platform_request_branch_label, item.firstBranchName, item.firstBranchAddress))
 
-                val nf = NumberFormat.getNumberInstance(Locale.forLanguageTag("fa-IR"))
                 if (item.totalBranchesCount > 1 || item.additionalBranches.isNotEmpty()) {
-                    bodyLines.add("تعداد کل شعب: ${PersianUtils.toPersianDigits(item.totalBranchesCount)} شعبه")
+                    bodyLines.add(root.context.getString(R.string.platform_request_total_branches_label, PersianUtils.toPersianDigits(item.totalBranchesCount)))
                 }
                 if (item.totalFee > 0) {
-                    bodyLines.add("مبلغ تعرفه: ${nf.format(item.totalFee.toLong())} تومان")
+                    bodyLines.add(root.context.getString(R.string.platform_request_fee_label, PersianUtils.formatPrice(item.totalFee, "تومان")))
                 }
                 if (item.hasReceipt) {
-                    val track = if (!item.receiptTrackingCode.isNullOrBlank()) " (کد رهگیری: ${item.receiptTrackingCode})" else ""
-                    bodyLines.add("فیش واریزی: ارسال شده$track")
+                    val trackCode = item.receiptTrackingCode?.takeIf { it.isNotBlank() }
+                    val receiptLine = if (trackCode != null) {
+                        root.context.getString(R.string.platform_request_receipt_uploaded_with_track, PersianUtils.toPersianDigits(trackCode))
+                    } else {
+                        root.context.getString(R.string.platform_request_receipt_uploaded)
+                    }
+                    bodyLines.add(receiptLine)
                 } else {
-                    bodyLines.add("فیش واریزی: هنوز ثبت نشده است")
+                    bodyLines.add(root.context.getString(R.string.platform_request_receipt_not_uploaded))
                 }
 
                 if (item.description.isNotBlank()) {
@@ -295,24 +308,44 @@ class PlatformRequestsActivity : BaseActivity() {
                 if (item.hasReceipt) {
                     btnAction3.isVisible = true
                     btnAction3.text = root.context.getString(R.string.business_request_receipt_view_btn)
+                    btnAction3.setIconResource(R.drawable.ic_document)
+                    btnAction3.iconGravity = com.google.android.material.button.MaterialButton.ICON_GRAVITY_TEXT_START
                     btnAction3.setOnClickListener { onShowReceipt(item) }
                 } else {
                     btnAction3.isVisible = false
                 }
 
                 if (isPending) {
+                    actionRow.isVisible = true
                     btnAction1.isVisible = true
-                    btnAction1.text = root.context.getString(R.string.platform_request_approve)
+                    btnAction1.text = root.context.getString(R.string.platform_request_approve_btn)
+                    btnAction1.setIconResource(R.drawable.ic_check)
+                    btnAction1.iconGravity = com.google.android.material.button.MaterialButton.ICON_GRAVITY_TEXT_START
+                    val primaryColor = com.google.android.material.color.MaterialColors.getColor(btnAction1, androidx.appcompat.R.attr.colorPrimary)
+                    val onPrimaryColor = com.google.android.material.color.MaterialColors.getColor(btnAction1, com.google.android.material.R.attr.colorOnPrimary)
+                    btnAction1.backgroundTintList = android.content.res.ColorStateList.valueOf(primaryColor)
+                    btnAction1.setTextColor(onPrimaryColor)
+                    btnAction1.iconTint = android.content.res.ColorStateList.valueOf(onPrimaryColor)
+                    btnAction1.strokeWidth = 0
                     btnAction1.setOnClickListener { onApprove(item) }
 
                     btnAction2.isVisible = true
                     btnAction2.text = root.context.getString(R.string.platform_request_reject)
+                    btnAction2.setIconResource(R.drawable.ic_close)
+                    btnAction2.iconGravity = com.google.android.material.button.MaterialButton.ICON_GRAVITY_TEXT_START
+                    val errorColor = com.google.android.material.color.MaterialColors.getColor(btnAction2, androidx.appcompat.R.attr.colorError)
+                    btnAction2.backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.TRANSPARENT)
+                    btnAction2.setTextColor(errorColor)
+                    btnAction2.iconTint = android.content.res.ColorStateList.valueOf(errorColor)
+                    btnAction2.strokeColor = android.content.res.ColorStateList.valueOf(errorColor)
+                    btnAction2.strokeWidth = (1 * root.context.resources.displayMetrics.density).toInt()
                     btnAction2.setOnClickListener { onReject(item) }
                 } else {
+                    actionRow.isVisible = false
                     btnAction1.isVisible = false
                     btnAction2.isVisible = false
                 }
-            }
         }
     }
+}
 }
