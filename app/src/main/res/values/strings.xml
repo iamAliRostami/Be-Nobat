@@ -88,6 +88,7 @@
     <string name="contact_input_message">متن پیام شما</string>
     <string name="contact_btn_send">ارسال پیام</string>
     <string name="contact_send_success">پیام شما با موفقیت ثبت شد و به زودی با شما تماس خواهیم گرفت.</string>
+    <string name="contact_alert_success_title">✓ پیام شما ارسال شد</string>
     <string name="contact_error_fill_fields">لطفاً همه فیلدهای ستاره‌دار را تکمیل نمایید.</string>
     <string name="home_shortcut_free_slots">نوبت‌های خالی</string>
     <string name="home_shortcut_free_slots_sub">رزرو بدون معطلی</string>
@@ -599,6 +600,27 @@
     <string name="platform_request_approved_success">درخواست تأیید شد و کسب‌وکار و دسترسی مدیر فعال گردید.</string>
     <string name="platform_request_rejected_success">درخواست رد شد.</string>
     <string name="drawer_platform_requests">درخواست‌های کسب‌وکار</string>
+    <string name="drawer_system_messages">پیام‌های سامانه</string>
+    <string name="drawer_platform_messages">پیام‌های کاربران (تماس با ما)</string>
+    <string name="drawer_platform_announcements">ارسال پیام به مدیران</string>
+    <string name="system_messages_title">پیام‌های سامانه</string>
+    <string name="platform_messages_title">پیام‌های کاربران (تماس با ما)</string>
+    <string name="platform_announcements_title">ارسال پیام و اعلانات به مدیران</string>
+    <string name="priority_normal">عادی</string>
+    <string name="priority_important">مهم</string>
+    <string name="priority_urgent">فوری و ضروری</string>
+    <string name="action_mark_read">بررسی شد</string>
+    <string name="action_mark_unread">بررسی‌نشده</string>
+    <string name="action_mark_all_read">خواندن همه</string>
+    <string name="status_unread">خوانده‌نشده</string>
+    <string name="status_reviewed">بررسی‌شده</string>
+    <string name="action_reply">پاسخ</string>
+    <string name="action_send_announcement">ارسال پیام</string>
+    <string name="announcement_title_hint">عنوان پیام</string>
+    <string name="announcement_content_hint">متن پیام یا اطلاعیه</string>
+    <string name="target_all_managers">ارسال به تمام مدیران و پرسنل (همگانی)</string>
+    <string name="target_single_user">ارسال به یک مدیر / کاربر خاص</string>
+    <string name="contact_reply_hint">متن پاسخ مدیریت به کاربر…</string>
     <string name="branch_pending_approval">در انتظار تأیید مدیر کل</string>
     <string name="branch_approve_action">تأیید شعبه</string>
     <string name="branch_approved_success">شعبه با موفقیت تأیید شد.</string>
@@ -797,4 +819,66 @@
     <string name="branch_pay_later">بعداً ارسال می‌کنم</string>
     <string name="branch_upload_receipt_action">ارسال فیش واریز</string>
     <string name="branch_dialog_receipt_title">تصویر فیش واریز شعبه «%1$s»</string>
+
+    <!-- Map & Navigation -->
+    <string name="branch_location_on_map">موقعیت مکانی روی نقشه</string>
+    <string name="action_pick_from_map">انتخاب از روی نقشه</string>
+    <string name="title_pick_location_on_map">انتخاب موقعیت مکانی</string>
+    <string name="title_view_location_on_map">مشاهده موقعیت روی نقشه</string>
+    <string name="action_confirm_location">تأیید موقعیت</string>
+    <string name="action_navigate">مسیریابی</string>
+    <string name="dialog_choose_nav_app">انتخاب مسیریاب</string>
+    <string name="nav_app_neshan">مسیریاب نشان</string>
+    <string name="nav_app_balad">مسیریاب بلد</string>
+    <string name="nav_app_google_maps">گوگل مپ (Google Maps)</string>
+    <string name="nav_app_waze">ویز (Waze)</string>
+    <string name="nav_app_system_default">سایر برنامه‌های نقشه</string>
+    <string name="action_view">مشاهده</string>
+    <string name="error_no_map_app_found">برنامه نقشه‌ای یافت نشد</string>
+
+    <!-- Contact Subjects -->
+    <string name="contact_subject_support">پشتیبانی عمومی و پرسش</string>
+    <string name="contact_subject_business">همکاری و ثبت کسب‌وکار</string>
+    <string name="contact_subject_feedback">انتقاد یا پیشنهاد</string>
+    <string name="contact_subject_bug">گزارش مشکل فنی در برنامه</string>
+    <string name="contact_subject_finance">امور مالی و فیش پرداختی</string>
+
+    <!-- Platform Settings -->
+    <string name="drawer_platform_settings">تنظیمات سامانه</string>
+    <string name="platform_settings_title">تنظیمات سامانه</string>
+    <string name="platform_settings_saved_success">تنظیمات سامانه با موفقیت ذخیره شد.</string>
+    <string name="platform_settings_section_address">نشانی و موقعیت مکانی</string>
+    <string name="platform_settings_section_contact">راه‌های ارتباطی و ساعات کاری</string>
+    <string name="platform_settings_section_bank">اطلاعات بانکی و شماره حساب‌ها</string>
+    <string name="platform_settings_section_pricing">تعرفه‌ها و شبکه‌های اجتماعی</string>
+    <string name="hint_head_office_address">نشانی کامل دفتر مرکزی</string>
+    <string name="hint_phone1">تلفن ثابت ۱</string>
+    <string name="hint_phone2">تلفن پشتیبانی ۲</string>
+    <string name="hint_mobile">تلفن همراه و اضطراری</string>
+    <string name="hint_support_email">ایمیل پشتیبانی</string>
+    <string name="hint_info_email">ایمیل سازمانی / عمومی</string>
+    <string name="hint_bank_name">نام بانک</string>
+    <string name="hint_account_holder">نام صاحب حساب</string>
+    <string name="hint_card_number">شماره کارت</string>
+    <string name="hint_iban">شماره شبا (IBAN)</string>
+    <string name="hint_account_number">شماره حساب</string>
+    <string name="hint_base_price">تعرفه ثبت کسب‌وکار (تومان)</string>
+    <string name="hint_extra_branch_price">تعرفه هر شعبه اضافی (تومان)</string>
+    <string name="hint_payment_instructions">دستورالعمل واریز</string>
+    <string name="hint_working_weekdays">ساعات کاری شنبه تا چهارشنبه</string>
+    <string name="hint_working_thursdays">ساعات کاری پنج‌شنبه‌ها</string>
+    <string name="hint_working_holidays">روزهای تعطیل</string>
+    <string name="hint_telegram">آیدی تلگرام</string>
+    <string name="hint_instagram">صفحه اینستاگرام</string>
+    <string name="hint_eitaa">کانال ایتا</string>
+    <string name="action_save_settings">ذخیره کلیه تنظیمات سامانه</string>
+
+    <!-- Team Role Localization -->
+    <string name="team_role_owner">مالک</string>
+    <string name="team_role_manager">مدیر</string>
+    <string name="team_role_staff">پرسنل</string>
+    <string name="team_no_phone">شماره تماس ثبت نشده</string>
+    <string name="team_branch_prefix">شعبه</string>
+    <string name="action_share_qr">کد QR و اشتراک</string>
+    <string name="not_registered">ثبت نشده</string>
 </resources>

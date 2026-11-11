@@ -81,6 +81,13 @@ class AdminBranchEditActivity : BaseActivity() {
     private lateinit var btnViewServices: MaterialButton
     private lateinit var btnSave: MaterialButton
     private lateinit var btnCancel: MaterialButton
+    private var selectedLatitude: Double? = null
+    private var selectedLongitude: Double? = null
+    private lateinit var btnPickLocationOnMap: MaterialButton
+    private lateinit var layoutCoordinatesPreview: View
+    private lateinit var tvCoordinatesDisplay: TextView
+    private lateinit var btnPreviewMap: MaterialButton
+    private lateinit var btnClearLocation: MaterialButton
 
     private val timeZones = listOf(
         "Asia/Tehran" to "تهران (Asia/Tehran +03:30)",
@@ -135,6 +142,40 @@ class AdminBranchEditActivity : BaseActivity() {
         btnViewServices = findViewById(R.id.btnViewServices)
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
+
+        btnPickLocationOnMap = findViewById(R.id.btnPickLocationOnMap)
+        layoutCoordinatesPreview = findViewById(R.id.layoutCoordinatesPreview)
+        tvCoordinatesDisplay = findViewById(R.id.tvCoordinatesDisplay)
+        btnPreviewMap = findViewById(R.id.btnPreviewMap)
+        btnClearLocation = findViewById(R.id.btnClearLocation)
+
+        btnPickLocationOnMap.setOnClickListener {
+            com.leon.be_nobat.helpers.MapHelper.showLocationPicker(this, selectedLatitude, selectedLongitude) { lat, lng ->
+                selectedLatitude = lat
+                selectedLongitude = lng
+                updateCoordinatesUi()
+            }
+        }
+
+        btnPreviewMap.setOnClickListener {
+            val lat = selectedLatitude
+            val lng = selectedLongitude
+            if (lat != null && lng != null) {
+                com.leon.be_nobat.helpers.MapHelper.showMapPreview(
+                    this,
+                    lat,
+                    lng,
+                    etBranchName.text?.toString(),
+                    etBranchAddress.text?.toString()
+                )
+            }
+        }
+
+        btnClearLocation.setOnClickListener {
+            selectedLatitude = null
+            selectedLongitude = null
+            updateCoordinatesUi()
+        }
 
         btnSave.text = if (isEditing) "ذخیره تغییرات" else "ایجاد شعبه"
         btnCancel.setOnClickListener { finish() }
@@ -276,6 +317,17 @@ class AdminBranchEditActivity : BaseActivity() {
         spinnerTimeZone.adapter = adapter
     }
 
+    private fun updateCoordinatesUi() {
+        val lat = selectedLatitude
+        val lng = selectedLongitude
+        if (lat != null && lng != null) {
+            layoutCoordinatesPreview.isVisible = true
+            tvCoordinatesDisplay.text = java.lang.String.format(java.util.Locale.US, "%.5f, %.5f", lat, lng)
+        } else {
+            layoutCoordinatesPreview.isVisible = false
+        }
+    }
+
     private fun loadData() {
         lifecycleScope.launch {
             managementRepository.listBusinesses(pageSize = 100).onSuccess { page ->
@@ -302,6 +354,10 @@ class AdminBranchEditActivity : BaseActivity() {
             branch.depositCardNumber?.let { etDepositCardNumber.setText(it) }
             branch.depositIban?.let { etDepositIban.setText(it) }
             branch.depositAccountHolder?.let { etDepositAccountHolder.setText(it) }
+
+            selectedLatitude = branch.latitude
+            selectedLongitude = branch.longitude
+            updateCoordinatesUi()
 
             // Select business
             val biz = businessesList.firstOrNull { it.first == branch.businessId }
@@ -422,6 +478,8 @@ class AdminBranchEditActivity : BaseActivity() {
             depositCardNumber = depositCard,
             depositIban = depositIban,
             depositAccountHolder = depositHolder,
+            latitude = selectedLatitude,
+            longitude = selectedLongitude
         )
 
         btnSave.isEnabled = false

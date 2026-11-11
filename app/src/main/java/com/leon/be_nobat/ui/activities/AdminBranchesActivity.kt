@@ -146,7 +146,14 @@ class AdminBranchesActivity : BaseActivity() {
                 val bizName = item.businessName?.takeIf { it.isNotBlank() } ?: "کسب‌وکار"
                 val addr = item.address.trim()
                 tvSubtitle.isVisible = true
-                tvSubtitle.text = if (addr.isNotEmpty()) "$bizName · $addr" else bizName
+                tvSubtitle.text = if (addr.isNotEmpty()) "$bizName · $addr 📍" else bizName
+                if (addr.isNotEmpty() || (item.latitude != null && item.longitude != null)) {
+                    tvSubtitle.setOnClickListener {
+                        com.leon.be_nobat.helpers.MapHelper.openNavigation(root.context, item.latitude, item.longitude, item.name, item.address)
+                    }
+                } else {
+                    tvSubtitle.setOnClickListener(null)
+                }
 
                 val openStr = PersianUtils.toPersianDigits("%02d:00".format(Locale.US, item.openHour))
                 val closeStr = PersianUtils.toPersianDigits("%02d:00".format(Locale.US, item.closeHour))

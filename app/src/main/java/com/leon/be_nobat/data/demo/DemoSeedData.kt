@@ -40,7 +40,30 @@ data class DemoDatabaseState(
     val favorites: List<String> = emptyList(),
     val resourceServices: Map<String, List<String>> = emptyMap(),
     val businessRequests: List<BusinessRequest> = emptyList(),
-    val platformPricing: PlatformPricing = PlatformPricing(),
+    val platformPricing: PlatformPricing = PlatformPricing(
+        baseBusinessPrice = 500_000.0,
+        extraBranchPrice = 200_000.0,
+        cardNumber = "6037-9918-1234-5678",
+        iban = "IR120170000000123456789012",
+        accountHolder = "سامانه نوبت‌دهی به‌نوبت",
+        paymentInstructions = "لطفاً پس از واریز مبلغ، تصویر فیش واریز را در این بخش بارگذاری نمایید.",
+        address = "اصفهان، خیابان شریعتی، مجتمع تجاری اداری به‌نوبت، طبقه ۴، واحد ۴۰۲",
+        latitude = 32.6546,
+        longitude = 51.6680,
+        phone = "021-91002424",
+        supportPhone = "021-91002425",
+        mobile = "09134588221",
+        email = "support@benobat.ir",
+        infoEmail = "info@benobat.ir",
+        bankName = "بانک ملت",
+        accountNumber = "123456789",
+        workingHoursWeekdays = "شنبه تا چهارشنبه: ۸:۳۰ الی ۱۸:۰۰",
+        workingHoursThursdays = "پنج‌شنبه‌ها: ۸:۳۰ الی ۱۳:۰۰",
+        workingHoursHolidays = "روزهای تعطیل: پشتیبانی آنلاین از طریق پیام و تیکت",
+        telegram = "benobat_support",
+        instagram = "benobat.official",
+        eitaa = "benobat_support"
+    ),
 )
 
 object DemoSeedData {

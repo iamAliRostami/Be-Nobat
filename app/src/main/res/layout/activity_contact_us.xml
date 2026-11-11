@@ -83,7 +83,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✓ پیام شما ارسال شد"
+                    android:text="@string/contact_alert_success_title"
                     android:textColor="#137333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -373,6 +373,24 @@
                             android:textAppearance="@style/TextAppearance.BeNobat.Body.Muted"
                             android:textSize="12sp" />
                     </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnMapAddress"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:contentDescription="@null"
+                        app:icon="@drawable/ic_map_pin"
+                        app:iconSize="18dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNavAddress"
+                        style="@style/Widget.Material3.Button.IconButton"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:contentDescription="@null"
+                        app:icon="@drawable/ic_navigation"
+                        app:iconSize="18dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCopyAddress"

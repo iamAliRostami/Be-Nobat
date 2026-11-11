@@ -86,6 +86,8 @@ data class ManagementBranch(
     val receiptUploadedAt: String? = null,
     val receiptImageUrl: String? = null,
     val gallery: List<GalleryItem> = emptyList(),
+    val latitude: Double? = null,
+    val longitude: Double? = null,
 )
 
 @Serializable
@@ -290,6 +292,22 @@ data class PlatformPricing(
     val iban: String = "",
     val accountHolder: String = "",
     val paymentInstructions: String = "",
+    val address: String = "",
+    val latitude: Double? = null,
+    val longitude: Double? = null,
+    val phone: String = "",
+    val supportPhone: String = "",
+    val mobile: String = "",
+    val email: String = "",
+    val infoEmail: String = "",
+    val bankName: String = "",
+    val accountNumber: String = "",
+    val workingHoursWeekdays: String = "",
+    val workingHoursThursdays: String = "",
+    val workingHoursHolidays: String = "",
+    val telegram: String = "",
+    val instagram: String = "",
+    val eitaa: String = "",
 ) {
     val bankCardNumber: String get() = cardNumber
     val bankIban: String get() = iban
@@ -391,4 +409,63 @@ data class ManagementDailyTrendItem(
     val revenue: Double = 0.0,
     val workMinutes: Long = 0L,
 )
+
+@Serializable
+data class SystemMessageDto(
+    val id: String = "",
+    val title: String = "",
+    val content: String = "",
+    val priority: String = "Normal",
+    val createdAt: String = "",
+    val isRead: Boolean = false,
+)
+
+@Serializable
+data class ContactMessageDto(
+    val id: String = "",
+    val name: String = "",
+    val contactInfo: String = "",
+    val subject: String = "",
+    val message: String = "",
+    val isRead: Boolean = false,
+    val adminReply: String? = null,
+    val repliedAt: String? = null,
+    val createdAt: String = "",
+)
+
+@Serializable
+data class PlatformAnnouncementDto(
+    val id: String = "",
+    val title: String = "",
+    val content: String = "",
+    val priority: String = "Normal",
+    val targetUserId: String? = null,
+    val targetUserName: String? = null,
+    val targetUserPhone: String? = null,
+    val createdAt: String = "",
+)
+
+@Serializable
+data class SidebarBadgesDto(
+    val pendingAppointments: Int = 0,
+    val pendingReviews: Int = 0,
+    val pendingRequests: Int = 0,
+    val unreadContactMessages: Int = 0,
+    val unreadBroadcasts: Int = 0,
+    val highestBroadcastPriority: String? = null,
+)
+
+@Serializable
+data class AnnouncementCreateRequest(
+    val title: String,
+    val content: String,
+    val priority: String = "Normal",
+    val targetUserId: String? = null,
+)
+
+@Serializable
+data class ContactReplyRequest(
+    val reply: String,
+)
+
 

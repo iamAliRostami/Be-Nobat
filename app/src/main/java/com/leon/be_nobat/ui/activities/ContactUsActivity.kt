@@ -27,10 +27,13 @@ class ContactUsActivity : BaseActivity() {
 
     private val tokenManager: TokenManager by inject()
     private val businessRepository: BusinessRepository by inject()
+    private val authRepository: com.leon.be_nobat.domain.repository.AuthRepository by inject()
 
-    private val defaultPhone = "02191002424"
-    private val defaultMobile = "09134588221"
-    private val defaultEmail = "support@benobat.ir"
+    private var defaultPhone = "02191002424"
+    private var defaultMobile = "09134588221"
+    private var defaultEmail = "support@benobat.ir"
+    private var officeLat: Double? = 32.6546
+    private var officeLng: Double? = 51.6680
 
     override fun observeViewModel() {
         // No shared state observation required
@@ -51,6 +54,8 @@ class ContactUsActivity : BaseActivity() {
         val btnSendEmail = findViewById<MaterialButton>(R.id.btnSendEmail)
         val btnCopyEmail = findViewById<MaterialButton>(R.id.btnCopyEmail)
         val btnCopyAddress = findViewById<MaterialButton>(R.id.btnCopyAddress)
+        val btnMapAddress = findViewById<MaterialButton>(R.id.btnMapAddress)
+        val btnNavAddress = findViewById<MaterialButton>(R.id.btnNavAddress)
 
         val cardSuccess = findViewById<MaterialCardView>(R.id.cardSuccessAlert)
         val etName = findViewById<TextInputEditText>(R.id.etSenderName)
@@ -74,21 +79,39 @@ class ContactUsActivity : BaseActivity() {
                     etContact.setText(contactInfo)
                 }
             }
+
+            authRepository.getPlatformPricing().onSuccess { p ->
+                if (p.address.isNotBlank()) tvAddress.text = p.address
+                if (p.phone.isNotBlank()) {
+                    defaultPhone = p.phone
+                    tvPhone.text = p.phone
+                }
+                if (p.mobile.isNotBlank()) {
+                    defaultMobile = p.mobile
+                    tvMobile.text = p.mobile
+                }
+                if (p.email.isNotBlank()) {
+                    defaultEmail = p.email
+                    tvEmail.text = p.email
+                }
+                if (p.latitude != null) officeLat = p.latitude
+                if (p.longitude != null) officeLng = p.longitude
+            }
         }
 
-        // Setup subject dropdown
+        // Setup subject dropdown (localized for fa, en, ar)
         val subjects = listOf(
-            getString(R.string.contact_input_subject) + ": " + "پشتیبانی عمومی",
-            "ثبت کسب‌وکار و همکاری",
-            "انتقاد یا پیشنهاد",
-            "گزارش مشکل فنی",
-            "امور مالی و فیش پرداختی"
+            getString(R.string.contact_subject_support),
+            getString(R.string.contact_subject_business),
+            getString(R.string.contact_subject_feedback),
+            getString(R.string.contact_subject_bug),
+            getString(R.string.contact_subject_finance)
         )
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, subjects)
         actvSubject.setAdapter(adapter)
         actvSubject.setText(subjects[0], false)
 
-        // Actions: Call, Mail, Copy
+        // Actions: Call, Mail, Copy, Map, Nav
         btnCallPhone.setOnClickListener {
             dialPhone(defaultPhone)
         }
@@ -112,6 +135,20 @@ class ContactUsActivity : BaseActivity() {
 
         btnCopyAddress.setOnClickListener {
             DeepLinkHelper.copyToClipboard(this, tvAddress.text.toString(), getString(R.string.contact_address_title))
+        }
+
+        btnMapAddress.setOnClickListener {
+            val lat = officeLat
+            val lng = officeLng
+            if (lat != null && lng != null) {
+                com.leon.be_nobat.helpers.MapHelper.showMapPreview(this, lat, lng, getString(R.string.contact_address_title), tvAddress.text.toString())
+            } else {
+                com.leon.be_nobat.helpers.MapHelper.openNavigation(this, null, null, getString(R.string.contact_address_title), tvAddress.text.toString())
+            }
+        }
+
+        btnNavAddress.setOnClickListener {
+            com.leon.be_nobat.helpers.MapHelper.openNavigation(this, officeLat, officeLng, getString(R.string.contact_address_title), tvAddress.text.toString())
         }
 
         // Send message form
