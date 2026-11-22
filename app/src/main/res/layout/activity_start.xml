@@ -7,78 +7,147 @@
     android:layout_height="match_parent"
     android:background="@drawable/splash_background">
 
-    <!-- Container for Emblem and Rotating Ring -->
-    <FrameLayout
-        android:id="@+id/emblemContainer"
-        android:layout_width="290dp"
-        android:layout_height="290dp"
-        app:layout_constraintBottom_toTopOf="@+id/bottomContentLayout"
+    <!-- Center Content Group (Emblem + Title + Slogan) -->
+    <LinearLayout
+        android:id="@+id/centerContentGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/featuresLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.42"
-        app:layout_constraintVertical_chainStyle="packed">
+        app:layout_constraintVertical_bias="0.40"
+        app:layout_constraintVertical_chainStyle="spread_inside">
 
-        <!-- Outer Glowing Crescent Ring (Blue marked part: rotates around the logo) -->
-        <ImageView
-            android:id="@+id/ivSplashRing"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:contentDescription="@null"
-            android:src="@drawable/splash_ring" />
+        <!-- Emblem Container (Infinity + Hands + 4 Ticks on identical coordinate frame) -->
+        <FrameLayout
+            android:id="@+id/emblemContainer"
+            android:layout_width="280dp"
+            android:layout_height="164dp"
+            android:layout_gravity="center_horizontal">
 
-        <!-- Central Calendar Emblem & Badge (Red marked part: zooms in) -->
-        <ImageView
-            android:id="@+id/ivSplashEmblem"
-            android:layout_width="190dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/splash_emblem" />
-    </FrameLayout>
+            <!-- 1. Infinity Shape (rotates continuously) -->
+            <ImageView
+                android:id="@+id/ivSplashInfinity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_infinity" />
 
-    <!-- Bottom Staggered Content (Yellow marked part: slides up part-by-part from below) -->
-    <LinearLayout
-        android:id="@+id/bottomContentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emblemContainer">
+            <!-- 2. Checkmark Clock Hands (zooms in from small to large) -->
+            <ImageView
+                android:id="@+id/ivSplashHands"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_hands" />
 
-        <!-- Part 1: Typography "به‌نوبت" -->
+            <!-- 3. Clock Ticks (appear one by one: 12h, 3h, 6h, 9h) -->
+            <ImageView
+                android:id="@+id/ivSplashTick12"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_tick_12" />
+
+            <ImageView
+                android:id="@+id/ivSplashTick3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_tick_3" />
+
+            <ImageView
+                android:id="@+id/ivSplashTick6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_tick_6" />
+
+            <ImageView
+                android:id="@+id/ivSplashTick9"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_tick_9" />
+
+        </FrameLayout>
+
+        <!-- Brand Title "به نوبت" -->
         <ImageView
             android:id="@+id/ivSplashTitle"
-            android:layout_width="220dp"
+            android:layout_width="210dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/app_name"
             android:src="@drawable/splash_title" />
 
-        <!-- Part 2: Subtitle "سامانه هوشمند نوبت‌دهی آنلاین" -->
+        <!-- Slogan "سامانه هوشمند نوبت‌دهی آنلاین" -->
         <ImageView
-            android:id="@+id/ivSplashSubtitle"
-            android:layout_width="250dp"
+            android:id="@+id/ivSplashSlogan"
+            android:layout_width="270dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/splash_subtitle" />
+            android:src="@drawable/splash_slogan" />
 
-        <!-- Part 3: Feature Badges (مدیریت هوشمند | مطمئن و امن | سریع و آسان) -->
+    </LinearLayout>
+
+    <!-- Bottom Features: 3 columns (sliding up one by one and fading in) -->
+    <LinearLayout
+        android:id="@+id/featuresLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="44dp"
+        android:baselineAligned="false"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Column 1 (Right in RTL): مدیریت هوشمند (Calendar) -->
         <ImageView
-            android:id="@+id/ivSplashFeatures"
-            android:layout_width="240dp"
+            android:id="@+id/ivFeatureSmart"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:src="@drawable/splash_features" />
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/splash_feature_smart" />
+
+        <!-- Column 2 (Center): مطمئن و امن (Shield) -->
+        <ImageView
+            android:id="@+id/ivFeatureSecure"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/splash_feature_secure" />
+
+        <!-- Column 3 (Left in RTL): سریع و آسان (Fast Clock) -->
+        <ImageView
+            android:id="@+id/ivFeatureFast"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:src="@drawable/splash_feature_fast" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

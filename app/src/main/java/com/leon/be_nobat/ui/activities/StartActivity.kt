@@ -1,9 +1,12 @@
 package com.leon.be_nobat.ui.activities
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,12 +25,13 @@ import org.koin.android.ext.android.inject
 class StartActivity : AppCompatActivity() {
     companion object {
         private const val DEFAULT_LANGUAGE_TAG = "fa"
-        private const val STANDARD_SPLASH_DURATION_MS = 2300L
+        private const val STANDARD_SPLASH_DURATION_MS = 2800L
     }
 
     private val tokenManager: TokenManager by inject()
     private var isNavigated = false
     private var resolvedTarget: Intent? = null
+    private var infinityRotationAnimator: ObjectAnimator? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -64,77 +68,97 @@ class StartActivity : AppCompatActivity() {
     }
 
     private fun startSplashAnimations() {
-        val ivEmblem = findViewById<ImageView>(R.id.ivSplashEmblem)
-        val ivRing = findViewById<ImageView>(R.id.ivSplashRing)
+        val ivInfinity = findViewById<ImageView>(R.id.ivSplashInfinity)
+        val ivHands = findViewById<ImageView>(R.id.ivSplashHands)
+        val ivTick12 = findViewById<ImageView>(R.id.ivSplashTick12)
+        val ivTick3 = findViewById<ImageView>(R.id.ivSplashTick3)
+        val ivTick6 = findViewById<ImageView>(R.id.ivSplashTick6)
+        val ivTick9 = findViewById<ImageView>(R.id.ivSplashTick9)
         val ivTitle = findViewById<ImageView>(R.id.ivSplashTitle)
-        val ivSubtitle = findViewById<ImageView>(R.id.ivSplashSubtitle)
-        val ivFeatures = findViewById<ImageView>(R.id.ivSplashFeatures)
+        val ivSlogan = findViewById<ImageView>(R.id.ivSplashSlogan)
+        val ivFeatureSmart = findViewById<ImageView>(R.id.ivFeatureSmart)
+        val ivFeatureSecure = findViewById<ImageView>(R.id.ivFeatureSecure)
+        val ivFeatureFast = findViewById<ImageView>(R.id.ivFeatureFast)
 
-        // 1. Red marked part: Central Emblem (zooms in from 0.15 scale with overshoot)
-        ivEmblem.scaleX = 0.15f
-        ivEmblem.scaleY = 0.15f
-        ivEmblem.alpha = 0f
+        // 1. Infinity Shape: continuous infinite rotation
+        infinityRotationAnimator = ObjectAnimator.ofFloat(ivInfinity, View.ROTATION, 0f, 360f).apply {
+            duration = 6000L
+            repeatCount = ValueAnimator.INFINITE
+            interpolator = LinearInterpolator()
+            start()
+        }
 
-        // 2. Blue marked part: Glowing Crescent Ring (rotates around the logo)
-        ivRing.alpha = 0f
-        ivRing.rotation = -120f
-
-        // 3. Yellow marked parts: Staggered slide up from bottom
-        val slideOffset = 50f * resources.displayMetrics.density
-        ivTitle.translationY = slideOffset
-        ivTitle.alpha = 0f
-
-        ivSubtitle.translationY = slideOffset
-        ivSubtitle.alpha = 0f
-
-        ivFeatures.translationY = slideOffset
-        ivFeatures.alpha = 0f
-
-        // Execute Animations:
-        // A) Emblem Zoom-In
-        ivEmblem.animate()
+        // 2. Checkmark Clock Hands: scale up from small to large
+        ivHands.scaleX = 0f
+        ivHands.scaleY = 0f
+        ivHands.alpha = 0f
+        ivHands.animate()
             .scaleX(1.0f)
             .scaleY(1.0f)
             .alpha(1.0f)
-            .setDuration(900)
-            .setInterpolator(OvershootInterpolator(1.3f))
+            .setDuration(850L)
+            .setInterpolator(OvershootInterpolator(1.4f))
             .start()
 
-        // B) Ring Rotation around Logo
-        ivRing.animate()
-            .rotation(360f)
-            .alpha(1.0f)
-            .setDuration(1600)
-            .setInterpolator(DecelerateInterpolator(1.4f))
-            .start()
+        // 3. Clock Ticks (12h, 3h, 6h, 9h): appear one by one clockwise
+        val ticks = listOf(ivTick12, ivTick3, ivTick6, ivTick9)
+        ticks.forEachIndexed { index, tickView ->
+            tickView.scaleX = 0.2f
+            tickView.scaleY = 0.2f
+            tickView.alpha = 0f
+            tickView.animate()
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .alpha(1.0f)
+                .setStartDelay(350L + (index * 180L))
+                .setDuration(380L)
+                .setInterpolator(OvershootInterpolator(1.3f))
+                .start()
+        }
 
-        // C) Bottom items slide up part by part
-        // Part 1: Typography "به‌نوبت"
+        // 4. Title & Slogan: appear simultaneously
+        val slideOffset = 30f * resources.displayMetrics.density
+        ivTitle.translationY = slideOffset
+        ivTitle.alpha = 0f
+        ivSlogan.translationY = slideOffset
+        ivSlogan.alpha = 0f
+
+        val titleDelay = 1050L
         ivTitle.animate()
             .translationY(0f)
             .alpha(1.0f)
-            .setStartDelay(550)
-            .setDuration(500)
-            .setInterpolator(DecelerateInterpolator())
+            .setStartDelay(titleDelay)
+            .setDuration(600L)
+            .setInterpolator(DecelerateInterpolator(1.5f))
             .start()
 
-        // Part 2: Subtitle "سامانه هوشمند نوبت‌دهی آنلاین"
-        ivSubtitle.animate()
+        ivSlogan.animate()
             .translationY(0f)
             .alpha(1.0f)
-            .setStartDelay(800)
-            .setDuration(500)
-            .setInterpolator(DecelerateInterpolator())
+            .setStartDelay(titleDelay)
+            .setDuration(600L)
+            .setInterpolator(DecelerateInterpolator(1.5f))
             .start()
 
-        // Part 3: Feature Badges (مدیریت هوشمند | مطمئن و امن | سریع و آسان)
-        ivFeatures.animate()
-            .translationY(0f)
-            .alpha(1.0f)
-            .setStartDelay(1050)
-            .setDuration(500)
-            .setInterpolator(DecelerateInterpolator())
-            .start()
+        // 5. Feature icons and texts: slide up from below one by one, color/alpha from faint to full
+        val featureSlide = 40f * resources.displayMetrics.density
+        val features = listOf(ivFeatureSmart, ivFeatureSecure, ivFeatureFast)
+        features.forEachIndexed { index, featureView ->
+            featureView.translationY = featureSlide
+            featureView.alpha = 0f
+            featureView.animate()
+                .translationY(0f)
+                .alpha(1.0f)
+                .setStartDelay(1350L + (index * 220L))
+                .setDuration(550L)
+                .setInterpolator(DecelerateInterpolator(1.4f))
+                .start()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        infinityRotationAnimator?.cancel()
     }
 
     private suspend fun resolveTargetIntent(): Intent {
