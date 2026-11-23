@@ -7,44 +7,53 @@
     android:layout_height="match_parent"
     android:background="@drawable/splash_background">
 
-    <!-- Center Content Group (Emblem + Title + Slogan) -->
+    <!-- VideoView for exact splash video animation -->
+    <VideoView
+        android:id="@+id/vvSplashVideo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Center Branding Layout: Emblem + Title + Slogan -->
     <LinearLayout
-        android:id="@+id/centerContentGroup"
+        android:id="@+id/centerBrandingLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:paddingHorizontal="24dp"
         app:layout_constraintBottom_toTopOf="@+id/featuresLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40"
-        app:layout_constraintVertical_chainStyle="spread_inside">
+        app:layout_constraintVertical_bias="0.38">
 
-        <!-- Emblem Container (Infinity + Hands + 4 Ticks on identical coordinate frame) -->
+        <!-- 1. Emblem Container (650x392 aspect ratio = 240dp x 145dp) -->
         <FrameLayout
             android:id="@+id/emblemContainer"
-            android:layout_width="280dp"
-            android:layout_height="164dp"
+            android:layout_width="240dp"
+            android:layout_height="145dp"
             android:layout_gravity="center_horizontal">
 
-            <!-- 1. Infinity Shape (rotates continuously) -->
+            <!-- Red part: Infinity Symbol -->
             <ImageView
                 android:id="@+id/ivSplashInfinity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@null"
+                android:contentDescription="@string/app_name"
                 android:src="@drawable/splash_infinity" />
 
-            <!-- 2. Checkmark Clock Hands (zooms in from small to large) -->
-            <ImageView
-                android:id="@+id/ivSplashHands"
+            <!-- Blue part: Animated Checkmark drawing in arrow direction -->
+            <com.leon.be_nobat.ui.views.SplashCheckmarkView
+                android:id="@+id/viewSplashCheckmark"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:src="@drawable/splash_hands" />
+                android:layout_height="match_parent" />
 
-            <!-- 3. Clock Ticks (appear one by one: 12h, 3h, 6h, 9h) -->
+            <!-- Yellow part: 4 Clock Ticks (12 -> 3 -> 6 -> 9) -->
             <ImageView
                 android:id="@+id/ivSplashTick12"
                 android:layout_width="match_parent"
@@ -72,82 +81,96 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
                 android:src="@drawable/splash_tick_9" />
-
         </FrameLayout>
 
-        <!-- Brand Title "به نوبت" -->
-        <ImageView
-            android:id="@+id/ivSplashTitle"
-            android:layout_width="210dp"
+        <!-- Grey part: Title & Slogan Container (Zooms in from far away) -->
+        <LinearLayout
+            android:id="@+id/titleSloganLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/splash_title" />
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <!-- Slogan "سامانه هوشمند نوبت‌دهی آنلاین" -->
-        <ImageView
-            android:id="@+id/ivSplashSlogan"
-            android:layout_width="270dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@null"
-            android:src="@drawable/splash_slogan" />
+            <!-- Typography "به‌نوبت" -->
+            <ImageView
+                android:id="@+id/ivSplashTitle"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/splash_title" />
 
+            <!-- Slogan "— سامانه هوشمند نوبت‌دهی آنلاین —" -->
+            <ImageView
+                android:id="@+id/ivSplashSubtitle"
+                android:layout_width="265dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:src="@drawable/splash_subtitle" />
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- Bottom Features: 3 columns (sliding up one by one and fading in) -->
+    <!-- Orange part: 3 Feature Badges (slide up 1 by 1 from right to left) -->
     <LinearLayout
         android:id="@+id/featuresLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginBottom="44dp"
-        android:baselineAligned="false"
         android:gravity="center"
+        android:layoutDirection="ltr"
         android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Column 1 (Right in RTL): مدیریت هوشمند (Calendar) -->
+        <!-- 3. Left Badge: سریع و آسان -->
         <ImageView
-            android:id="@+id/ivFeatureSmart"
+            android:id="@+id/ivBadgeFast"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:src="@drawable/splash_feature_smart" />
+            android:src="@drawable/splash_badge_fast" />
 
-        <!-- Column 2 (Center): مطمئن و امن (Shield) -->
+        <!-- 2. Center Badge: مطمئن و امن -->
         <ImageView
-            android:id="@+id/ivFeatureSecure"
+            android:id="@+id/ivBadgeSecure"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:src="@drawable/splash_feature_secure" />
+            android:src="@drawable/splash_badge_secure" />
 
-        <!-- Column 3 (Left in RTL): سریع و آسان (Fast Clock) -->
+        <!-- 1. Right Badge: مدیریت هوشمند -->
         <ImageView
-            android:id="@+id/ivFeatureFast"
+            android:id="@+id/ivBadgeSmart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:src="@drawable/splash_feature_fast" />
-
+            android:src="@drawable/splash_badge_smart" />
     </LinearLayout>
+
+    <!-- App Version Display -->
+    <TextView
+        android:id="@+id/tvAppVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:fontFamily="@font/app_font"
+        android:textColor="#5A7168"
+        android:textSize="12sp"
+        android:alpha="0.85"
+        tools:text="نسخه ۱.۳.۰"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
