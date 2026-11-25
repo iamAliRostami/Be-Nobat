@@ -1,24 +1,27 @@
 package com.leon.be_nobat.ui.activities
 
-import android.animation.ObjectAnimator
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.view.animation.OvershootInterpolator
-import android.widget.FrameLayout
-import android.widget.ImageView
+import android.widget.TextView
+import android.widget.VideoView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.leon.be_nobat.BuildConfig
 import com.leon.be_nobat.R
 import com.leon.be_nobat.data.local.TokenManager
 import com.leon.be_nobat.helpers.DeepLinkHelper
-import com.leon.be_nobat.ui.views.SplashCheckmarkView
+import com.leon.be_nobat.helpers.PersianUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -26,7 +29,7 @@ import org.koin.android.ext.android.inject
 class StartActivity : AppCompatActivity() {
     companion object {
         private const val DEFAULT_LANGUAGE_TAG = "fa"
-        private const val STANDARD_SPLASH_DURATION_MS = 5000L
+        private const val STANDARD_SPLASH_DURATION_MS = 10000L
     }
 
     private val tokenManager: TokenManager by inject()
@@ -41,15 +44,43 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setDefaultLocaleIfNeeded()
 
-        // Edge-to-edge transparent system bars for seamless gradient background
+        // Edge-to-edge transparent system bars with matching background
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = true
+        insetsController.isAppearanceLightNavigationBars = true
+        window.decorView.setBackgroundColor(getColor(R.color.splash_background))
 
         setContentView(R.layout.activity_start)
 
-        findViewById<android.widget.TextView>(R.id.tvAppVersion)?.text =
-            getString(R.string.app_version_format, toPersianDigits(BuildConfig.VERSION_NAME))
+        val tvVersion = findViewById<TextView>(R.id.tvAppVersion)
+        val formattedVersion = PersianUtils.toPersianDigits(BuildConfig.VERSION_NAME)
+        tvVersion?.text = getString(R.string.app_version_format, formattedVersion)
+
+        // Set initial state for slide-up entrance animation: translated down and transparent
+        tvVersion?.alpha = 0f
+        tvVersion?.translationY = 50f * resources.displayMetrics.density
+
+        // Ensure bottom version text is never overlapped by system navigation bars
+        val root = findViewById<View>(R.id.splashRoot)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
+            val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val baseMargin = (32 * resources.displayMetrics.density).toInt()
+            (tvVersion?.layoutParams as? ViewGroup.MarginLayoutParams)?.let { lp ->
+                lp.bottomMargin = baseMargin + navBars.bottom
+                tvVersion.layoutParams = lp
+            }
+            insets
+        }
+
+        // Animate version TextView sliding up from the bottom with smooth deceleration
+        tvVersion?.animate()
+            ?.translationY(0f)
+            ?.alpha(1f)
+            ?.setStartDelay(600L)
+            ?.setDuration(800L)
+            ?.setInterpolator(DecelerateInterpolator(1.8f))
+            ?.start()
 
         setupSplashAnimation()
 
@@ -59,204 +90,94 @@ class StartActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-            // Resolve target route in background while animations run
+            // Resolve target route in background while animation runs
             val target = resolveTargetIntent()
             resolvedTarget = target
 
-            // Keep standard splash screen visible for standard duration
+            // Fallback timeout to guarantee transition even if video playback has issues
             delay(STANDARD_SPLASH_DURATION_MS)
 
             navigateToTarget(target)
         }
     }
 
+    private var videoWidth = 720
+    private var videoHeight = 1280
+
     private fun setupSplashAnimation() {
-        val videoView = findViewById<android.widget.VideoView>(R.id.vvSplashVideo)
-        val centerBranding = findViewById<View>(R.id.centerBrandingLayout)
-        val featuresLayout = findViewById<View>(R.id.featuresLayout)
+        val videoView = findViewById<VideoView>(R.id.vvSplashVideo)
+        val root = findViewById<View>(R.id.splashRoot)
+
+        root?.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            if (videoView != null && videoWidth > 0 && videoHeight > 0) {
+                adjustVideoAspect(videoView, videoWidth, videoHeight)
+            }
+        }
 
         try {
-            val videoUri = android.net.Uri.parse("android.resource://$packageName/${R.raw.benobat_splash}")
+            val videoUri = Uri.parse("android.resource://$packageName/${R.raw.benobat_splash}")
             videoView?.apply {
                 visibility = View.VISIBLE
-                centerBranding?.visibility = View.INVISIBLE
-                featuresLayout?.visibility = View.INVISIBLE
                 setVideoURI(videoUri)
                 setOnPreparedListener { mp ->
                     mp.isLooping = false
+                    if (mp.videoWidth > 0 && mp.videoHeight > 0) {
+                        videoWidth = mp.videoWidth
+                        videoHeight = mp.videoHeight
+                    }
+                    adjustVideoAspect(this, videoWidth, videoHeight)
                     start()
                 }
                 setOnCompletionListener {
                     resolvedTarget?.let { target -> navigateToTarget(target) }
                 }
                 setOnErrorListener { _, _, _ ->
-                    visibility = View.GONE
-                    centerBranding?.visibility = View.VISIBLE
-                    featuresLayout?.visibility = View.VISIBLE
-                    startSplashAnimations()
+                    resolvedTarget?.let { target -> navigateToTarget(target) }
                     true
                 }
-            } ?: run {
-                startSplashAnimations()
             }
         } catch (_: Exception) {
-            videoView?.visibility = View.GONE
-            centerBranding?.visibility = View.VISIBLE
-            featuresLayout?.visibility = View.VISIBLE
-            startSplashAnimations()
+            resolvedTarget?.let { target -> navigateToTarget(target) }
         }
     }
 
-    private fun startSplashAnimations() {
-        val emblemContainer = findViewById<FrameLayout>(R.id.emblemContainer)
-        val ivInfinity = findViewById<ImageView>(R.id.ivSplashInfinity)
-        val viewCheckmark = findViewById<SplashCheckmarkView>(R.id.viewSplashCheckmark)
-        val ivTick12 = findViewById<ImageView>(R.id.ivSplashTick12)
-        val ivTick3 = findViewById<ImageView>(R.id.ivSplashTick3)
-        val ivTick6 = findViewById<ImageView>(R.id.ivSplashTick6)
-        val ivTick9 = findViewById<ImageView>(R.id.ivSplashTick9)
-        val titleSloganLayout = findViewById<View>(R.id.titleSloganLayout)
-        val ivBadgeSmart = findViewById<ImageView>(R.id.ivBadgeSmart)
-        val ivBadgeSecure = findViewById<ImageView>(R.id.ivBadgeSecure)
-        val ivBadgeFast = findViewById<ImageView>(R.id.ivBadgeFast)
+    /**
+     * Dynamically adjusts VideoView layout dimensions to strictly preserve the video's aspect ratio
+     * (e.g. 720:1280) across any device screen (phones, tablets, foldables), preventing any stretching
+     * or distortion.
+     */
+    private fun adjustVideoAspect(
+        videoView: VideoView,
+        vWidth: Int,
+        vHeight: Int,
+        cropToFill: Boolean = false
+    ) {
+        val parent = videoView.parent as? View ?: return
+        parent.post {
+            val containerWidth = parent.width
+            val containerHeight = parent.height
+            if (containerWidth <= 0 || containerHeight <= 0) return@post
 
-        val density = resources.displayMetrics.density
+            val videoRatio = vWidth.toFloat() / vHeight.toFloat()
 
-        // 1. Red marked part: Infinity Symbol (rotates and zooms in)
-        ivInfinity.scaleX = 0.2f
-        ivInfinity.scaleY = 0.2f
-        ivInfinity.rotation = -220f
-        ivInfinity.alpha = 0f
+            val targetWidth: Int
+            val targetHeight: Int
 
-        // 2. Blue marked part: Checkmark starts at progress 0
-        viewCheckmark.progress = 0f
+            if (cropToFill) {
+                targetWidth = kotlin.math.max(containerWidth, (containerHeight * videoRatio).toInt())
+                targetHeight = kotlin.math.max(containerHeight, (containerWidth / videoRatio).toInt())
+            } else {
+                targetWidth = kotlin.math.min(containerWidth, (containerHeight * videoRatio).toInt())
+                targetHeight = kotlin.math.min(containerHeight, (containerWidth / videoRatio).toInt())
+            }
 
-        // 3. Yellow marked part: 4 Clock Ticks (scale 0, alpha 0)
-        listOf(ivTick12, ivTick3, ivTick6, ivTick9).forEach { tick ->
-            tick.scaleX = 0f
-            tick.scaleY = 0f
-            tick.alpha = 0f
+            val lp = videoView.layoutParams
+            if (lp.width != targetWidth || lp.height != targetHeight) {
+                lp.width = targetWidth
+                lp.height = targetHeight
+                videoView.layoutParams = lp
+            }
         }
-
-        // Set pivot points for clock ticks to pop from their respective positions
-        emblemContainer.post {
-            val w = emblemContainer.width.toFloat()
-            val h = emblemContainer.height.toFloat()
-            ivTick12.pivotX = w * (515f / 650f)
-            ivTick12.pivotY = h * (166f / 392f)
-
-            ivTick3.pivotX = w * (627f / 650f)
-            ivTick3.pivotY = h * (270f / 392f)
-
-            ivTick6.pivotX = w * (515f / 650f)
-            ivTick6.pivotY = h * (379f / 392f)
-
-            ivTick9.pivotX = w * (417f / 650f)
-            ivTick9.pivotY = h * (270f / 392f)
-        }
-
-        // 4. Grey marked part: Title & Slogan (zooms in from far away)
-        titleSloganLayout.scaleX = 0.2f
-        titleSloganLayout.scaleY = 0.2f
-        titleSloganLayout.alpha = 0f
-
-        // 5. Orange marked part: 3 Badges (slide up from bottom)
-        val badgeSlide = 65f * density
-        ivBadgeSmart.translationY = badgeSlide
-        ivBadgeSmart.alpha = 0f
-
-        ivBadgeSecure.translationY = badgeSlide
-        ivBadgeSecure.alpha = 0f
-
-        ivBadgeFast.translationY = badgeSlide
-        ivBadgeFast.alpha = 0f
-
-        // --- EXECUTE ANIMATIONS ---
-
-        // A) Red Part: Infinity Symbol rotates and scales into place
-        ivInfinity.animate()
-            .scaleX(1.0f)
-            .scaleY(1.0f)
-            .rotation(0f)
-            .alpha(1.0f)
-            .setDuration(850)
-            .setInterpolator(DecelerateInterpolator(1.3f))
-            .start()
-
-        // B) Blue Part: Checkmark draws in arrow direction (short arm -> vertex -> long arm)
-        ObjectAnimator.ofFloat(viewCheckmark, "progress", 0f, 1f).apply {
-            duration = 750
-            startDelay = 120
-            interpolator = DecelerateInterpolator(1.2f)
-            start()
-        }
-
-        // C) Yellow Part: 4 Clock Ticks appear one by one clockwise (12 -> 3 -> 6 -> 9)
-        ivTick12.animate()
-            .scaleX(1f).scaleY(1f).alpha(1f)
-            .setStartDelay(200)
-            .setDuration(260)
-            .setInterpolator(OvershootInterpolator(2.2f))
-            .start()
-
-        ivTick3.animate()
-            .scaleX(1f).scaleY(1f).alpha(1f)
-            .setStartDelay(360)
-            .setDuration(260)
-            .setInterpolator(OvershootInterpolator(2.2f))
-            .start()
-
-        ivTick6.animate()
-            .scaleX(1f).scaleY(1f).alpha(1f)
-            .setStartDelay(520)
-            .setDuration(260)
-            .setInterpolator(OvershootInterpolator(2.2f))
-            .start()
-
-        ivTick9.animate()
-            .scaleX(1f).scaleY(1f).alpha(1f)
-            .setStartDelay(680)
-            .setDuration(260)
-            .setInterpolator(OvershootInterpolator(2.2f))
-            .start()
-
-        // D) Grey Part: Title and slogan zoom in from far away to actual size
-        titleSloganLayout.animate()
-            .scaleX(1.0f)
-            .scaleY(1.0f)
-            .alpha(1.0f)
-            .setStartDelay(250)
-            .setDuration(750)
-            .setInterpolator(DecelerateInterpolator(1.2f))
-            .start()
-
-        // E) Orange Part: Badges slide up 1 by 1 from right to left (Smart 1 -> Secure 2 -> Fast 3)
-        // 1. Right: مدیریت هوشمند
-        ivBadgeSmart.animate()
-            .translationY(0f)
-            .alpha(1.0f)
-            .setStartDelay(950)
-            .setDuration(450)
-            .setInterpolator(DecelerateInterpolator(1.4f))
-            .start()
-
-        // 2. Center: مطمئن و امن
-        ivBadgeSecure.animate()
-            .translationY(0f)
-            .alpha(1.0f)
-            .setStartDelay(1130)
-            .setDuration(450)
-            .setInterpolator(DecelerateInterpolator(1.4f))
-            .start()
-
-        // 3. Left: سریع و آسان
-        ivBadgeFast.animate()
-            .translationY(0f)
-            .alpha(1.0f)
-            .setStartDelay(1310)
-            .setDuration(450)
-            .setInterpolator(DecelerateInterpolator(1.4f))
-            .start()
     }
 
     private suspend fun resolveTargetIntent(): Intent {
@@ -287,6 +208,8 @@ class StartActivity : AppCompatActivity() {
                         resolvedBranchId?.let { putExtra("branchId", it) }
                         parsed.providerId?.let { putExtra("providerId", it) }
                     }
+                } else if (!resolvedBranchId.isNullOrBlank() && parsed.businessId.isNullOrBlank()) {
+                    return BranchDetailActivity.createIntent(this, branchId = resolvedBranchId, businessId = resolvedBizId)
                 } else if (!resolvedBizId.isNullOrBlank()) {
                     return Intent(this, BusinessDetailActivity::class.java).apply {
                         putExtra("businessId", resolvedBizId)
@@ -313,7 +236,12 @@ class StartActivity : AppCompatActivity() {
         if (isNavigated || isFinishing || isDestroyed) return
         isNavigated = true
         startActivity(target)
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, android.R.anim.fade_in, android.R.anim.fade_out)
+        } else {
+            @Suppress("DEPRECATION")
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        }
         finish()
     }
 
@@ -323,10 +251,5 @@ class StartActivity : AppCompatActivity() {
                 LocaleListCompat.forLanguageTags(DEFAULT_LANGUAGE_TAG)
             )
         }
-    }
-
-    private fun toPersianDigits(text: String): String {
-        val persian = charArrayOf('۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹')
-        return text.map { if (it in '0'..'9') persian[it - '0'] else it }.joinToString("")
     }
 }
