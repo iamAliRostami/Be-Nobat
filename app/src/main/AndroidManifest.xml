@@ -182,11 +182,9 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.activities.BusinessDetailActivity"
-            android:exported="false" />
 
-        <activity
-            android:name=".ui.activities.BranchDetailActivity"
+            android:name=".ui.activities.BusinessDetailActivity"
+
             android:exported="false" />
 
         <activity
@@ -281,7 +279,7 @@
 
         <activity
             android:name=".ui.activities.AdminBusinessEditActivity"
-            android:exported="true"
+            android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity

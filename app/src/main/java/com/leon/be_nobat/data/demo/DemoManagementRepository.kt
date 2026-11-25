@@ -182,21 +182,7 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 city = input.city,
                 description = input.description,
                 requiresApproval = input.requiresApproval,
-                cancellationNoticeMinutes = input.cancellationNoticeMinutes ?: old.cancellationNoticeMinutes,
-                depositPercentage = input.depositPercentage ?: old.depositPercentage,
-                depositCardNumber = input.depositCardNumber ?: old.depositCardNumber,
-                depositIban = input.depositIban ?: old.depositIban,
-                depositAccountHolder = input.depositAccountHolder ?: old.depositAccountHolder,
-                telegram = input.telegram,
-                instagram = input.instagram,
-                whatsApp = input.whatsApp,
-                eitaa = input.eitaa,
-                bale = input.bale,
-                rubika = input.rubika,
-                linkedIn = input.linkedIn,
-                twitter = input.twitter,
-                aparat = input.aparat,
-                website = input.website,
+                cancellationNoticeMinutes = input.cancellationNoticeMinutes ?: old.cancellationNoticeMinutes
             )
             s.copy(businesses = s.businesses.map { if (it.id == id) value else it }) to value
         }
@@ -254,17 +240,6 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 depositCardNumber = input.depositCardNumber,
                 depositIban = input.depositIban,
                 depositAccountHolder = input.depositAccountHolder,
-                phone = input.phone,
-                telegram = input.telegram,
-                instagram = input.instagram,
-                whatsApp = input.whatsApp,
-                eitaa = input.eitaa,
-                bale = input.bale,
-                rubika = input.rubika,
-                linkedIn = input.linkedIn,
-                twitter = input.twitter,
-                aparat = input.aparat,
-                website = input.website,
             )
             s.copy(
                 branches = listOf(value) + s.branches,
@@ -350,17 +325,6 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 depositCardNumber = input.depositCardNumber,
                 depositIban = input.depositIban,
                 depositAccountHolder = input.depositAccountHolder,
-                phone = input.phone,
-                telegram = input.telegram,
-                instagram = input.instagram,
-                whatsApp = input.whatsApp,
-                eitaa = input.eitaa,
-                bale = input.bale,
-                rubika = input.rubika,
-                linkedIn = input.linkedIn,
-                twitter = input.twitter,
-                aparat = input.aparat,
-                website = input.website,
             )
             s.copy(branches = s.branches.map { if (it.id == id) value else it }) to value
         }
