@@ -490,7 +490,8 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 displayName = user.displayName,
                 email = user.email
             )
-            s.copy(memberships = listOf(value) + s.memberships) to value
+            val updatedResources = ensureStaffResource(s.resources, input.branchId, input.userId, user.displayName, input.role)
+            s.copy(memberships = listOf(value) + s.memberships, resources = updatedResources) to value
         }
     }
 
@@ -510,8 +511,30 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 displayName = user.displayName,
                 email = user.email
             )
-            s.copy(memberships = s.memberships.map { if (it.id == id) value else it }) to value
+            val updatedResources = ensureStaffResource(s.resources, input.branchId, input.userId, user.displayName, input.role)
+            s.copy(memberships = s.memberships.map { if (it.id == id) value else it }, resources = updatedResources) to value
         }
+    }
+
+    private fun ensureStaffResource(
+        resources: List<ManagementResource>,
+        branchId: String,
+        userId: String,
+        displayName: String,
+        role: String,
+    ): List<ManagementResource> {
+        val hasStaff = role.split(",").any { it.trim().equals("Staff", ignoreCase = true) }
+        if (!hasStaff) return resources
+        if (resources.any { it.branchId == branchId && it.userId == userId }) return resources
+        val resource = ManagementResource(
+            id = demoId(),
+            branchId = branchId,
+            name = displayName.ifBlank { "پرسنل" },
+            kind = "staff",
+            userId = userId,
+            active = true,
+        )
+        return listOf(resource) + resources
     }
 
     override suspend fun deleteMembership(id: String): Result<Unit> = runCatching {
@@ -597,7 +620,8 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 businessId = branch.businessId,
                 membershipId = membership.id,
             )
-            s.copy(users = updatedUsers, memberships = updatedMemberships) to person
+            val updatedResources = ensureStaffResource(s.resources, branch.id, user.id, user.displayName, input.role)
+            s.copy(users = updatedUsers, memberships = updatedMemberships, resources = updatedResources) to person
         }
     }
 
@@ -624,7 +648,8 @@ class DemoManagementRepository(private val dataStore: DemoDataStore, private val
                 businessId = branch?.businessId,
                 membershipId = existing.id,
             )
-            s.copy(memberships = newMemberships) to person
+            val updatedResources = ensureStaffResource(s.resources, branchId, user.id, user.displayName, role)
+            s.copy(memberships = newMemberships, resources = updatedResources) to person
         }
     }
 

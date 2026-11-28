@@ -105,6 +105,7 @@ class AdminBranchEditActivity : BaseActivity() {
     private lateinit var tvBranchId: TextView
     private lateinit var btnViewTeam: MaterialButton
     private lateinit var btnViewServices: MaterialButton
+    private lateinit var btnManageResources: MaterialButton
     private lateinit var btnSave: MaterialButton
     private lateinit var btnCancel: MaterialButton
     private var selectedLatitude: Double? = null
@@ -188,6 +189,7 @@ class AdminBranchEditActivity : BaseActivity() {
         tvBranchId = findViewById(R.id.tvBranchId)
         btnViewTeam = findViewById(R.id.btnViewTeam)
         btnViewServices = findViewById(R.id.btnViewServices)
+        btnManageResources = findViewById(R.id.btnManageResources)
         btnSave = findViewById(R.id.btnSave)
         btnCancel = findViewById(R.id.btnCancel)
 
@@ -482,6 +484,14 @@ class AdminBranchEditActivity : BaseActivity() {
             }
             btnViewServices.setOnClickListener {
                 startActivity(Intent(this@AdminBranchEditActivity, AdminServicesActivity::class.java))
+            }
+            btnManageResources.setOnClickListener {
+                val b = existingBranch ?: return@setOnClickListener
+                com.leon.be_nobat.helpers.BranchResourcesDialogHelper.show(
+                    activity = this@AdminBranchEditActivity,
+                    branch = b,
+                    managementRepository = managementRepository,
+                )
             }
             findViewById<com.google.android.material.button.MaterialButton>(R.id.btnShareBranch)?.setOnClickListener {
                 val b = existingBranch ?: return@setOnClickListener

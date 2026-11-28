@@ -84,6 +84,8 @@ class BookingActivity : BaseActivity() {
 
     }
 
+    private var lastProviderOptions: List<String> = emptyList()
+
     override fun setupViews() {
         setupAdminHeader(getString(R.string.book_now)) {
             handleBackPress()
@@ -385,28 +387,7 @@ class BookingActivity : BaseActivity() {
         tvStep1Price.text = PersianUtils.formatPrice(state.totalPrice.toLong())
 
         // Provider dropdown (Step 2)
-        val providerTv = findViewById<MaterialAutoCompleteTextView>(R.id.dropdownProvider)
-        val tilProvider = findViewById<TextInputLayout>(R.id.tilProvider)
-        if (state.selectedServices.isEmpty()) {
-            tilProvider.helperText = getString(R.string.booking_select_service_first)
-            providerTv.setSimpleItems(emptyArray())
-            providerTv.setText("", false)
-            providerTv.isEnabled = false
-        } else {
-            tilProvider.helperText = null
-            providerTv.isEnabled = true
-            val providerOptions = listOf(getString(R.string.any_provider)) + state.providers.map { it.name }
-            providerTv.setSimpleItems(providerOptions.toTypedArray())
-            providerTv.setOnItemClickListener { _, _, pos, _ ->
-                val id = if (pos == 0) null else state.providers.getOrNull(pos - 1)?.id
-                viewModel.selectProvider(id)
-            }
-            val currentProvider = state.providers.firstOrNull { it.id == state.selectedProviderId }
-            val expectedProviderText = currentProvider?.name ?: getString(R.string.any_provider)
-            if (providerTv.text.toString() != expectedProviderText) {
-                providerTv.setText(expectedProviderText, false)
-            }
-        }
+        renderProviderDropdown(state)
 
         // Date selection display text & adapter refresh (Step 2)
         findViewById<TextView>(R.id.tvSelectedDateDisplay).text =
@@ -550,6 +531,66 @@ class BookingActivity : BaseActivity() {
             startActivity(successIntent)
             finish()
             return
+        }
+    }
+
+    private fun renderProviderDropdown(state: BookingUiState) {
+        val providerTv = findViewById<MaterialAutoCompleteTextView>(R.id.dropdownProvider)
+        val tilProvider = findViewById<TextInputLayout>(R.id.tilProvider)
+        tilProvider.hint = "ارائه‌دهنده سرویس"
+
+        if (state.selectedServices.isEmpty()) {
+            tilProvider.helperText = getString(R.string.booking_select_service_first)
+            if (lastProviderOptions.isNotEmpty()) {
+                lastProviderOptions = emptyList()
+                providerTv.setSimpleItems(emptyArray())
+            }
+            providerTv.setText("", false)
+            providerTv.isEnabled = false
+            return
+        }
+
+        if (state.providers.isEmpty() && !state.loadingProviders) {
+            tilProvider.helperText = "برای ترکیب خدمات انتخابی، کارمند فعالی در این شعبه تعریف نشده است."
+            if (lastProviderOptions.isNotEmpty()) {
+                lastProviderOptions = emptyList()
+                providerTv.setSimpleItems(emptyArray())
+            }
+            providerTv.setText("", false)
+            providerTv.isEnabled = false
+            return
+        }
+
+        tilProvider.helperText = if (state.loadingProviders) "در حال دریافت ارائه‌دهندگان..." else null
+        providerTv.isEnabled = !state.loadingProviders
+        val providerOptions = if (state.providers.size > 1) {
+            listOf(getString(R.string.any_provider)) + state.providers.map { it.name }
+        } else {
+            state.providers.map { it.name }
+        }
+
+        if (providerOptions != lastProviderOptions) {
+            lastProviderOptions = providerOptions
+            providerTv.setSimpleItems(providerOptions.toTypedArray())
+        }
+
+        providerTv.setOnItemClickListener { _, _, pos, _ ->
+            val id = if (state.providers.size > 1) {
+                if (pos == 0) null else state.providers.getOrNull(pos - 1)?.id
+            } else {
+                state.providers.getOrNull(pos)?.id
+            }
+            viewModel.selectProvider(id)
+        }
+
+        val currentProvider = state.providers.firstOrNull { it.id == state.selectedProviderId }
+        val expectedProviderText = when {
+            currentProvider != null -> currentProvider.name
+            state.providers.size > 1 -> getString(R.string.any_provider)
+            else -> ""
+        }
+        if (providerTv.text.toString() != expectedProviderText) {
+            providerTv.setText(expectedProviderText, false)
         }
     }
 

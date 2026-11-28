@@ -84,6 +84,10 @@ class AdminServiceEditActivity : BaseActivity() {
     private lateinit var btnBranchCancellation: MaterialButton
     private lateinit var btnCancel: MaterialButton
     private lateinit var btnSave: MaterialButton
+    private lateinit var tvSelectedResourcesSummary: TextView
+    private lateinit var btnSelectResources: MaterialButton
+    private var branchResources: List<com.leon.be_nobat.domain.model.ManagementResource> = emptyList()
+    private val selectedResourceIds = mutableSetOf<String>()
 
     companion object {
         const val EXTRA_SERVICE_ID = "extra_service_id"
@@ -131,6 +135,9 @@ class AdminServiceEditActivity : BaseActivity() {
         btnBranchCancellation = findViewById(R.id.btnBranchCancellation)
         btnCancel = findViewById(R.id.btnCancel)
         btnSave = findViewById(R.id.btnSave)
+        tvSelectedResourcesSummary = findViewById(R.id.tvSelectedResourcesSummary)
+        btnSelectResources = findViewById(R.id.btnSelectResources)
+        btnSelectResources.setOnClickListener { showResourcePickerDialog() }
 
         cancellationEditor = CancellationNoticeEditor(this)
         cancellationEditor.setValue(null)
@@ -252,6 +259,16 @@ class AdminServiceEditActivity : BaseActivity() {
                 setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             }
             spBranch.adapter = branchAdapter
+            spBranch.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (editingServiceId.isNullOrBlank()) {
+                        branchesList.getOrNull(position)?.id?.let { branchId ->
+                            loadBranchResources(branchId, preselectedIds = emptySet())
+                        }
+                    }
+                }
+                override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+            }
 
             // 2. If editing, load service details directly
             if (!editingServiceId.isNullOrBlank()) {
@@ -291,6 +308,10 @@ class AdminServiceEditActivity : BaseActivity() {
                 spBranch.setSelection(branchIdx)
             }
             spBranch.isEnabled = false // Service branch assignment is already bound
+            val boundBranchId = service.branchIds.firstOrNull() ?: branchesList.firstOrNull()?.id
+            if (!boundBranchId.isNullOrBlank()) {
+                loadBranchResources(boundBranchId, preselectedIds = service.resourceIds.toSet())
+            }
 
             // Hide catalog creation tools in edit mode
             tvSourceLabel.visibility = View.GONE
@@ -364,6 +385,7 @@ class AdminServiceEditActivity : BaseActivity() {
                     durationMinutes = duration,
                     price = priceToman,
                     cancellationNoticeMinutes = cancellationEditor.value,
+                    resourceIds = selectedResourceIds.toList(),
                 )
 
                 createServiceUseCase(input).onSuccess {
@@ -380,6 +402,7 @@ class AdminServiceEditActivity : BaseActivity() {
                     businessId = service.businessId,
                     catalogItemId = service.catalogItemId,
                     cancellationNoticeMinutes = cancellationEditor.value,
+                    resourceIds = selectedResourceIds.toList(),
                     name = name,
                     description = etDescription.text?.toString()?.trim().orEmpty(),
                     durationMinutes = duration,
@@ -396,6 +419,54 @@ class AdminServiceEditActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun loadBranchResources(branchId: String, preselectedIds: Set<String>) {
+        lifecycleScope.launch {
+            managementRepository.listResources(
+                branchId = branchId,
+                includeInactive = false,
+                page = 1,
+                pageSize = 100,
+            ).onSuccess { page ->
+                branchResources = page.items
+                selectedResourceIds.clear()
+                selectedResourceIds.addAll(preselectedIds.intersect(branchResources.map { it.id }.toSet()))
+                updateSelectedResourcesSummary()
+            }.onFailure {
+                branchResources = emptyList()
+                selectedResourceIds.clear()
+                updateSelectedResourcesSummary()
+            }
+        }
+    }
+
+    private fun updateSelectedResourcesSummary() {
+        val selectedNames = branchResources.filter { it.id in selectedResourceIds }.map { it.name }
+        tvSelectedResourcesSummary.text = when {
+            branchResources.isEmpty() -> "منبع فعالی برای این شعبه ثبت نشده است"
+            selectedNames.isEmpty() -> "هیچ ارائه‌دهنده‌ای انتخاب نشده است"
+            else -> "انتخاب‌شده: ${selectedNames.joinToString("، ")}"
+        }
+    }
+
+    private fun showResourcePickerDialog() {
+        if (branchResources.isEmpty()) {
+            showFeedback("ابتدا از بخش تنظیم منابع شعبه، حداقل یک منبع اضافه کنید.", isError = true)
+            return
+        }
+        val names = branchResources.map { it.name }.toTypedArray()
+        val checked = BooleanArray(branchResources.size) { idx -> branchResources[idx].id in selectedResourceIds }
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+            .setTitle("انتخاب ارائه‌دهندگان سرویس")
+            .setMultiChoiceItems(names, checked) { _, which, isChecked ->
+                val id = branchResources[which].id
+                if (isChecked) selectedResourceIds.add(id) else selectedResourceIds.remove(id)
+            }
+            .setPositiveButton("تایید") { _, _ -> updateSelectedResourcesSummary() }
+            .setNegativeButton("انصراف", null)
+            .show()
     }
 
     private fun showFeedback(message: String, isError: Boolean = false) {
