@@ -7,7 +7,8 @@ import android.content.Intent
 import android.net.Uri
 
 object DeepLinkHelper {
-    const val WEB_BASE_URL = "https://benobat.ir"
+    val WEB_BASE_URL: String
+        get() = com.leon.be_nobat.BuildConfig.MEDIA_BASE_URL.trimEnd('/')
     const val APP_SCHEME = "benobat"
 
     /**
@@ -163,7 +164,7 @@ object DeepLinkHelper {
         val businessId = when {
             host in listOf("business", "book") && pathSegments.isNotEmpty() -> pathSegments[0]
             pathSegments.size >= 2 && pathSegments[0].lowercase() in listOf("b", "business", "book") -> pathSegments[1]
-            pathSegments.size == 1 && host in listOf("benobat.ir", "www.benobat.ir") -> pathSegments[0]
+            pathSegments.size == 1 && host in listOfNotNull("benobat.ir", "www.benobat.ir", "benobat.chbkn.dev", Uri.parse(WEB_BASE_URL).host) -> pathSegments[0]
             else -> pathSegments.lastOrNull()
         }
 

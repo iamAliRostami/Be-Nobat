@@ -1,5 +1,6 @@
 package com.leon.be_nobat.helpers
 
+import com.leon.be_nobat.BuildConfig
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -12,13 +13,13 @@ class DeepLinkHelperTest {
     @Test
     fun createBusinessWebLink_withoutBranch_generatesCorrectUrl() {
         val link = DeepLinkHelper.createBusinessWebLink("biz-100")
-        assertEquals("https://benobat.ir/b/biz-100", link)
+        assertEquals("${BuildConfig.MEDIA_BASE_URL.trimEnd('/')}/b/biz-100", link)
     }
 
     @Test
     fun createBusinessWebLink_withBranch_generatesCorrectUrl() {
         val link = DeepLinkHelper.createBusinessWebLink("biz-100", "branch-50")
-        assertEquals("https://benobat.ir/b/biz-100?branch=branch-50", link)
+        assertEquals("${BuildConfig.MEDIA_BASE_URL.trimEnd('/')}/b/biz-100?branch=branch-50", link)
     }
 
     @Test
@@ -36,7 +37,7 @@ class DeepLinkHelperTest {
     @Test
     fun createProviderWebLink_generatesCorrectUrl() {
         val link = DeepLinkHelper.createProviderWebLink("prov-123")
-        assertEquals("https://benobat.ir/provider/prov-123", link)
+        assertEquals("${BuildConfig.MEDIA_BASE_URL.trimEnd('/')}/provider/prov-123", link)
     }
 
     @Test
